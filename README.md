@@ -77,6 +77,7 @@ plexlists tng posters --all           # optional: generate title-card posters
 plexlists tng poster borg ~/borg.png  # or use your own image (file or URL)
 plexlists tng build --all             # create / update playlists in Plex
 plexlists tng build --all --user kid   # for a managed or shared user, not you
+plexlists tng build --all --collection # as collections, which every user sees
 plexlists tng remove borg             # delete a playlist from Plex
 plexlists status                      # login state and token expiry
 ```

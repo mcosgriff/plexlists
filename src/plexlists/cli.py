@@ -95,6 +95,15 @@ TokenOpt = Annotated[
     ),
 ]
 AllOpt = Annotated[bool, typer.Option("--all", "-a", help="Every playlist instead of naming them.")]
+CollectionOpt = Annotated[
+    bool,
+    typer.Option(
+        "--collection",
+        "-c",
+        help="Work with collections in the show's library instead of playlists. Every "
+        "user of the server sees a collection; films from a movie library are left out.",
+    ),
+]
 UsersOpt = Annotated[
     list[str] | None,
     typer.Option(
@@ -248,6 +257,7 @@ def make_show_app(show: Show) -> typer.Typer:
             ),
         ] = show.title,
         users: UsersOpt = None,
+        collection: CollectionOpt = False,
         url: UrlOpt = None,
         token: TokenOpt = None,
     ) -> None:
@@ -264,6 +274,8 @@ def make_show_app(show: Show) -> typer.Typer:
         with the closest titles in your library.
         """
         keys = resolve(keys, all_)
+        if collection and users:
+            raise typer.BadParameter("A collection is shared by every user: drop --user.")
 
         with console.status("Connecting to Plex..."):
             targets = sessions_for(connect_plex(url, token), users)
@@ -283,15 +295,26 @@ def make_show_app(show: Show) -> typer.Typer:
             for key in keys:
                 result = session.match(show, key, show_title)
                 total_missing += len(result.missing)
-                out = session.apply(
-                    show,
-                    result,
-                    dry_run=dry_run,
-                    artwork=not no_artwork,
-                    force_artwork=force_artwork,
-                    posters_dir=posters_dir,
-                    existing=existing,
-                )
+                if collection:
+                    out = session.apply_collection(
+                        show,
+                        result,
+                        title=show_title,
+                        dry_run=dry_run,
+                        artwork=not no_artwork,
+                        force_artwork=force_artwork,
+                        posters_dir=posters_dir,
+                    )
+                else:
+                    out = session.apply(
+                        show,
+                        result,
+                        dry_run=dry_run,
+                        artwork=not no_artwork,
+                        force_artwork=force_artwork,
+                        posters_dir=posters_dir,
+                        existing=existing,
+                    )
                 print_result(show, result, out)
 
         if total_missing:
@@ -474,31 +497,53 @@ def make_show_app(show: Show) -> typer.Typer:
             bool, typer.Option("--yes", "-y", help="Don't ask for confirmation.")
         ] = False,
         users: UsersOpt = None,
+        collection: CollectionOpt = False,
+        show_title: Annotated[
+            str,
+            typer.Option(
+                envvar=title_env(show),
+                help="The show's title as it appears in your Plex TV library.",
+                rich_help_panel="Plex connection",
+            ),
+        ] = show.title,
         url: UrlOpt = None,
         token: TokenOpt = None,
     ) -> None:
         """
         Delete playlists from Plex.
 
-        Only touches playlists whose name exactly matches one of this show's
-        playlists. Episodes and watch history aren't affected.
+        Only touches playlists (or, with --collection, collections in the show's
+        library) whose name exactly matches one of this show's playlists.
+        Episodes and watch history aren't affected.
         """
         keys = resolve(keys, all_)
-        targets = []
+        if collection and users:
+            raise typer.BadParameter("A collection is shared by every user: drop --user.")
+        kind = "collection" if collection else "playlist"
+        targets: list[tuple[str | None, Any]] = []
         with console.status("Connecting to Plex..."):
             for user, session in sessions_for(connect_plex(url, token), users):
-                targets += [(user, pl) for pl in session.find_playlists(show, keys)]
+                if collection:
+                    try:
+                        cols = session.collections(show, show_title)
+                    except ShowNotFoundError as exc:
+                        raise fail(escape(str(exc))) from None
+                    names = [show.plex_name(k) for k in keys]
+                    targets += [(None, cols[n]) for n in names if n in cols]
+                else:
+                    targets += [(user, pl) for pl in session.find_playlists(show, keys)]
         if not targets:
-            console.print("None of those playlists exist in Plex.")
+            console.print(f"None of those {kind}s exist in Plex.")
             return
         for user, pl in targets:
             owner = f" [dim]for {escape(user)}[/dim]" if user else ""
-            console.print(f"  • {escape(pl.title)} [dim]({pl.leafCount} items)[/dim]{owner}")
-        if not yes and not typer.confirm(f"Delete {len(targets)} playlist(s) from Plex?"):
+            count = pl.childCount if collection else pl.leafCount
+            console.print(f"  • {escape(pl.title)} [dim]({count} items)[/dim]{owner}")
+        if not yes and not typer.confirm(f"Delete {len(targets)} {kind}(s) from Plex?"):
             raise typer.Abort()
         for _, pl in targets:
             pl.delete()
-        console.print(f"[green]Deleted {len(targets)} playlist(s).[/green]")
+        console.print(f"[green]Deleted {len(targets)} {kind}(s).[/green]")
 
     return app
 

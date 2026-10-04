@@ -110,6 +110,33 @@ def sync_playlist(plex: Any, pl: Any, items: list[Any], dry_run: bool) -> str:
     return f"updated ({plan.summary()})"
 
 
+def sync_collection(col: Any, items: list[Any], dry_run: bool) -> str:
+    """Make an existing collection hold exactly `items`, in that order."""
+    current = col.items()
+    plan = plan_sync([i.ratingKey for i in current], [i.ratingKey for i in items])
+    if plan.empty:
+        return "unchanged"
+    if dry_run:
+        return f"would update ({plan.summary()})"
+    wanted = {i.ratingKey for i in items}
+    have = {i.ratingKey for i in current}
+    if plan.remove:
+        col.removeItems([i for i in current if i.ratingKey not in wanted])
+    if plan.add:
+        col.addItems([i for i in items if i.ratingKey not in have])
+    order_collection(col, items)
+    return f"updated ({plan.summary()})"
+
+
+def order_collection(col: Any, items: list[Any]) -> None:
+    """Put a collection in custom order, matching `items`."""
+    col.sortUpdate(sort="custom")
+    previous = None
+    for item in items:
+        col.moveItem(item, after=previous)
+        previous = item
+
+
 # --------------------------------------------------------------------- artwork
 
 

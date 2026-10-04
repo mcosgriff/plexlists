@@ -20,7 +20,9 @@ from plexlists.sync import (
     find_films,
     find_image,
     find_show,
+    order_collection,
     sync_artwork,
+    sync_collection,
     sync_playlist,
 )
 
@@ -57,6 +59,18 @@ class MatchResult:
         out = []
         for r in self.entries:
             for item in r.items:
+                if item.ratingKey not in seen:
+                    seen.add(item.ratingKey)
+                    out.append(item)
+        return out
+
+    @property
+    def episode_items(self) -> list[Any]:
+        """Like `items`, without films: what can go in a collection in the show's library."""
+        seen: set[Any] = set()
+        out = []
+        for r in self.entries:
+            for item in [] if r.ep.film else r.items:
                 if item.ratingKey not in seen:
                     seen.add(item.ratingKey)
                     out.append(item)
@@ -255,6 +269,66 @@ class Session:
             try:
                 out.artwork = sync_artwork(
                     self.plex, pl, key, folder, state, force_artwork, dry_run
+                )
+            except Exception as exc:
+                out.artwork_error = f"{type(exc).__name__}: {exc}"
+            if not dry_run:
+                config.write_json(config.artwork_state_file(), state)
+        return out
+
+    def collections(self, show: Show, title: str | None = None) -> dict[str, Any]:
+        """Collections in the show's library, by name."""
+        self.library(show, title)
+        section = self._show_objs[(show.slug, title or show.title)].section()
+        found: dict[str, Any] = {}
+        for col in section.collections():
+            found.setdefault(col.title, col)
+        return found
+
+    def apply_collection(
+        self,
+        show: Show,
+        result: MatchResult,
+        *,
+        title: str | None = None,
+        dry_run: bool = False,
+        artwork: bool = True,
+        force_artwork: bool = False,
+        posters_dir: Path | None = None,
+    ) -> ApplyResult:
+        """Like `apply`, but as a collection in the show's library, which every user of the
+        server sees. A collection lives in one library, so films are left out."""
+        key = result.key
+        name, description = show.plex_name(key), show.playlists[key].description
+        col = self.collections(show, title).get(name)
+        if col is not None and col.smart:
+            return ApplyResult(
+                "skipped",
+                skipped="a smart collection with this name exists. Rename or delete it in Plex.",
+            )
+        items = result.episode_items
+        if not items:
+            return ApplyResult("skipped", skipped="nothing matched")
+
+        if col is None:
+            action = "would create" if dry_run else "created"
+            if not dry_run:
+                section = self._show_objs[(show.slug, title or show.title)].section()
+                col = section.createCollection(name, items=items)
+                order_collection(col, items)
+        else:
+            action = sync_collection(col, items, dry_run)
+        if col is not None and not dry_run and (col.summary or "") != description:
+            with contextlib.suppress(Exception):
+                col.editSummary(description)
+
+        out = ApplyResult(action)
+        if artwork:
+            folder = posters_dir or config.posters_dir(show.slug)
+            state = config.read_json(config.artwork_state_file())
+            try:
+                out.artwork = sync_artwork(
+                    self.plex, col, key, folder, state, force_artwork, dry_run
                 )
             except Exception as exc:
                 out.artwork_error = f"{type(exc).__name__}: {exc}"

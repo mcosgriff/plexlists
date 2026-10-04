@@ -66,13 +66,73 @@ class FakePlaylist:
         self.server.pls.remove(self)
 
 
+class FakeCollection:
+    def __init__(self, section: Section, rating_key: int, title: str, items: list[Item]) -> None:
+        self.section = section
+        self.ratingKey = rating_key
+        self.title = title
+        self.smart = False
+        self.summary = ""
+        self.sort = "release"
+        self.entries = list(items)
+        self.posters: list[str] = []
+        self.arts: list[str] = []
+
+    @property
+    def childCount(self) -> int:  # noqa: N802
+        return len(self.entries)
+
+    def keys(self) -> list[int]:
+        return [i.ratingKey for i in self.items()]
+
+    def items(self) -> list[Item]:
+        if self.sort == "custom":
+            return list(self.entries)
+        return sorted(self.entries, key=lambda i: (i.seasonNumber or 0, i.index))
+
+    def addItems(self, items: list[Item]) -> None:  # noqa: N802
+        self.entries += items
+
+    def removeItems(self, items: list[Item]) -> None:  # noqa: N802
+        gone = {i.ratingKey for i in items}
+        self.entries = [i for i in self.entries if i.ratingKey not in gone]
+
+    def sortUpdate(self, sort: str) -> None:  # noqa: N802
+        self.sort = sort
+
+    def moveItem(self, item: Item, after: Item | None = None) -> None:  # noqa: N802
+        self.entries.remove(item)
+        self.entries.insert(self.entries.index(after) + 1 if after else 0, item)
+
+    def editSummary(self, text: str) -> None:  # noqa: N802
+        self.summary = text
+
+    def uploadPoster(self, filepath: str) -> None:  # noqa: N802
+        self.posters.append(filepath)
+
+    def uploadArt(self, filepath: str) -> None:  # noqa: N802
+        self.arts.append(filepath)
+
+    def delete(self) -> None:
+        self.section.colls.remove(self)
+
+
 @dataclass
 class Section:
     type: str
     items: list[Any]
+    colls: list[FakeCollection] = field(default_factory=list)
 
     def search(self, title: str) -> list[Any]:
         return [i for i in self.items if norm(title) in norm(i.title)]
+
+    def collections(self) -> list[FakeCollection]:
+        return list(self.colls)
+
+    def createCollection(self, title: str, items: list[Item]) -> FakeCollection:  # noqa: N802
+        col = FakeCollection(self, 5000 + len(self.colls), title, items)
+        self.colls.append(col)
+        return col
 
 
 @dataclass
@@ -80,6 +140,10 @@ class FakeShow:
     title: str
     eps: list[Item]
     artUrl: str | None = None  # noqa: N815
+    library_section: Section | None = None
+
+    def section(self) -> Section | None:
+        return self.library_section
 
     def episodes(self) -> list[Item]:
         return self.eps
@@ -123,6 +187,7 @@ class FakeServer:
 
     def __post_init__(self) -> None:
         self.library = _Library([Section("show", [self.show]), Section("movie", self.movies)])
+        self.show.library_section = self.library.secs[0]
         self.pls: list[FakePlaylist] = []
         self.next_pid = 0
         self.next_rk = 1000

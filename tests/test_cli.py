@@ -207,3 +207,23 @@ def test_build_and_remove_for_other_users(monkeypatch, plex, make_server, shows)
     out = invoke("tng", "remove", "borg", "--yes", "--user", "alice")
     assert "for alice" in out and "Deleted 1" in out
     assert theirs["alice"].pls == [] and len(theirs["bob"].pls) == 1
+
+
+def test_build_and_remove_as_collection(plex, shows) -> None:
+    out = invoke("tng", "build", "borg", "--collection", "--no-artwork")
+    assert "TNG: The Borg" in out and "created" in out
+    assert plex.pls == []  # no playlist was made
+    (col,) = plex.show.library_section.colls
+    wanted = [e.title for e in shows["tng"].playlists["borg"].episodes if not e.film]
+    assert [i.title for i in col.items()] == wanted  # in order, without First Contact
+    assert col.summary == shows["tng"].playlists["borg"].description
+
+    assert "unchanged" in invoke("tng", "build", "borg", "-c", "--no-artwork")
+    col.entries.reverse()
+    col.entries.pop()
+    assert "updated" in invoke("tng", "build", "borg", "-c", "--no-artwork")
+    assert [i.title for i in col.items()] == wanted
+
+    assert "drop --user" in invoke("tng", "build", "borg", "-c", "--user", "alice")
+    assert "Deleted 1 collection" in invoke("tng", "remove", "borg", "-c", "--yes")
+    assert plex.show.library_section.colls == []
