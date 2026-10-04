@@ -45,7 +45,8 @@ remembers the last answer, so they're shown as soon as the app opens.
 
 Opening a playlist lists each entry's episode number, air date, length and
 whether you've watched it, with Plex's summary of the highlighted episode
-underneath. This loads by itself once connected; without a saved login, press
+underneath, and marks the next one to watch. The tree and the show view give
+each playlist's progress ("12/27"). This loads by itself once connected; without a saved login, press
 `c` to connect.
 
 | Key | Action |

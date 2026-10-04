@@ -38,7 +38,14 @@ from textual.widgets.option_list import Option
 
 from plexlists import auth, config
 from plexlists.models import BUILTIN_DIR, Show, discover
-from plexlists.report import entry_details, entry_status, match_summary, result_lines
+from plexlists.report import (
+    entry_details,
+    entry_status,
+    match_summary,
+    next_unwatched,
+    result_lines,
+    watched_progress,
+)
 from plexlists.service import (
     ApplyResult,
     MatchResult,
@@ -433,7 +440,15 @@ class PlexlistsApp(App[None]):
                 "  ✓" if not result.missing else f"  {len(result.missing)}✗",
                 style="green" if not result.missing else "yellow",
             )
+            label.append(f"  {self.watched_text(result)}", style="dim")
         return label
+
+    @staticmethod
+    def watched_text(result: MatchResult | None) -> str:
+        """'12/27' watched, or '' before the playlist has been checked against Plex."""
+        if result is None or not result.items:
+            return ""
+        return "{}/{}".format(*watched_progress(result))
 
     def refresh_labels(self, slug: str) -> None:
         show = self.shows.get(slug)
@@ -470,7 +485,9 @@ class PlexlistsApp(App[None]):
         )
         table = self.query_one("#table", DataTable)
         table.clear(columns=True)
-        table.add_columns("Key", "Name in Plex", "Items", "Runtime", "Poster", "Plex", "Created")
+        table.add_columns(
+            "Key", "Name in Plex", "Items", "Runtime", "Poster", "Plex", "Created", "Watched"
+        )
         self.show_detail(None)
         folder = config.posters_dir(show.slug)
         for key, p in show.playlists.items():
@@ -482,6 +499,7 @@ class PlexlistsApp(App[None]):
                 "✓" if find_image(folder, key) else Text("—", style="dim"),
                 Text.from_markup(self.plex_cell(show, key)),
                 self.created_cell(show, key),
+                self.watched_text(self.results.get((show.slug, key))) or Text("—", style="dim"),
                 key=key,
             )
 
@@ -495,25 +513,29 @@ class PlexlistsApp(App[None]):
 
     def render_playlist(self, show: Show, key: str) -> None:
         p = show.playlists[key]
+        result = self.results.get((show.slug, key))
+        watched = f" · {w} watched" if (w := self.watched_text(result)) else ""
         poster = find_image(config.posters_dir(show.slug), key)
         poster_s = f"poster: {escape(poster.name)}" if poster else "no poster"
         self.query_one("#summary", Static).update(
             f"[bold]{escape(show.plex_name(key))}[/bold]\n"
             f"{escape(p.description)}\n"
             f"[dim]{len(p.episodes)} items · {hours(show.runtime(key))} · {poster_s}"
-            f"{self.times_summary(show, key)} · Plex: [/dim]{self.plex_cell(show, key)}"
+            f"{self.times_summary(show, key)}{watched} · Plex: [/dim]{self.plex_cell(show, key)}"
         )
         table = self.query_one("#table", DataTable)
         table.clear(columns=True)
         table.add_columns(
             "#", "S", "Title", "Note", "In Plex", "Episode", "Aired", "Length", "Watched"
         )
-        result = self.results.get((show.slug, key))
         blank = Text("—", style="dim")
+        up_next = next_unwatched(result) if result else None
         for i, e in enumerate(p.episodes):
             status = Text.from_markup(entry_status(show, result.entries[i])) if result else blank
             d = entry_details(result.entries[i]) if result else None
-            info = [d.episode, d.aired, d.length, d.watched] if d else [""] * 4
+            info: list[Any] = [d.episode, d.aired, d.length, d.watched] if d else [""] * 4
+            if i == up_next:
+                info[3] = Text("▶ next", style="bold")
             table.add_row(
                 str(i + 1),
                 "film" if e.film else str(e.season),

@@ -70,6 +70,20 @@ def entry_details(r: EntryResult) -> EntryDetails | None:
     )
 
 
+def watched_progress(result: MatchResult) -> tuple[int, int]:
+    """(watched, total) over the Plex items a playlist matched."""
+    items = result.items
+    return sum(bool(getattr(i, "isPlayed", False)) for i in items), len(items)
+
+
+def next_unwatched(result: MatchResult) -> int | None:
+    """Index of the first entry with something left to watch, or None if there isn't one."""
+    for n, r in enumerate(result.entries):
+        if r.items and not all(getattr(i, "isPlayed", False) for i in r.items):
+            return n
+    return None
+
+
 def result_lines(show: Show, result: MatchResult, out: ApplyResult | None = None) -> list[str]:
     """Summary line plus details for one playlist. `out` is None for a match-only check."""
     name = escape(show.plex_name(result.key))

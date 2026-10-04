@@ -218,7 +218,10 @@ async def test_playlist_shows_episode_details_from_plex(server) -> None:
         detail = app.query_one("#detail", Static)
         assert not detail.has_class("hidden")
         assert "path of the Borg" in str(detail.render())
-        assert cell(app, 1, 8) == "—"  # matched, not watched
+        assert cell(app, 1, 8) == "▶ next"  # the first one left to watch
+        assert cell(app, 2, 8) == "—"  # matched, not watched
+        assert "1/8 watched" in str(app.query_one("#summary", Static).render())
+        assert app.nodes[Nav("tng", "borg")].label.plain.endswith("✓  1/8")
 
         # Once connected, other playlists load their details when opened.
         await select(app, pilot, Nav("tng", "q"))
@@ -227,6 +230,7 @@ async def test_playlist_shows_episode_details_from_plex(server) -> None:
         assert cell(app, 2, 5) == "S2E16"  # Q Who again
         await select(app, pilot, Nav("tng"))
         assert app.query_one("#detail", Static).has_class("hidden")
+        assert cell(app, 1, 7) == "1/8"  # the Borg row of the show view
 
 
 async def test_connects_on_startup_when_logged_in(server, shows) -> None:
