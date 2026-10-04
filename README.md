@@ -7,8 +7,9 @@ Build curated TV show playlists in Plex, matched by episode title.
 - **In-place updates:** rebuilding adds, removes and reorders items without
   recreating the playlist, so custom posters survive.
 - **Posters:** upload your own artwork, or generate simple title cards.
-- **Shows as TOML:** ships with *The X-Files* and *Star Trek: The Next
-  Generation*; add your own without writing Python.
+- **Shows as TOML:** ships with *The X-Files*, *Star Trek: The Next Generation*,
+  *Star Trek: Enterprise*, *Babylon 5*, *Defiance*, *Stargate SG-1* and
+  *Stargate Atlantis*; add your own without writing Python.
 - **Interactive app:** run `plexlists` with no command for a Textual TUI to browse,
   check, build and manage posters. Every action is also a CLI command for scripting.
 - **Secure login:** Plex's JWT device flow, with the key in your OS keychain
