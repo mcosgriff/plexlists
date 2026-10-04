@@ -1,0 +1,175 @@
+"""Plex operations shared by the CLI and the TUI: match, build, remove.
+
+Nothing in here prints. Functions return results that the front end renders.
+"""
+
+from __future__ import annotations
+
+import contextlib
+from dataclasses import dataclass, field
+from enum import StrEnum
+from pathlib import Path
+from typing import Any
+
+from plexlists import config
+from plexlists.matching import Library
+from plexlists.models import Ep, Show
+from plexlists.sync import find_films, find_show, sync_artwork, sync_playlist
+
+
+class EntryStatus(StrEnum):
+    matched = "matched"
+    missing = "missing"  # an episode that isn't in Plex (or is ambiguous)
+    no_film = "no_film"  # a film that isn't in any movie library: skipped, not an error
+
+
+@dataclass
+class EntryResult:
+    ep: Ep
+    items: list[Any]
+    suggestions: list[str] = field(default_factory=list)
+
+    @property
+    def status(self) -> EntryStatus:
+        if self.items:
+            return EntryStatus.matched
+        return EntryStatus.no_film if self.ep.film else EntryStatus.missing
+
+
+@dataclass
+class MatchResult:
+    key: str
+    entries: list[EntryResult]
+
+    @property
+    def items(self) -> list[Any]:
+        """Matched Plex items in order, without duplicates (a combined two-parter can
+        satisfy two entries)."""
+        seen: set[Any] = set()
+        out = []
+        for r in self.entries:
+            for item in r.items:
+                if item.ratingKey not in seen:
+                    seen.add(item.ratingKey)
+                    out.append(item)
+        return out
+
+    @property
+    def missing(self) -> list[EntryResult]:
+        return [r for r in self.entries if r.status == EntryStatus.missing]
+
+    @property
+    def films_skipped(self) -> list[EntryResult]:
+        return [r for r in self.entries if r.status == EntryStatus.no_film]
+
+
+@dataclass
+class ApplyResult:
+    action: str  # "created", "updated (+1)", "unchanged", "would create", …
+    artwork: list[str] = field(default_factory=list)
+    artwork_error: str | None = None
+    skipped: str | None = None  # why nothing was done, if so
+
+
+class ShowNotFoundError(LookupError):
+    pass
+
+
+class Session:
+    """A connected Plex server plus per-show caches of its episodes."""
+
+    def __init__(self, plex: Any) -> None:
+        self.plex = plex
+        self._libraries: dict[tuple[str, str], Library] = {}
+
+    @property
+    def server_name(self) -> str:
+        return str(getattr(self.plex, "friendlyName", "Plex"))
+
+    def library(self, show: Show, title: str | None = None) -> Library:
+        title = title or show.title
+        cache_key = (show.slug, title)
+        if cache_key not in self._libraries:
+            show_obj = find_show(self.plex, title)
+            if show_obj is None:
+                raise ShowNotFoundError(f"Couldn't find '{title}' in any TV library.")
+            films = find_films(self.plex, show.films) if show.films else {}
+            self._libraries[cache_key] = Library(show_obj.episodes(), films)
+        return self._libraries[cache_key]
+
+    def forget(self, show: Show | None = None) -> None:
+        """Drop cached episode lists (e.g. after adding episodes to Plex)."""
+        if show is None:
+            self._libraries.clear()
+        else:
+            self._libraries = {k: v for k, v in self._libraries.items() if k[0] != show.slug}
+
+    def match(self, show: Show, key: str, title: str | None = None) -> MatchResult:
+        lib = self.library(show, title)
+        entries = []
+        for ep in show.playlists[key].episodes:
+            items = lib.match(ep)
+            sugg = lib.suggest(ep) if not items and not ep.film else []
+            entries.append(EntryResult(ep, items, sugg))
+        return MatchResult(key, entries)
+
+    def existing_playlists(self) -> dict[str, Any]:
+        found: dict[str, Any] = {}
+        for pl in self.plex.playlists(playlistType="video"):
+            found.setdefault(pl.title, pl)
+        return found
+
+    def apply(
+        self,
+        show: Show,
+        result: MatchResult,
+        *,
+        dry_run: bool = False,
+        artwork: bool = True,
+        force_artwork: bool = False,
+        posters_dir: Path | None = None,
+        existing: dict[str, Any] | None = None,
+    ) -> ApplyResult:
+        """Create the playlist or update it in place, then sync its artwork."""
+        key = result.key
+        name, description = show.plex_name(key), show.playlists[key].description
+        if existing is None:
+            existing = self.existing_playlists()
+        pl = existing.get(name)
+        if pl is not None and pl.smart:
+            return ApplyResult(
+                "skipped",
+                skipped="a smart playlist with this name exists. Rename or delete it in Plex.",
+            )
+        items = result.items
+        if not items:
+            return ApplyResult("skipped", skipped="nothing matched")
+
+        if pl is None:
+            action = "would create" if dry_run else "created"
+            if not dry_run:
+                pl = self.plex.createPlaylist(name, items=items)
+                existing[name] = pl
+        else:
+            action = sync_playlist(self.plex, pl, items, dry_run)
+        if pl is not None and not dry_run and (pl.summary or "") != description:
+            with contextlib.suppress(Exception):
+                pl.editSummary(description)
+
+        out = ApplyResult(action)
+        if artwork:
+            folder = posters_dir or config.posters_dir(show.slug)
+            state = config.read_json(config.artwork_state_file())
+            try:
+                out.artwork = sync_artwork(
+                    self.plex, pl, key, folder, state, force_artwork, dry_run
+                )
+            except Exception as exc:
+                out.artwork_error = f"{type(exc).__name__}: {exc}"
+            if not dry_run:
+                config.write_json(config.artwork_state_file(), state)
+        return out
+
+    def find_playlists(self, show: Show, keys: list[str]) -> list[Any]:
+        names = {show.plex_name(k) for k in keys}
+        return [pl for pl in self.plex.playlists() if pl.title in names]
