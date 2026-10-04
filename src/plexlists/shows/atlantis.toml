@@ -1,0 +1,199 @@
+# Stargate Atlantis.
+# "The Siege" is a three-parter that spans seasons one and two, so each part is
+# listed explicitly.
+
+[show]
+title = "Stargate Atlantis"
+label = "Stargate Atlantis"
+prefix = "SGA: "
+episode_minutes = 44
+long_episodes = ["Rising"]
+colors = { top = "#0f2f4f", bottom = "#030a12", accent = "#7fd6c2", text = "#eef5f7" }
+
+[[playlists]]
+key = "binge"
+name = "Weekend Binge"
+description = "The essential episodes, from Rising to Enemy at the Gate"
+episodes = [
+    [1, "Rising", "Friday night"],
+    [1, "Thirty-Eight Minutes"],
+    [1, "The Storm"],
+    [1, "The Eye"],
+    [1, "Before I Sleep"],
+    [1, "The Siege (1)"],
+    [1, "The Siege (2)"],
+    [2, "The Siege (3)"],
+    [2, "Trinity", "Saturday"],
+    [2, "Grace Under Pressure"],
+    [2, "Michael"],
+    [2, "Allies"],
+    [3, "No Man's Land"],
+    [3, "Sateda"],
+    [3, "Common Ground"],
+    [3, "McKay and Mrs. Miller"],
+    [3, "The Return (1)"],
+    [3, "The Return (2)"],
+    [3, "Tao of Rodney"],
+    [3, "Sunday"],
+    [3, "First Strike"],
+    [4, "Adrift", "Sunday"],
+    [4, "Lifeline"],
+    [4, "Be All My Sins Remember'd"],
+    [4, "Midway"],
+    [4, "The Last Man"],
+    [5, "Search and Rescue"],
+    [5, "The Shrine"],
+    [5, "Vegas"],
+    [5, "Enemy at the Gate", "Finale"],
+]
+
+[[playlists]]
+key = "wraith"
+name = "The Wraith War"
+description = "Waking the Wraith and living with the consequences"
+episodes = [
+    [1, "Rising"],
+    [1, "The Defiant One"],
+    [1, "The Gift"],
+    [1, "The Siege (1)"],
+    [1, "The Siege (2)"],
+    [2, "The Siege (3)"],
+    [2, "The Lost Boys"],
+    [2, "The Hive"],
+    [2, "Allies"],
+    [3, "No Man's Land"],
+    [3, "Misbegotten"],
+    [3, "Common Ground"],
+    [4, "Spoils of War"],
+    [5, "The Queen"],
+    [5, "Enemy at the Gate"],
+]
+
+[[playlists]]
+key = "michael"
+name = "Michael"
+description = "The experiment that came back to haunt Atlantis"
+episodes = [
+    [2, "Michael", "Connor Trinneer"],
+    [2, "Allies"],
+    [3, "No Man's Land"],
+    [3, "Misbegotten"],
+    [3, "Vengeance"],
+    [4, "The Kindred (1)"],
+    [4, "The Kindred (2)"],
+    [5, "Search and Rescue"],
+    [5, "The Prodigal"],
+]
+
+[[playlists]]
+key = "asurans"
+name = "The Asurans"
+description = "The Pegasus galaxy's Replicators"
+episodes = [
+    [3, "Progeny"],
+    [3, "The Real World"],
+    [3, "The Return (1)"],
+    [3, "The Return (2)"],
+    [3, "First Strike"],
+    [4, "Adrift"],
+    [4, "Lifeline"],
+    [4, "This Mortal Coil"],
+    [4, "Be All My Sins Remember'd"],
+    [5, "Ghost in the Machine"],
+]
+
+[[playlists]]
+key = "genii"
+name = "The Genii"
+description = "Kolya and the not-so-simple farmers"
+episodes = [
+    [1, "Underground"],
+    [1, "The Storm"],
+    [1, "The Eye"],
+    [1, "The Brotherhood"],
+    [2, "Coup d'état"],
+    [3, "Common Ground"],
+    [3, "Irresponsible"],
+    [5, "Remnants"],
+]
+
+[[playlists]]
+key = "todd"
+name = "Todd the Wraith"
+description = "The enemy of my enemy"
+episodes = [
+    [3, "Common Ground", "First appearance"],
+    [4, "The Seer"],
+    [4, "Miller's Crossing"],
+    [4, "Be All My Sins Remember'd"],
+    [4, "Spoils of War"],
+    [5, "The Queen"],
+    [5, "Infection"],
+    [5, "Enemy at the Gate"],
+]
+
+[[playlists]]
+key = "mckay"
+name = "Rodney McKay"
+description = "The smartest man in two galaxies, by his own account"
+episodes = [
+    [2, "Duet"],
+    [2, "Trinity"],
+    [2, "Grace Under Pressure"],
+    [3, "McKay and Mrs. Miller"],
+    [3, "Tao of Rodney"],
+    [4, "Miller's Crossing"],
+    [4, "Quarantine"],
+    [4, "The Last Man"],
+    [5, "The Shrine"],
+    [5, "Brain Storm"],
+]
+
+[[playlists]]
+key = "crossovers"
+name = "SG-1 Crossovers"
+description = "Visitors from Stargate Command"
+episodes = [
+    [1, "Rising", "Jack O'Neill and Daniel Jackson"],
+    [3, "The Real World", "Jack O'Neill"],
+    [3, "The Return (1)", "Jack O'Neill"],
+    [3, "The Return (2)"],
+    [4, "Adrift", "Samantha Carter"],
+    [4, "Lifeline"],
+    [4, "Reunion", "Carter takes command"],
+    [4, "Midway", "Teal'c"],
+    [5, "First Contact", "Daniel Jackson"],
+    [5, "The Lost Tribe"],
+    [5, "Enemy at the Gate", "Samantha Carter"],
+]
+
+[[playlists]]
+key = "funny"
+name = "The Funny Ones"
+description = "The lighter side of the Pegasus galaxy"
+episodes = [
+    [2, "Duet"],
+    [3, "Irresistible"],
+    [3, "McKay and Mrs. Miller"],
+    [3, "Irresponsible"],
+    [3, "Tao of Rodney"],
+    [4, "Harmony"],
+    [5, "Brain Storm"],
+]
+
+[[playlists]]
+key = "guests"
+name = "Guest Stars"
+description = "Familiar faces in another galaxy"
+episodes = [
+    [1, "Rising", "Robert Patrick"],
+    [1, "Underground", "Colm Meaney"],
+    [1, "The Storm", "Robert Davi as Kolya"],
+    [2, "Instinct", "Jewel Staite, before she joined the cast"],
+    [2, "Michael", "Connor Trinneer"],
+    [3, "Irresistible", "Richard Kind"],
+    [3, "The Real World", "Alan Ruck"],
+    [4, "Reunion", "Mark Dacascos"],
+    [4, "Travelers", "Jill Wagner"],
+    [5, "Brain Storm", "Bill Nye, Neil deGrasse Tyson, Dave Foley"],
+]
