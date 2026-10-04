@@ -9,3 +9,6 @@ wheels/
 # Virtual environments
 .venv
 _to_delete/
+
+# JetBrains per-machine state
+.idea/workspace.xml
