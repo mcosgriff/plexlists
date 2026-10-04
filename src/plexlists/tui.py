@@ -280,6 +280,7 @@ class PlexlistsApp(App[None]):
         Binding("c", "check", "Check"),
         Binding("b", "build", "Build"),
         Binding("p", "poster", "Poster"),
+        Binding("v", "view_poster", "View poster"),
         Binding("o", "open_posters", "Posters folder"),
         Binding("e", "edit_show", "Edit show"),
         Binding("x", "remove", "Remove"),
@@ -897,6 +898,19 @@ class PlexlistsApp(App[None]):
         )
         self.call_from_thread(self.notify, f"Generated {len(keys)} poster(s).")
         self.call_from_thread(self.refresh_view)
+
+    def action_view_poster(self) -> None:
+        """Open the selected playlist's poster in the system image viewer."""
+        nav = self.current
+        if nav is None or nav.key is None:
+            self.notify("Select a playlist to view its poster.", severity="warning")
+            return
+        poster = find_image(config.posters_dir(nav.slug), nav.key)
+        if poster is None:
+            self.notify("No poster yet. Press p to generate one.", severity="warning")
+            return
+        typer.launch(str(poster))
+        self.notify(f"Opened {poster.name}")
 
     def action_open_posters(self) -> None:
         if self.current is None:

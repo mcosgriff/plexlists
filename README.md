@@ -55,6 +55,7 @@ each playlist's progress ("12/27"). This loads by itself once connected; without
 | `c` | Check: match episodes against your library without changing Plex |
 | `b` | Build: create or update playlists, and upload changed posters |
 | `p` | Generate title-card posters from Plex artwork (asks before replacing existing ones) |
+| `v` | View the selected playlist's poster in your image viewer |
 | `o` | Open the posters folder in Finder |
 | `e` | Edit the show file in `$EDITOR` (copies a built-in show to your folder first) |
 | `x` | Delete playlists from Plex (asks first) |

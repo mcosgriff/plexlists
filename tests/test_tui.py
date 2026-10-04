@@ -304,3 +304,17 @@ async def test_filter_narrows_the_tree_and_finds_episodes() -> None:
         assert box.has_class("hidden") and box.value == ""
         assert Nav("xfiles", "funny") in app.nodes
         assert app.current == Nav("tng", "binge")  # the selection survives
+
+
+async def test_view_poster_opens_the_image(monkeypatch, config_dir: Path) -> None:
+    opened: list[str] = []
+    monkeypatch.setattr(tui.typer, "launch", opened.append)
+    app = PlexlistsApp()
+    async with app.run_test(size=(160, 40)) as pilot:
+        await select(app, pilot, Nav("xfiles", "funny"))
+        await pilot.press("v")
+        assert opened == []  # nothing to open yet
+        await pilot.press("p")
+        await settle(app, pilot)
+        await pilot.press("v")
+        assert opened == [str(config_dir / "posters" / "xfiles" / "funny.jpg")]
