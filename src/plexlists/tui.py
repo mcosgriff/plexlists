@@ -38,7 +38,13 @@ from textual.widgets.option_list import Option
 from plexlists import auth, config
 from plexlists.models import BUILTIN_DIR, Show, discover
 from plexlists.report import entry_status, match_summary, result_lines
-from plexlists.service import ApplyResult, MatchResult, Session
+from plexlists.service import (
+    ApplyResult,
+    MatchResult,
+    PlaylistTimes,
+    Session,
+    cached_playlist_times,
+)
 from plexlists.sync import find_image
 
 
@@ -268,6 +274,8 @@ class PlexlistsApp(App[None]):
         self.session: Session | None = None
         self.results: dict[tuple[str, str], MatchResult] = {}
         self.actions: dict[tuple[str, str], str] = {}
+        # Plex playlist name -> times, as of the last time we asked. None = never asked.
+        self.times: dict[str, PlaylistTimes] | None = None
         self.nodes: dict[Nav, Any] = {}
         self.current: Nav | None = None
 
@@ -288,9 +296,38 @@ class PlexlistsApp(App[None]):
     def on_mount(self) -> None:
         if config.import_legacy_login():
             self.notify("Imported your login from xfiles.py.")
+        self.load_cached_times()
         self.load_shows()
         self.update_subtitle()
         self.query_one("#nav", Tree).focus()
+
+    def load_cached_times(self) -> None:
+        """What the server said last time, until we connect and ask again."""
+        server_id = config.load_config().get("server_id")
+        self.times = cached_playlist_times(server_id) if server_id else None
+
+    def set_times(self, times: dict[str, PlaylistTimes]) -> None:
+        self.times = times
+        self.refresh_view()
+
+    def created_cell(self, show: Show, key: str) -> Text:
+        t = (self.times or {}).get(show.plex_name(key))
+        if t is None or t.created is None:
+            return Text("—", style="dim")
+        return Text(f"{t.created:%Y-%m-%d}")
+
+    def times_summary(self, show: Show, key: str) -> str:
+        if self.times is None:
+            return ""
+        t = self.times.get(show.plex_name(key))
+        if t is None:
+            return " · not in Plex"
+        parts = [
+            f"{label} {when:%Y-%m-%d %H:%M}"
+            for label, when in (("created", t.created), ("updated", t.updated))
+            if when is not None
+        ]
+        return "".join(f" · {p}" for p in parts)
 
     def update_subtitle(self, connected: str | None = None) -> None:
         if connected:
@@ -371,7 +408,7 @@ class PlexlistsApp(App[None]):
         )
         table = self.query_one("#table", DataTable)
         table.clear(columns=True)
-        table.add_columns("Key", "Name in Plex", "Items", "Runtime", "Poster", "Plex")
+        table.add_columns("Key", "Name in Plex", "Items", "Runtime", "Poster", "Plex", "Created")
         folder = config.posters_dir(show.slug)
         for key, p in show.playlists.items():
             table.add_row(
@@ -381,6 +418,7 @@ class PlexlistsApp(App[None]):
                 hours(show.runtime(key)),
                 "✓" if find_image(folder, key) else Text("—", style="dim"),
                 Text.from_markup(self.plex_cell(show, key)),
+                self.created_cell(show, key),
                 key=key,
             )
 
@@ -399,8 +437,8 @@ class PlexlistsApp(App[None]):
         self.query_one("#summary", Static).update(
             f"[bold]{escape(show.plex_name(key))}[/bold]\n"
             f"{escape(p.description)}\n"
-            f"[dim]{len(p.episodes)} items · {hours(show.runtime(key))} · {poster_s} · "
-            f"Plex: [/dim]{self.plex_cell(show, key)}"
+            f"[dim]{len(p.episodes)} items · {hours(show.runtime(key))} · {poster_s}"
+            f"{self.times_summary(show, key)} · Plex: [/dim]{self.plex_cell(show, key)}"
         )
         table = self.query_one("#table", DataTable)
         table.clear(columns=True)
@@ -494,6 +532,7 @@ class PlexlistsApp(App[None]):
                 if build:
                     out = session.apply(show, result, existing=existing)
                 self.call_from_thread(self.store_result, show, result, out)
+            self.call_from_thread(self.set_times, session.playlist_times())
         except Exception as exc:
             self.call_from_thread(self.report_error, f"{type(exc).__name__}: {exc}")
             return
@@ -539,6 +578,7 @@ class PlexlistsApp(App[None]):
             targets = session.find_playlists(show, keys)
             for pl in targets:
                 pl.delete()
+            self.call_from_thread(self.set_times, session.playlist_times())
         except Exception as exc:
             self.call_from_thread(self.report_error, f"{type(exc).__name__}: {exc}")
             return
@@ -660,7 +700,9 @@ class PlexlistsApp(App[None]):
     def after_login(self, ok: bool | None) -> None:
         if ok:
             self.session = None
+            self.load_cached_times()
             self.update_subtitle()
+            self.refresh_view()
 
     @work(thread=True, exclusive=True, group="plex")
     def do_logout(self) -> None:

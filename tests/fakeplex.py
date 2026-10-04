@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Any
 
 from plexlists.titles import norm
@@ -29,6 +30,7 @@ class FakePlaylist:
         self.smart = False
         self.summary = ""
         self.entries: list[tuple[int, Item]] = []
+        self.addedAt = self.updatedAt = datetime(2026, 10, 3, 21, 14, 5)
         self.posters: list[str] = []
         self.arts: list[str] = []
         self.addItems(items)

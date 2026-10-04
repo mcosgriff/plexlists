@@ -18,8 +18,14 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58c68fc5-f407-48bb-9d62-5cd6b24ff055" name="Changes" comment="chore: add JetBrains IDE project files to .idea directory">
+    <list default="true" id="58c68fc5-f407-48bb-9d62-5cd6b24ff055" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/plexlists/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/plexlists/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/plexlists/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/plexlists/service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/plexlists/tui.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/plexlists/tui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/fakeplex.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fakeplex.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_tui.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_tui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,18 +39,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "mcosgriff"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;mcosgriff&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:mcosgriff/plexlists.git",
-    "accountId": "0ee7075b-2621-423c-8c33-94903116c7b3"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:mcosgriff/plexlists.git&quot;,
+    &quot;accountId&quot;: &quot;0ee7075b-2621-423c-8c33-94903116c7b3&quot;
   }
-}]]></component>
+}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -108,10 +114,10 @@
       <entry key="W1" value="43.99235929796328" />
     </decayedShown>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1,
-  "fromUser": false
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1,
+  &quot;fromUser&quot;: false
+}</component>
   <component name="ProjectId" id="3KD9CEHaEbPaHMUMZxk1tzNZBL6" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
@@ -119,28 +125,28 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/mcosgriff/Development/plexlists",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
-    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog",
-    "to.speed.mode.migration.done": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mcosgriff/Development/plexlists&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;python.packages.toolwindow.project.migrated.to.right.top.v2&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.CommitDialog&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -156,7 +162,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1791081141604</updated>
-      <workItem from="1791081142615" duration="2306000" />
+      <workItem from="1791081142615" duration="3059000" />
     </task>
     <task id="LOCAL-00001" summary="chore: add JetBrains IDE project files to .idea directory">
       <option name="closed" value="true" />
@@ -166,7 +172,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791081919407</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat(posters): enable art-based title card generation and custom uploads&#10;&#10;- Add support for generating title-card posters with artwork from Plex.&#10;- Allow importing custom images (file or URL) as posters or 16:9 background art.&#10;- Refactor poster rendering logic to integrate Plex artwork and fallback to plain gradients.&#10;- Update CLI and documentation to include new options, such as specifying `poster_from` in show files to select artwork.&#10;- Enhance tests to cover validation and new functionality.">
+      <option name="closed" value="true" />
+      <created>1791083774095</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1791083774095</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -186,6 +200,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="chore: add JetBrains IDE project files to .idea directory" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: add JetBrains IDE project files to .idea directory" />
+    <MESSAGE value="feat(posters): enable art-based title card generation and custom uploads&#10;&#10;- Add support for generating title-card posters with artwork from Plex.&#10;- Allow importing custom images (file or URL) as posters or 16:9 background art.&#10;- Refactor poster rendering logic to integrate Plex artwork and fallback to plain gradients.&#10;- Update CLI and documentation to include new options, such as specifying `poster_from` in show files to select artwork.&#10;- Enhance tests to cover validation and new functionality." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(posters): enable art-based title card generation and custom uploads&#10;&#10;- Add support for generating title-card posters with artwork from Plex.&#10;- Allow importing custom images (file or URL) as posters or 16:9 background art.&#10;- Refactor poster rendering logic to integrate Plex artwork and fallback to plain gradients.&#10;- Update CLI and documentation to include new options, such as specifying `poster_from` in show files to select artwork.&#10;- Enhance tests to cover validation and new functionality." />
   </component>
 </project>

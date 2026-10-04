@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import contextlib
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -69,6 +70,34 @@ class ApplyResult:
     artwork: list[str] = field(default_factory=list)
     artwork_error: str | None = None
     skipped: str | None = None  # why nothing was done, if so
+
+
+@dataclass(frozen=True)
+class PlaylistTimes:
+    """When Plex says a playlist was created and last changed (server-local time)."""
+
+    created: datetime | None
+    updated: datetime | None
+
+
+def _stamp(value: Any) -> datetime | None:
+    if isinstance(value, datetime):
+        return value.replace(microsecond=0)
+    with contextlib.suppress(TypeError, ValueError):
+        return datetime.fromisoformat(value)
+    return None
+
+
+def cached_playlist_times(server_id: str) -> dict[str, PlaylistTimes] | None:
+    """Playlist times as of the last connection to this server, or None if never seen."""
+    saved = config.read_json(config.playlists_state_file()).get(server_id)
+    if not isinstance(saved, dict):
+        return None
+    return {
+        name: PlaylistTimes(_stamp(t.get("created")), _stamp(t.get("updated")))
+        for name, t in saved.items()
+        if isinstance(t, dict)
+    }
 
 
 class ShowNotFoundError(LookupError):
@@ -154,6 +183,26 @@ class Session:
         for pl in self.plex.playlists(playlistType="video"):
             found.setdefault(pl.title, pl)
         return found
+
+    def playlist_times(self) -> dict[str, PlaylistTimes]:
+        """Created/updated times of every video playlist, by name, straight from Plex.
+
+        Plex is the record of these; they're also saved per server so the TUI can
+        show them before it connects.
+        """
+        times = {
+            name: PlaylistTimes(
+                _stamp(getattr(pl, "addedAt", None)), _stamp(getattr(pl, "updatedAt", None))
+            )
+            for name, pl in self.existing_playlists().items()
+        }
+        state = config.read_json(config.playlists_state_file())
+        state[str(self.plex.machineIdentifier)] = {
+            name: {k: v.isoformat() if v else None for k, v in vars(t).items()}
+            for name, t in times.items()
+        }
+        config.write_json(config.playlists_state_file(), state)
+        return times
 
     def apply(
         self,

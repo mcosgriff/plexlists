@@ -4,7 +4,7 @@ import pytest
 from textual.coordinate import Coordinate
 from textual.widgets import DataTable, Static, Tree
 
-from plexlists import tui
+from plexlists import config, tui
 from plexlists.tui import ConfirmScreen, Nav, PlexlistsApp
 from tests.fakeplex import FakeServer
 
@@ -168,3 +168,28 @@ async def test_account_screen_opens() -> None:
         await pilot.press("escape")
         await pilot.pause()
         assert app.screen is app.screen_stack[0]
+
+
+async def test_created_time_comes_from_plex_and_is_remembered(server, config_dir: Path) -> None:
+    config.save_config({"server_id": server.machineIdentifier})
+    app = PlexlistsApp()
+    async with app.run_test(size=(160, 40)) as pilot:
+        await select(app, pilot, Nav("tng"))
+        assert app.times is None  # never asked this server
+        assert cell(app, 1, 6) == "—"
+        await select(app, pilot, Nav("tng", "borg"))
+        await pilot.press("b")
+        await settle(app, pilot)
+        summary = str(app.query_one("#summary", Static).render())
+        assert "created 2026-10-03 21:14" in summary
+        await select(app, pilot, Nav("tng", "q"))
+        assert "not in Plex" in str(app.query_one("#summary", Static).render())
+        await select(app, pilot, Nav("tng"))
+        assert cell(app, 1, 6) == "2026-10-03"
+
+    again = PlexlistsApp()  # a new run shows the saved times before connecting
+    async with again.run_test(size=(160, 40)) as pilot:
+        await select(again, pilot, Nav("tng"))
+        assert again.session is None
+        assert cell(again, 1, 6) == "2026-10-03"
+        assert cell(again, 0, 6) == "—"

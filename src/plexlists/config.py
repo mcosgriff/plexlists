@@ -2,6 +2,7 @@
 
     <config dir>/config.json     device ID, chosen server, username (not secret)
     <config dir>/artwork.json    hashes of uploaded posters (not secret)
+    <config dir>/playlists.json  when each playlist was created in Plex, per server (a cache)
     <config dir>/secrets.json    device key + token, ONLY with `login --store file`
     <config dir>/shows/*.toml    your own show definitions
     <config dir>/posters/<show>/ poster and background images
@@ -50,6 +51,10 @@ def secrets_file() -> Path:
 
 def artwork_state_file() -> Path:
     return app_dir() / "artwork.json"
+
+
+def playlists_state_file() -> Path:
+    return app_dir() / "playlists.json"
 
 
 def user_shows_dir() -> Path:
