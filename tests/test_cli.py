@@ -248,3 +248,23 @@ def test_build_all_exits_nonzero_on_errors(monkeypatch, plex) -> None:
     result = runner.invoke(cli.make_app(), ["build-all", "--no-artwork"], env={"COLUMNS": "300"})
     assert result.exit_code == 1
     assert "server went away" in result.output and "had errors" in result.output
+
+
+def test_list_and_show_with_plex_details(plex) -> None:
+    for e in plex.show.eps:
+        if e.title == "Q Who":
+            e.seasonNumber, e.index, e.duration, e.isPlayed = 2, 16, 45 * 60 * 1000, True
+    assert "Created" not in invoke("tng", "list")  # offline by default
+    invoke("tng", "build", "borg", "--no-artwork")
+
+    out = invoke("tng", "list", "--plex")
+    borg = next(line for line in out.splitlines() if "TNG: The Borg" in line)
+    assert "all matched" in borg and "2026-10-03" in borg and "1/8" in borg
+    data = next(line for line in out.splitlines() if "TNG: Data" in line)
+    assert "2026-10-03" not in data  # not built, so no created date
+
+    out = invoke("tng", "show", "borg", "--plex")
+    q_who = next(line for line in out.splitlines() if "Q Who" in line)
+    assert "S2E16" in q_who and "45m" in q_who and "✓" in q_who
+    assert "▶ next" in next(line for line in out.splitlines() if "Both Worlds (1)" in line)
+    assert "all matched · 1/8 watched" in out

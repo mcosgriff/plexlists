@@ -19,7 +19,14 @@ from rich.table import Table
 
 from plexlists import __version__, auth, config
 from plexlists.models import Show, discover
-from plexlists.report import result_lines
+from plexlists.report import (
+    entry_details,
+    entry_status,
+    match_summary,
+    next_unwatched,
+    result_lines,
+    watched_progress,
+)
 from plexlists.service import ApplyResult, MatchResult, Session, ShowNotFoundError
 from plexlists.sync import find_image
 
@@ -105,6 +112,14 @@ CollectionOpt = Annotated[
         "user of the server sees a collection; films from a movie library are left out.",
     ),
 ]
+PlexOpt = Annotated[
+    bool,
+    typer.Option(
+        "--plex",
+        "-p",
+        help="Connect to Plex and add what it knows: matches, dates and watched status.",
+    ),
+]
 UsersOpt = Annotated[
     list[str] | None,
     typer.Option(
@@ -166,32 +181,75 @@ def make_show_app(show: Show) -> typer.Typer:
         ),
     ]
 
+    ShowTitleOpt = Annotated[  # noqa: N806  (type alias)
+        str,
+        typer.Option(
+            envvar=title_env(show),
+            help="The show's title as it appears in your Plex TV library.",
+            rich_help_panel="Plex connection",
+        ),
+    ]
+
+    def plex_session(url: str | None, token: str | None, show_title: str) -> Session:
+        """A session that has found this show, or exit with a readable error."""
+        with console.status("Connecting to Plex..."):
+            session = Session(connect_plex(url, token))
+            try:
+                session.library(show, show_title)
+            except ShowNotFoundError as exc:
+                raise fail(
+                    f"{escape(str(exc))} Pass --show-title or set {title_env(show)} "
+                    "to the title Plex shows."
+                ) from None
+        return session
+
     @app.command("list")
-    def list_cmd() -> None:
+    def list_cmd(
+        plex: PlexOpt = False,
+        show_title: ShowTitleOpt = show.title,
+        url: UrlOpt = None,
+        token: TokenOpt = None,
+    ) -> None:
         """
         Show this show's playlists.
 
         Each playlist's key (what you pass to the other commands), its name in
         Plex, item count, approximate runtime, whether a poster image exists, and
-        a short description. Doesn't need a Plex connection.
+        a short description. Doesn't need a Plex connection, unless you pass
+        --plex: that adds how each playlist matches your library, when it was
+        created in Plex and how much of it you've watched.
         """
         folder = config.posters_dir(show.slug)
+        session = plex_session(url, token, show_title) if plex else None
+        times = session.playlist_times() if session else {}
         t = Table(title=f"{escape(show.label)} playlists")
         t.add_column("Key", style="bold cyan")
         t.add_column("Name in Plex")
         t.add_column("Items", justify="right")
         t.add_column("Runtime", justify="right")
         t.add_column("Poster", justify="center")
+        if session:
+            t.add_column("Matches")
+            t.add_column("Created")
+            t.add_column("Watched", justify="right")
         t.add_column("About", style="dim")
         for k, p in show.playlists.items():
-            t.add_row(
+            row = [
                 k,
                 escape(show.plex_name(k)),
                 str(len(p.episodes)),
                 hours(show.runtime(k)),
                 "✓" if find_image(folder, k) else "[dim]—[/dim]",
-                escape(p.description),
-            )
+            ]
+            if session:
+                result = session.match(show, k, show_title)
+                made = times.get(show.plex_name(k))
+                row += [
+                    match_summary(result),
+                    f"{made.created:%Y-%m-%d}" if made and made.created else "[dim]—[/dim]",
+                    "{}/{}".format(*watched_progress(result)),
+                ]
+            t.add_row(*row, escape(p.description))
         console.print(t)
 
     @app.command("show")
@@ -204,14 +262,21 @@ def make_show_app(show: Show) -> typer.Typer:
                 show_default=False,
             ),
         ],
+        plex: PlexOpt = False,
+        show_title: ShowTitleOpt = show.title,
+        url: UrlOpt = None,
+        token: TokenOpt = None,
     ) -> None:
         """
         List the episodes in a playlist, in viewing order with notes.
 
-        Doesn't need a Plex connection.
+        Doesn't need a Plex connection, unless you pass --plex: that adds each
+        entry's match in your library, its episode number, air date, length and
+        whether you've watched it, and marks the next one to watch.
         """
         k = resolve([key], False)[0]
         p = show.playlists[k]
+        result = plex_session(url, token, show_title).match(show, k, show_title) if plex else None
         t = Table(
             title=f"{escape(show.plex_name(k))} — {len(p.episodes)} items, {hours(show.runtime(k))}"
         )
@@ -219,11 +284,29 @@ def make_show_app(show: Show) -> typer.Typer:
         t.add_column("S", justify="right")
         t.add_column("Title", style="bold")
         t.add_column("Note", style="dim")
+        if result:
+            for name in ("In Plex", "Episode", "Aired", "Length", "Watched"):
+                t.add_column(name)
+        up_next = next_unwatched(result) if result else None
         for i, e in enumerate(p.episodes, 1):
-            t.add_row(
-                str(i), "film" if e.film else str(e.season), escape(show.display(e)), escape(e.note)
-            )
+            row = [
+                str(i),
+                "film" if e.film else str(e.season),
+                escape(show.display(e)),
+                escape(e.note),
+            ]
+            if result:
+                entry = result.entries[i - 1]
+                d = entry_details(entry)
+                info = [d.episode, d.aired, d.length, d.watched] if d else [""] * 4
+                if i - 1 == up_next:
+                    info[3] = "[bold]▶ next[/bold]"
+                row += [entry_status(show, entry), *(v or "[dim]—[/dim]" for v in info)]
+            t.add_row(*row)
         console.print(t)
+        if result:
+            watched, total = watched_progress(result)
+            console.print(f"{match_summary(result)} · {watched}/{total} watched")
 
     @app.command()
     def build(

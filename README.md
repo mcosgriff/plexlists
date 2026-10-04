@@ -73,6 +73,8 @@ plexlists login                       # once: approve this device on plex.tv
 plexlists shows                       # available shows
 plexlists tng list                    # playlists for a show
 plexlists tng show borg               # episodes in a playlist
+plexlists tng show borg --plex        # …with episode numbers, air dates, watched
+plexlists tng list --plex             # …with matches, created dates, progress
 plexlists tng build --all --dry-run   # check matches and what would change
 plexlists tng posters --all           # optional: generate title-card posters
 plexlists tng poster borg ~/borg.png  # or use your own image (file or URL)
