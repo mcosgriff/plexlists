@@ -296,6 +296,7 @@ class PlexlistsApp(App[None]):
         self.times: dict[str, PlaylistTimes] | None = None
         # Shows whose episode details we stop loading unasked ("*" = can't connect at all).
         self.no_auto: set[str] = set()
+        self.absent: set[str] = set()  # shows the connected server doesn't have
         self.connect_lock = threading.Lock()
         self.nodes: dict[Nav, Any] = {}
         self.current: Nav | None = None
@@ -340,9 +341,7 @@ class PlexlistsApp(App[None]):
                 results = [session.match(show, key) for key in show.playlists]
             except ShowNotFoundError:
                 self.no_auto.add(show.slug)
-                self.call_from_thread(
-                    self.log_line, f"[dim]{escape(show.title)} isn't in your Plex library.[/dim]"
-                )
+                self.call_from_thread(self.mark_absent, show)
                 continue
             except Exception as exc:
                 self.no_auto.add(show.slug)
@@ -353,6 +352,22 @@ class PlexlistsApp(App[None]):
                 )
                 continue
             self.call_from_thread(self.store_scan, show, results)
+
+    def mark_absent(self, show: Show) -> None:
+        """The server doesn't have this show: dim it in the tree."""
+        self.absent.add(show.slug)
+        self.log_line(f"[dim]{escape(show.title)} isn't in your Plex library.[/dim]")
+        node = self.nodes.get(Nav(show.slug))
+        if node is not None:
+            node.set_label(self.show_label(show))
+        self.refresh_labels(show.slug)
+        if self.current and self.current.slug == show.slug:
+            self.refresh_view()
+
+    def show_label(self, show: Show) -> Text:
+        if show.slug in self.absent:
+            return Text(f"{show.label}  (not in Plex)", style="dim")
+        return Text(show.label, style="bold")
 
     def store_scan(self, show: Show, results: list[MatchResult]) -> None:
         """Results of the background check for one show. Anything checked meanwhile wins."""
@@ -420,7 +435,7 @@ class PlexlistsApp(App[None]):
         tree.clear()
         self.nodes = {}
         for slug, show in self.shows.items():
-            node = tree.root.add(Text(show.label, style="bold"), data=Nav(slug), expand=True)
+            node = tree.root.add(self.show_label(show), data=Nav(slug), expand=True)
             self.nodes[Nav(slug)] = node
             for key in show.playlists:
                 leaf = node.add_leaf(self.playlist_label(show, key), data=Nav(slug, key))
@@ -433,7 +448,7 @@ class PlexlistsApp(App[None]):
             self.show_nav(target.data)
 
     def playlist_label(self, show: Show, key: str) -> Text:
-        label = Text(show.playlists[key].name)
+        label = Text(show.playlists[key].name, style="dim" if show.slug in self.absent else "")
         result = self.results.get((show.slug, key))
         if result is not None:
             label.append(
@@ -478,9 +493,10 @@ class PlexlistsApp(App[None]):
 
     def render_show(self, show: Show) -> None:
         src = "built-in" if show.source and BUILTIN_DIR in show.source.parents else str(show.source)
+        absent = "  [yellow]not in your Plex library[/yellow]" if show.slug in self.absent else ""
         self.query_one("#summary", Static).update(
             f"[bold]{escape(show.title)}[/bold]  [dim]{len(show.playlists)} playlists · "
-            f"{escape(src)}[/dim]\n"
+            f"{escape(src)}[/dim]{absent}\n"
             "[dim]c check all · b build all · p posters for all · enter opens a playlist[/dim]"
         )
         table = self.query_one("#table", DataTable)
@@ -828,6 +844,7 @@ class PlexlistsApp(App[None]):
         self.results.clear()
         self.actions.clear()
         self.no_auto.clear()
+        self.absent.clear()
         if self.session is not None:
             self.session.forget()
         self.load_shows()
@@ -851,9 +868,10 @@ class PlexlistsApp(App[None]):
         if ok:
             self.session = None
             self.no_auto.clear()
+            self.absent.clear()
             self.load_cached_times()
             self.update_subtitle()
-            self.refresh_view()
+            self.load_shows()  # redraws the tree without the old server's marks
             self.connect_in_background()
 
     @work(thread=True, exclusive=True, group="plex")

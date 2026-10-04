@@ -248,6 +248,10 @@ async def test_connects_on_startup_when_logged_in(server, shows) -> None:
         assert "✓" in app.nodes[Nav("tng", "holodeck")].label.plain
         assert "all matched" in cell(app, 0, 5)
         assert "xfiles" in app.no_auto  # not on this server: skipped quietly
+        assert app.nodes[Nav("xfiles")].label.plain == "The X-Files  (not in Plex)"
+        assert app.nodes[Nav("tng")].label.plain == "Star Trek: TNG"
+        await select(app, pilot, Nav("xfiles"))
+        assert "not in your Plex library" in str(app.query_one("#summary", Static).render())
         assert not [k for k in app.results if k[0] == "xfiles"]
 
 
