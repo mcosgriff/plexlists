@@ -34,6 +34,9 @@ plexlists
 Shows and playlists are listed on the left. Select a show to act on all of its
 playlists, or select a single playlist.
 
+The header shows the connection to Plex: 🟢 connected, ⚪ not connected yet (or
+not logged in), 🔴 the last attempt failed.
+
 Each playlist shows when it was created and last updated in Plex. Plex keeps
 those times itself, per server; plexlists reads them whenever it connects and
 remembers the last answer, so they're shown as soon as the app opens.

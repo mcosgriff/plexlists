@@ -334,17 +334,20 @@ class PlexlistsApp(App[None]):
         ]
         return "".join(f" · {p}" for p in parts)
 
-    def update_subtitle(self, connected: str | None = None) -> None:
+    def update_subtitle(self, connected: str | None = None, failed: bool = False) -> None:
+        """Header status: 🟢 connected, 🔴 couldn't connect, ⚪ not connected yet."""
         if connected:
-            self.sub_title = f"connected to {connected}"
+            self.sub_title = f"🟢 connected to {connected}"
             return
+        icon, state = ("🔴", "can't connect") if failed else ("⚪", "not connected")
         cfg = config.load_config()
         if cfg.get("client_id"):
-            self.sub_title = f"{cfg.get('username', '?')} @ {cfg.get('server_name', '?')}"
+            who = f"{cfg.get('username', '?')} @ {cfg.get('server_name', '?')}"
+            self.sub_title = f"{icon} {state} · {who}"
         elif os.environ.get("PLEX_TOKEN"):
-            self.sub_title = "using PLEX_TOKEN"
+            self.sub_title = f"{icon} {state} · using PLEX_TOKEN"
         else:
-            self.sub_title = "not logged in — press a"
+            self.sub_title = "⚪ not logged in — press a"
 
     def load_shows(self) -> None:
         self.shows, errors = discover(config.user_shows_dir())
@@ -532,14 +535,20 @@ class PlexlistsApp(App[None]):
             self.session = connect_session()
         except auth.AuthError as exc:
             self.call_from_thread(self.report_error, str(exc), "Can't connect")
+            self.call_from_thread(self.update_subtitle, None, True)
             return None
         except Exception as exc:
             self.call_from_thread(
                 self.report_error, f"{type(exc).__name__}: {exc}", "Can't connect"
             )
+            self.call_from_thread(self.update_subtitle, None, True)
             return None
-        self.call_from_thread(self.update_subtitle, self.session.server_name)
+        self.call_from_thread(self.connected, self.session.server_name)
         return self.session
+
+    def connected(self, server_name: str) -> None:
+        self.update_subtitle(server_name)
+        self.log_line(f"Connected to {escape(server_name)}.")
 
     def report_error(self, message: str, title: str = "Error") -> None:
         self.log_line(f"[red]{escape(message)}[/red]")
@@ -684,7 +693,7 @@ class PlexlistsApp(App[None]):
         try:  # artwork from Plex is a bonus: without a connection, write plain cards
             if session is None:
                 session = self.session = connect_session()
-                self.call_from_thread(self.update_subtitle, session.server_name)
+                self.call_from_thread(self.connected, session.server_name)
             session.library(show)
         except Exception:
             session = None

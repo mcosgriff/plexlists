@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 from textual.coordinate import Coordinate
-from textual.widgets import DataTable, Static, Tree
+from textual.widgets import DataTable, RichLog, Static, Tree
 
 from plexlists import config, tui
 from plexlists.tui import ConfirmScreen, Nav, PlexlistsApp
@@ -41,7 +41,7 @@ async def test_starts_with_shows_and_playlists() -> None:
         table = app.query_one("#table", DataTable)
         assert table.row_count == 8
         assert cell(app, 7, 2) == "Star Trek: First Contact"
-        assert "not logged in" in app.sub_title
+        assert "⚪ not logged in" in app.sub_title
 
 
 async def test_show_view_lists_playlists_and_enter_opens_one() -> None:
@@ -65,7 +65,9 @@ async def test_check_marks_episodes(server) -> None:
         assert cell(app, 1, 4) == "✓"  # Hide and Q
         assert "all matched" in str(app.query_one("#summary", Static).render())
         assert server.pls == []  # checking never changes Plex
-        assert "connected to TestServer" in app.sub_title
+        assert "🟢 connected to TestServer" in app.sub_title
+        log = "\n".join(line.text for line in app.query_one("#log", RichLog).lines)
+        assert log.index("Connecting to Plex") < log.index("Connected to TestServer.")
 
 
 async def test_build_whole_show_then_rebuild(server, shows) -> None:
@@ -143,6 +145,7 @@ async def test_connection_error_is_reported(monkeypatch) -> None:
         await settle(app, pilot)
         assert app.session is None
         assert ("tng", "borg") not in app.results
+        assert app.sub_title.startswith("⚪")  # no saved login: nothing to be red about
 
 
 async def test_reload_picks_up_new_user_show(config_dir: Path) -> None:
