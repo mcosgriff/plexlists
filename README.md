@@ -59,6 +59,7 @@ each playlist's progress ("12/27"). This loads by itself once connected; without
 | `e` | Edit the show file in `$EDITOR` (copies a built-in show to your folder first) |
 | `x` | Delete playlists from Plex (asks first) |
 | `r` | Reload show files and re-read your Plex library |
+| `/` | Filter the list by show, playlist or episode title (`esc` clears it) |
 | `a` | Account: log in or out |
 | `g` | Hide or show the log |
 | `q` | Quit |

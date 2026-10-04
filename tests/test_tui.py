@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 from textual.coordinate import Coordinate
-from textual.widgets import DataTable, RichLog, Static, Tree
+from textual.widgets import DataTable, Input, RichLog, Static, Tree
 
 from plexlists import config, tui
 from plexlists.tui import ConfirmScreen, Nav, PlexlistsApp
@@ -279,3 +279,28 @@ async def test_header_shows_background_check_progress(server) -> None:
         assert app.sub_title == "🟢 connected to TestServer · checking shows 3/7…"
         app.set_scan(None)
         assert app.sub_title == "🟢 connected to TestServer"
+
+
+async def test_filter_narrows_the_tree_and_finds_episodes() -> None:
+    app = PlexlistsApp()
+    async with app.run_test(size=(160, 40)) as pilot:
+        box = app.query_one("#filter", Input)
+        assert box.has_class("hidden")
+        await pilot.press("slash", *"borg")
+        await pilot.pause()
+        assert box.value == "borg"  # typed letters go to the box, not to the key bindings
+        assert Nav("tng", "borg") in app.nodes  # by playlist name
+        assert Nav("tng", "binge") in app.nodes  # by episode title: I, Borg
+        assert Nav("tng", "holodeck") not in app.nodes
+        assert Nav("xfiles") not in app.nodes
+
+        await pilot.press("enter")
+        await select(app, pilot, Nav("tng", "binge"))
+        table = app.query_one("#table", DataTable)
+        assert cell(app, table.cursor_row, 2) == "I, Borg"  # jumps to the episode
+
+        await pilot.press("slash", "escape")
+        await pilot.pause()
+        assert box.has_class("hidden") and box.value == ""
+        assert Nav("xfiles", "funny") in app.nodes
+        assert app.current == Nav("tng", "binge")  # the selection survives

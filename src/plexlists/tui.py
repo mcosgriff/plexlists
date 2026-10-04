@@ -27,6 +27,7 @@ from textual.widgets import (
     DataTable,
     Footer,
     Header,
+    Input,
     Label,
     LoadingIndicator,
     OptionList,
@@ -252,7 +253,9 @@ class AccountScreen(ModalScreen[str]):
 class PlexlistsApp(App[None]):
     TITLE = "plexlists"
     CSS = """
-    #nav { width: 42; border-right: solid $panel; padding-right: 1; }
+    #side { width: 42; border-right: solid $panel; padding-right: 1; }
+    #nav { height: 1fr; }
+    #filter.hidden { display: none; }
     #main { width: 1fr; }
     #summary { height: auto; padding: 0 1 1 1; }
     #table { height: 1fr; }
@@ -282,6 +285,8 @@ class PlexlistsApp(App[None]):
         Binding("x", "remove", "Remove"),
         Binding("r", "reload", "Reload"),
         Binding("a", "account", "Account"),
+        Binding("slash", "filter", "Filter", key_display="/"),
+        Binding("escape", "clear_filter", "Clear filter", show=False),
         Binding("g", "toggle_log", "Log"),
         Binding("q", "quit", "Quit"),
     ]
@@ -298,6 +303,10 @@ class PlexlistsApp(App[None]):
         self.no_auto: set[str] = set()
         self.absent: set[str] = set()  # shows the connected server doesn't have
         self.scan: tuple[int, int] | None = None  # background check progress
+        self.filter_text = ""  # lowercase; narrows the tree to matching playlists
+        # After a rebuild, until the cursor is back: the tree's first node, whose
+        # automatic highlight must not change the view.
+        self.restoring: Nav | None = None
         self.connect_lock = threading.Lock()
         self.nodes: dict[Nav, Any] = {}
         self.current: Nav | None = None
@@ -307,9 +316,13 @@ class PlexlistsApp(App[None]):
     def compose(self) -> ComposeResult:
         yield Header()
         with Horizontal():
-            tree: Tree[Nav] = Tree("Shows", id="nav")
-            tree.show_root = False
-            yield tree
+            with Vertical(id="side"):
+                yield Input(
+                    placeholder="Filter playlists and episodes", id="filter", classes="hidden"
+                )
+                tree: Tree[Nav] = Tree("Shows", id="nav")
+                tree.show_root = False
+                yield tree
             with Vertical(id="main"):
                 yield Static(id="summary")
                 yield DataTable(id="table", cursor_type="row", zebra_stripes=True)
@@ -440,22 +453,79 @@ class PlexlistsApp(App[None]):
         for e in errors:
             self.log_line(f"[yellow]Skipping show file: {escape(e)}[/yellow]")
             self.notify(e, title="Show file error", severity="warning", timeout=8)
+        self.build_tree()
+
+    def matching_episode(self, show: Show, key: str) -> int | None:
+        """Index of the first episode in a playlist whose title contains the filter text."""
+        if not self.filter_text:
+            return None
+        titles = (show.display(e).lower() for e in show.playlists[key].episodes)
+        return next((n for n, t in enumerate(titles) if self.filter_text in t), None)
+
+    def visible_playlists(self, show: Show) -> list[str]:
+        """The show's playlists that pass the filter: by show, playlist or episode name."""
+        text = self.filter_text
+        if not text or text in show.label.lower() or text in show.title.lower():
+            return list(show.playlists)
+        return [
+            key
+            for key, p in show.playlists.items()
+            if text in key or text in p.name.lower() or self.matching_episode(show, key) is not None
+        ]
+
+    def build_tree(self) -> None:
         tree = self.query_one("#nav", Tree)
         previous = self.current
         tree.clear()
         self.nodes = {}
         for slug, show in self.shows.items():
+            keys = self.visible_playlists(show)
+            if not keys:
+                continue
             node = tree.root.add(self.show_label(show), data=Nav(slug), expand=True)
             self.nodes[Nav(slug)] = node
-            for key in show.playlists:
+            for key in keys:
                 leaf = node.add_leaf(self.playlist_label(show, key), data=Nav(slug, key))
                 self.nodes[Nav(slug, key)] = leaf
         target = self.nodes.get(previous) if previous else None
         if target is None and self.nodes:
             target = next(iter(self.nodes.values()))
         if target is not None:
-            tree.move_cursor(target)
+            # The new nodes have no lines until the tree redraws, so the cursor can only
+            # be put back afterwards. Until then, ignore the highlight of the first node.
+            self.restoring = next(iter(self.nodes))
             self.show_nav(target.data)
+            self.call_after_refresh(self.restore_cursor, target.data)
+
+    def restore_cursor(self, nav: Nav) -> None:
+        first, self.restoring = self.restoring, None
+        tree = self.query_one("#nav", Tree)
+        node = self.nodes.get(nav)  # None if the tree was rebuilt again meanwhile
+        moved = tree.cursor_node is not None and tree.cursor_node.data != first
+        if node is not None and not moved:  # don't undo a move made in the meantime
+            tree.move_cursor(node)
+
+    def action_filter(self) -> None:
+        box = self.query_one("#filter", Input)
+        box.remove_class("hidden")
+        box.focus()
+
+    def action_clear_filter(self) -> None:
+        box = self.query_one("#filter", Input)
+        if box.has_class("hidden"):
+            return
+        box.value = ""
+        box.add_class("hidden")
+        self.query_one("#nav", Tree).focus()
+
+    @on(Input.Changed, "#filter")
+    def filter_changed(self, event: Input.Changed) -> None:
+        self.filter_text = event.value.strip().lower()
+        self.build_tree()
+
+    @on(Input.Submitted, "#filter")
+    def filter_submitted(self) -> None:
+        self.query_one("#nav", Tree).focus()
 
     def playlist_label(self, show: Show, key: str) -> Text:
         label = Text(show.playlists[key].name, style="dim" if show.slug in self.absent else "")
@@ -488,7 +558,11 @@ class PlexlistsApp(App[None]):
 
     @on(Tree.NodeHighlighted, "#nav")
     def nav_highlighted(self, event: Tree.NodeHighlighted[Nav]) -> None:
-        if event.node.data is not None:
+        # Rebuilding the tree queues a highlight for its first node; only the node the
+        # cursor ends up on counts.
+        if self.restoring is not None and event.node.data == self.restoring:
+            return
+        if event.node.data is not None and event.node is event.control.cursor_node:
             self.show_nav(event.node.data)
 
     def show_nav(self, nav: Nav | None) -> None:
@@ -571,6 +645,8 @@ class PlexlistsApp(App[None]):
                 *(v or blank for v in info),
             )
         self.show_detail(0)
+        if (found := self.matching_episode(show, key)) is not None:
+            table.move_cursor(row=found)  # the episode the filter was looking for
         if result is None and self.can_auto_load(show):
             self.load_details(show, key)
 
