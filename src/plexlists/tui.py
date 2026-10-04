@@ -287,6 +287,7 @@ class PlexlistsApp(App[None]):
         Binding("r", "reload", "Reload"),
         Binding("a", "account", "Account"),
         Binding("slash", "filter", "Filter", key_display="/"),
+        Binding("z", "toggle_fold", "Collapse/expand all"),
         Binding("escape", "clear_filter", "Clear filter", show=False),
         Binding("g", "toggle_log", "Log"),
         Binding("q", "quit", "Quit"),
@@ -477,13 +478,19 @@ class PlexlistsApp(App[None]):
     def build_tree(self) -> None:
         tree = self.query_one("#nav", Tree)
         previous = self.current
+        # Shows start collapsed. A rebuild keeps the ones that were open, plus the one
+        # holding the selected playlist; a filter opens everything it matched.
+        opened = {n.data.slug for n in tree.root.children if n.data and n.is_expanded}
+        if previous and previous.key:
+            opened.add(previous.slug)
         tree.clear()
         self.nodes = {}
         for slug, show in self.shows.items():
             keys = self.visible_playlists(show)
             if not keys:
                 continue
-            node = tree.root.add(self.show_label(show), data=Nav(slug), expand=True)
+            expand = bool(self.filter_text) or slug in opened
+            node = tree.root.add(self.show_label(show), data=Nav(slug), expand=expand)
             self.nodes[Nav(slug)] = node
             for key in keys:
                 leaf = node.add_leaf(self.playlist_label(show, key), data=Nav(slug, key))
@@ -505,6 +512,24 @@ class PlexlistsApp(App[None]):
         moved = tree.cursor_node is not None and tree.cursor_node.data != first
         if node is not None and not moved:  # don't undo a move made in the meantime
             tree.move_cursor(node)
+
+    def action_toggle_fold(self) -> None:
+        """Collapse every show in the tree, or expand them all if they're already collapsed."""
+        tree = self.query_one("#nav", Tree)
+        shows = list(tree.root.children)
+        if any(node.is_expanded for node in shows):
+            # A playlist's row is about to disappear: move to its show first.
+            if (
+                self.current
+                and self.current.key
+                and (node := self.nodes.get(Nav(self.current.slug)))
+            ):
+                tree.move_cursor(node)
+            for node in shows:
+                node.collapse()
+        else:
+            for node in shows:
+                node.expand()
 
     def action_filter(self) -> None:
         box = self.query_one("#filter", Input)
@@ -690,8 +715,10 @@ class PlexlistsApp(App[None]):
         if self.current and self.current.key is None and event.row_key.value:
             node = self.nodes.get(Nav(self.current.slug, str(event.row_key.value)))
             if node is not None:
-                self.query_one("#nav", Tree).move_cursor(node)
+                if node.parent is not None:
+                    node.parent.expand()  # its row only exists once the show is open
                 self.show_nav(node.data)
+                self.call_after_refresh(self.query_one("#nav", Tree).move_cursor, node)
 
     def log_line(self, markup: str) -> None:
         self.query_one("#log", RichLog).write(markup)

@@ -18,7 +18,11 @@ def server(monkeypatch: pytest.MonkeyPatch, make_server, shows) -> FakeServer:
 
 
 async def select(app: PlexlistsApp, pilot, nav: Nav) -> None:
-    app.query_one("#nav", Tree).move_cursor(app.nodes[nav])
+    node = app.nodes[nav]
+    if node.parent is not None and not node.parent.is_expanded:
+        node.parent.expand()  # shows start collapsed
+        await pilot.pause()
+    app.query_one("#nav", Tree).move_cursor(node)
     await pilot.pause()
 
 
@@ -319,3 +323,18 @@ async def test_view_poster_opens_the_image(monkeypatch, config_dir: Path) -> Non
         await settle(app, pilot)
         await pilot.press("v")
         assert opened == [str(config_dir / "posters" / "xfiles" / "funny.jpg")]
+
+
+async def test_collapse_and_expand_all() -> None:
+    app = PlexlistsApp()
+    async with app.run_test(size=(160, 40)) as pilot:
+        tree = app.query_one("#nav", Tree)
+        assert not any(node.is_expanded for node in tree.root.children)  # how it starts
+        await select(app, pilot, Nav("tng", "borg"))
+        await pilot.press("z")
+        await pilot.pause()
+        assert not any(node.is_expanded for node in tree.root.children)
+        assert app.current == Nav("tng")  # the playlist row is hidden, so its show is selected
+        await pilot.press("z")
+        await pilot.pause()
+        assert all(node.is_expanded for node in tree.root.children)

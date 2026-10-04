@@ -32,8 +32,9 @@ From the project folder without installing: `uv run plexlists …`
 plexlists
 ```
 
-Shows and playlists are listed on the left. Select a show to act on all of its
-playlists, or select a single playlist.
+Shows are listed on the left, collapsed; open one to see its playlists (`z`
+opens or closes them all). Select a show to act on all of its playlists, or
+select a single playlist.
 
 With a saved login the app connects to Plex in the background as it opens and
 checks every playlist, so the match marks and episode details fill in by
@@ -61,6 +62,7 @@ each playlist's progress ("12/27"). This loads by itself once connected; without
 | `e` | Edit the show file in `$EDITOR` (copies a built-in show to your folder first) |
 | `x` | Delete playlists from Plex (asks first) |
 | `r` | Reload show files and re-read your Plex library |
+| `z` | Collapse all shows in the list, or expand them again |
 | `/` | Filter the list by show, playlist or episode title (`esc` clears it) |
 | `a` | Account: log in or out |
 | `g` | Hide or show the log |
