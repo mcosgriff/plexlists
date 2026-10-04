@@ -7,7 +7,7 @@ from tests.fakeplex import Item
 
 
 @pytest.mark.parametrize("style", ["tmdb", "tvdb"])
-@pytest.mark.parametrize("slug", ["babylon5", "defiance", "enterprise", "tng", "xfiles"])
+@pytest.mark.parametrize("slug", ["babylon5", "defiance", "enterprise", "sg1", "tng", "xfiles"])
 def test_every_entry_matches(shows, slug: str, style: str) -> None:
     show = shows[slug]
     films = dict(zip(show.films, film_items(show), strict=True))

@@ -1,0 +1,240 @@
+# Stargate SG-1.
+# Two-parters within a season list each part; cliffhangers that span seasons
+# ("Nemesis" / "Small Victories") have their own titles.
+
+[show]
+title = "Stargate SG-1"
+label = "Stargate SG-1"
+prefix = "SG-1: "
+episode_minutes = 44
+long_episodes = ["Children of the Gods"]
+colors = { top = "#12303a", bottom = "#03090c", accent = "#5cc8e8", text = "#eef6f8" }
+
+[films.stargate]
+name = "Stargate"
+search = "Stargate"
+year = 1994
+minutes = 116
+
+[films.ark_of_truth]
+name = "Stargate: The Ark of Truth"
+search = "Ark of Truth"
+year = 2008
+minutes = 97
+
+[films.continuum]
+name = "Stargate: Continuum"
+search = "Continuum"
+year = 2008
+minutes = 98
+
+[[playlists]]
+key = "binge"
+name = "Weekend Binge"
+description = "The essential episodes, from the original film to Unending"
+episodes = [
+    { film = "stargate", note = "Friday night" },
+    [1, "Children of the Gods"],
+    [1, "The Torment of Tantalus"],
+    [1, "There But for the Grace of God"],
+    [1, "Within the Serpent's Grasp"],
+    [2, "The Serpent's Lair"],
+    [2, "The Fifth Race", "Saturday"],
+    [2, "1969"],
+    [3, "Shades of Grey"],
+    [3, "Nemesis"],
+    [4, "Small Victories"],
+    [4, "Window of Opportunity"],
+    [4, "2010"],
+    [5, "Wormhole X-Treme!"],
+    [5, "Meridian"],
+    [6, "Abyss"],
+    [6, "Full Circle"],
+    [7, "Heroes (1)", "Sunday"],
+    [7, "Heroes (2)"],
+    [7, "Lost City (1)"],
+    [7, "Lost City (2)"],
+    [8, "Reckoning (1)"],
+    [8, "Reckoning (2)"],
+    [8, "Threads"],
+    [8, "Moebius (1)"],
+    [8, "Moebius (2)"],
+    [10, "200"],
+    [10, "Unending", "Finale"],
+]
+
+[[playlists]]
+key = "goauld"
+name = "The Goa'uld War"
+description = "Apophis, the System Lords and Anubis"
+episodes = [
+    [1, "Children of the Gods"],
+    [1, "Within the Serpent's Grasp"],
+    [2, "The Serpent's Lair"],
+    [2, "The Tok'ra (1)"],
+    [2, "The Tok'ra (2)"],
+    [2, "Serpent's Song"],
+    [2, "Out of Mind"],
+    [3, "Into the Fire"],
+    [3, "Jolinar's Memories"],
+    [3, "The Devil You Know"],
+    [4, "The Serpent's Venom"],
+    [4, "Exodus"],
+    [5, "Enemies"],
+    [5, "Summit"],
+    [5, "Last Stand"],
+    [5, "Revelations"],
+    [6, "Redemption (1)"],
+    [6, "Redemption (2)"],
+    [6, "Full Circle"],
+    [7, "Fallen"],
+    [7, "Homecoming"],
+    [7, "Lost City (1)"],
+    [7, "Lost City (2)"],
+    [8, "Reckoning (1)"],
+    [8, "Reckoning (2)"],
+    [8, "Threads"],
+]
+
+[[playlists]]
+key = "replicators"
+name = "The Replicators"
+description = "The Asgard's enemy becomes everyone's problem"
+episodes = [
+    [3, "Nemesis"],
+    [4, "Small Victories"],
+    [5, "Enemies"],
+    [5, "Menace"],
+    [6, "Unnatural Selection"],
+    [8, "New Order (1)"],
+    [8, "New Order (2)"],
+    [8, "Gemini"],
+    [8, "Reckoning (1)"],
+    [8, "Reckoning (2)"],
+]
+
+[[playlists]]
+key = "asgard"
+name = "Thor and the Asgard"
+description = "Earth's little grey allies"
+episodes = [
+    [1, "Thor's Hammer"],
+    [2, "Thor's Chariot"],
+    [2, "The Fifth Race"],
+    [3, "Fair Game"],
+    [3, "Nemesis"],
+    [4, "Small Victories"],
+    [5, "Red Sky"],
+    [5, "Revelations"],
+    [6, "Unnatural Selection"],
+    [7, "Fragile Balance"],
+    [8, "New Order (1)"],
+    [8, "New Order (2)"],
+    [10, "Unending"],
+]
+
+[[playlists]]
+key = "ascension"
+name = "Ascension"
+description = "Daniel Jackson, Oma Desala and the Ancients"
+episodes = [
+    [3, "Maternal Instinct"],
+    [5, "Meridian"],
+    [6, "Abyss"],
+    [6, "Full Circle"],
+    [7, "Fallen"],
+    [8, "Threads"],
+]
+
+[[playlists]]
+key = "ori"
+name = "The Ori"
+description = "The season nine and ten arc, concluded in The Ark of Truth"
+episodes = [
+    [9, "Avalon (1)"],
+    [9, "Avalon (2)"],
+    [9, "Origin"],
+    [9, "The Powers That Be"],
+    [9, "Beachhead"],
+    [9, "The Fourth Horseman (1)"],
+    [9, "The Fourth Horseman (2)"],
+    [9, "Crusade"],
+    [9, "Camelot"],
+    [10, "Flesh and Blood"],
+    [10, "The Pegasus Project"],
+    [10, "Counterstrike"],
+    [10, "The Quest (1)"],
+    [10, "The Quest (2)"],
+    [10, "Line in the Sand"],
+    [10, "The Shroud"],
+    [10, "Dominion"],
+    { film = "ark_of_truth" },
+]
+
+[[playlists]]
+key = "time"
+name = "Time Travel and Other Realities"
+description = "Time loops, alternate timelines and parallel universes"
+episodes = [
+    [1, "There But for the Grace of God"],
+    [2, "1969"],
+    [3, "Point of View"],
+    [4, "Window of Opportunity"],
+    [4, "2010"],
+    [5, "2001"],
+    [8, "Moebius (1)"],
+    [8, "Moebius (2)"],
+    [9, "Ripple Effect"],
+    [10, "The Road Not Taken"],
+    [10, "Unending"],
+    { film = "continuum" },
+]
+
+[[playlists]]
+key = "funny"
+name = "The Funny Ones"
+description = "The show at its most self-aware"
+episodes = [
+    [3, "Urgo"],
+    [4, "Upgrades"],
+    [4, "Window of Opportunity"],
+    [5, "Wormhole X-Treme!"],
+    [6, "The Other Guys"],
+    [7, "Fragile Balance"],
+    [7, "Avenger 2.0"],
+    [8, "Citizen Joe"],
+    [10, "200"],
+    [10, "Family Ties"],
+]
+
+[[playlists]]
+key = "guests"
+name = "Guest Stars"
+description = "Familiar faces through the gate"
+episodes = [
+    [1, "Politics", "Ronny Cox"],
+    [3, "Urgo", "Dom DeLuise"],
+    [4, "The Other Side", "Rene Auberjonois"],
+    [4, "Watergate", "Marina Sirtis"],
+    [5, "Ascension", "John de Lancie"],
+    [5, "Wormhole X-Treme!", "Willie Garson"],
+    [6, "The Other Guys", "John Billingsley"],
+    [7, "Enemy Mine", "Michael Rooker"],
+    [7, "Heroes (1)", "Saul Rubinek, Adam Baldwin"],
+    [7, "Heroes (2)"],
+    [7, "Inauguration", "William Devane"],
+    [8, "Prometheus Unbound", "Claudia Black"],
+    [8, "It's Good to Be King", "Wayne Brady"],
+    [8, "Citizen Joe", "Dan Castellaneta"],
+    [10, "Family Ties", "Fred Willard"],
+]
+
+[[playlists]]
+key = "films"
+name = "The Movies"
+description = "The original film and the two direct-to-video finales"
+episodes = [
+    { film = "stargate" },
+    { film = "ark_of_truth" },
+    { film = "continuum" },
+]
