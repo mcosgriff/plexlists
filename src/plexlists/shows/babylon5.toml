@@ -1,0 +1,231 @@
+# Babylon 5. Episodes are matched by title, so aired vs. "master" order doesn't matter.
+
+[show]
+title = "Babylon 5"
+label = "Babylon 5"
+prefix = "B5: "
+episode_minutes = 44
+colors = { top = "#1c2452", bottom = "#06071a", accent = "#e0b84a", text = "#f1f0f7" }
+
+[films.gathering]
+name = "Babylon 5: The Gathering"
+search = "The Gathering"
+year = 1993
+minutes = 89
+
+[films.in_the_beginning]
+name = "Babylon 5: In the Beginning"
+search = "In the Beginning"
+year = 1998
+minutes = 94
+
+[films.thirdspace]
+name = "Babylon 5: Thirdspace"
+search = "Thirdspace"
+year = 1998
+minutes = 94
+
+[films.river_of_souls]
+name = "Babylon 5: The River of Souls"
+search = "River of Souls"
+year = 1998
+minutes = 94
+
+[films.call_to_arms]
+name = "Babylon 5: A Call to Arms"
+search = "Call to Arms"
+year = 1999
+minutes = 94
+
+[[playlists]]
+key = "binge"
+name = "Weekend Binge"
+description = "The spine of the five-year arc, from the Firing Line to Sleeping in Light"
+episodes = [
+    [1, "Midnight on the Firing Line", "Friday night"],
+    [1, "And the Sky Full of Stars"],
+    [1, "Signs and Portents"],
+    [1, "Babylon Squared"],
+    [1, "Chrysalis"],
+    [2, "Points of Departure", "Saturday"],
+    [2, "The Coming of Shadows"],
+    [2, "In the Shadow of Z'ha'dum"],
+    [2, "The Long, Twilight Struggle"],
+    [2, "The Fall of Night"],
+    [3, "Messages from Earth"],
+    [3, "Point of No Return"],
+    [3, "Severed Dreams"],
+    [3, "War Without End (1)"],
+    [3, "War Without End (2)"],
+    [3, "Z'ha'dum"],
+    [4, "The Hour of the Wolf", "Sunday"],
+    [4, "The Long Night"],
+    [4, "Into the Fire"],
+    [4, "Intersections in Real Time"],
+    [4, "Endgame"],
+    [4, "Rising Star"],
+    [5, "Sleeping in Light", "Finale"],
+]
+
+[[playlists]]
+key = "shadows"
+name = "The Shadow War"
+description = "From Morden's first question to the last of the First Ones"
+episodes = [
+    [1, "Signs and Portents", "What do you want?"],
+    [1, "Chrysalis"],
+    [2, "Revelations"],
+    [2, "The Coming of Shadows"],
+    [2, "In the Shadow of Z'ha'dum"],
+    [2, "The Long, Twilight Struggle"],
+    [2, "The Fall of Night"],
+    [3, "Matters of Honor"],
+    [3, "Ship of Tears"],
+    [3, "Interludes and Examinations"],
+    [3, "War Without End (1)"],
+    [3, "War Without End (2)"],
+    [3, "Walkabout"],
+    [3, "And the Rock Cried Out, No Hiding Place"],
+    [3, "Shadow Dancing"],
+    [3, "Z'ha'dum"],
+    [4, "The Hour of the Wolf"],
+    [4, "Whatever Happened to Mr. Garibaldi?"],
+    [4, "The Summoning"],
+    [4, "Falling Toward Apotheosis"],
+    [4, "The Long Night"],
+    [4, "Into the Fire"],
+]
+
+[[playlists]]
+key = "earth"
+name = "Earth Civil War"
+description = "President Clark, Nightwatch and the fight to take Earth back"
+episodes = [
+    [1, "Chrysalis"],
+    [2, "Revelations"],
+    [2, "All Alone in the Night"],
+    [2, "Hunter, Prey"],
+    [2, "In the Shadow of Z'ha'dum"],
+    [2, "The Fall of Night"],
+    [3, "Voices of Authority"],
+    [3, "Messages from Earth"],
+    [3, "Point of No Return"],
+    [3, "Severed Dreams"],
+    [3, "Ceremonies of Light and Dark"],
+    [4, "The Illusion of Truth"],
+    [4, "Racing Mars"],
+    [4, "Lines of Communication"],
+    [4, "No Surrender, No Retreat"],
+    [4, "The Exercise of Vital Powers"],
+    [4, "The Face of the Enemy"],
+    [4, "Intersections in Real Time"],
+    [4, "Between the Darkness and the Light"],
+    [4, "Endgame"],
+    [4, "Rising Star"],
+]
+
+[[playlists]]
+key = "londo-gkar"
+name = "Londo and G'Kar"
+description = "The Centauri, the Narn and the two men at the center of it"
+episodes = [
+    [1, "Midnight on the Firing Line"],
+    [1, "Signs and Portents"],
+    [1, "Chrysalis"],
+    [2, "The Coming of Shadows"],
+    [2, "Acts of Sacrifice"],
+    [2, "The Long, Twilight Struggle"],
+    [3, "Convictions"],
+    [3, "Dust to Dust"],
+    [3, "Sic Transit Vir"],
+    [3, "And the Rock Cried Out, No Hiding Place"],
+    [4, "The Hour of the Wolf"],
+    [4, "The Summoning"],
+    [4, "The Long Night"],
+    [5, "The Very Long Night of Londo Mollari"],
+    [5, "Movements of Fire and Shadow"],
+    [5, "The Fall of Centauri Prime"],
+]
+
+[[playlists]]
+key = "psicorps"
+name = "Psi Corps"
+description = "Bester and the telepaths"
+episodes = [
+    [1, "Mind War", "Walter Koenig's first appearance as Bester"],
+    [2, "A Race Through Dark Places"],
+    [2, "Divided Loyalties"],
+    [3, "Dust to Dust"],
+    [3, "Ship of Tears"],
+    [4, "Epiphanies"],
+    [4, "Moments of Transition"],
+    [4, "The Face of the Enemy"],
+    [4, "Rising Star"],
+    [5, "Strange Relations"],
+    [5, "A Tragedy of Telepaths"],
+    [5, "Phoenix Rising"],
+    [5, "The Corps Is Mother, the Corps Is Father"],
+]
+
+[[playlists]]
+key = "valen"
+name = "Sinclair and Valen"
+description = "The Battle of the Line, Babylon 4 and the Minbari prophecy"
+episodes = [
+    { film = "in_the_beginning", note = "Prequel: spoils the first-season mysteries" },
+    [1, "And the Sky Full of Stars"],
+    [1, "Babylon Squared"],
+    [2, "Points of Departure"],
+    [3, "War Without End (1)"],
+    [3, "War Without End (2)"],
+    [4, "Atonement"],
+]
+
+[[playlists]]
+key = "standalones"
+name = "Best Standalones"
+description = "Self-contained episodes that work without the arc"
+episodes = [
+    [1, "The Parliament of Dreams"],
+    [1, "Believers"],
+    [2, "And Now for a Word"],
+    [2, "Confessions and Lamentations"],
+    [2, "Comes the Inquisitor"],
+    [3, "Passing Through Gethsemane"],
+    [3, "A Late Delivery from Avalon"],
+    [4, "The Deconstruction of Falling Stars"],
+    [5, "The Very Long Night of Londo Mollari"],
+    [5, "A View from the Gallery"],
+    [5, "Day of the Dead"],
+]
+
+[[playlists]]
+key = "guests"
+name = "Guest Stars"
+description = "Familiar faces passing through the station"
+episodes = [
+    [1, "Mind War", "Walter Koenig"],
+    [1, "Deathwalker", "Sarah Douglas"],
+    [1, "Grail", "David Warner"],
+    [1, "Eyes", "Jeffrey Combs"],
+    [1, "The Quality of Mercy", "June Lockhart"],
+    [2, "The Geometry of Shadows", "Michael Ansara"],
+    [2, "The Long Dark", "Dwight Schultz"],
+    [3, "Passing Through Gethsemane", "Brad Dourif"],
+    [3, "A Late Delivery from Avalon", "Michael York"],
+    [3, "Grey 17 Is Missing", "Robert Englund"],
+    [3, "Z'ha'dum", "Melissa Gilbert"],
+    [5, "Day of the Dead", "Penn & Teller; written by Neil Gaiman"],
+]
+
+[[playlists]]
+key = "films"
+name = "The Movies"
+description = "The TV movies, in story order"
+episodes = [
+    { film = "in_the_beginning" },
+    { film = "gathering", note = "The original pilot" },
+    { film = "thirdspace", note = "Set during season four" },
+    { film = "river_of_souls", note = "Set after season five" },
+    { film = "call_to_arms", note = "Leads into Crusade" },
+]
