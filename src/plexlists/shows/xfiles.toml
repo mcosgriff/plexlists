@@ -1,0 +1,243 @@
+# The X-Files. Episodes are matched by title, so DVD vs. aired order doesn't matter.
+
+[show]
+title = "The X-Files"
+label = "The X-Files"
+prefix = "X-Files: "
+episode_minutes = 44
+colors = { top = "#14231a", bottom = "#030604", accent = "#6fdc8c", text = "#eef5ef" }
+
+[films.fight_the_future]
+name = "The X-Files: Fight the Future"
+search = "X-Files"
+year = 1998
+minutes = 121
+
+[[playlists]]
+key = "binge"
+name = "Weekend Binge"
+description = "Mythology spine through the Syndicate's end, plus the best standalones"
+episodes = [
+    [1, "Pilot", "Friday night"],
+    [1, "Deep Throat"],
+    [1, "Squeeze"],
+    [1, "Beyond the Sea"],
+    [1, "The Erlenmeyer Flask"],
+    [2, "Duane Barry", "Saturday"],
+    [2, "Ascension"],
+    [2, "One Breath"],
+    [2, "Humbug"],
+    [2, "Anasazi"],
+    [3, "The Blessing Way"],
+    [3, "Paper Clip"],
+    [3, "Clyde Bruckman's Final Repose"],
+    [3, "Pusher"],
+    [3, "Jose Chung's From Outer Space"],
+    [4, "Home"],
+    [4, "Memento Mori"],
+    [4, "Small Potatoes", "Sunday"],
+    [4, "Gethsemane"],
+    [5, "Redux"],
+    [5, "Redux II"],
+    [5, "Bad Blood"],
+    { film = "fight_the_future" },
+    [6, "Triangle"],
+    [6, "Drive"],
+    [6, "Two Fathers"],
+    [6, "One Son", "Finale: the Syndicate arc closes"],
+]
+
+[[playlists]]
+key = "monsters"
+name = "Monster of the Week"
+description = "The best standalone episodes, scary and funny"
+episodes = [
+    [1, "Squeeze"],
+    [1, "Ice"],
+    [1, "Darkness Falls"],
+    [1, "Tooms", "Sequel to Squeeze"],
+    [2, "The Host"],
+    [2, "Irresistible"],
+    [2, "Die Hand Die Verletzt"],
+    [2, "Humbug"],
+    [3, "Clyde Bruckman's Final Repose"],
+    [3, "War of the Coprophages"],
+    [3, "Pusher"],
+    [3, "Jose Chung's From Outer Space"],
+    [4, "Home"],
+    [4, "Unruhe"],
+    [4, "Leonard Betts"],
+    [4, "Small Potatoes"],
+    [5, "The Post-Modern Prometheus"],
+    [5, "Bad Blood"],
+    [5, "Folie a Deux"],
+    [6, "Drive"],
+    [6, "Monday"],
+    [6, "Arcadia"],
+    [6, "Field Trip"],
+    [7, "Hungry"],
+    [7, "X-Cops"],
+    [10, "Mulder and Scully Meet the Were-Monster", "2016 revival"],
+]
+
+[[playlists]]
+key = "halloween"
+name = "Halloween"
+description = "The scariest episodes, with no comic relief"
+episodes = [
+    [1, "Squeeze"],
+    [1, "Ice"],
+    [1, "Darkness Falls"],
+    [2, "The Host"],
+    [2, "Irresistible"],
+    [3, "Grotesque"],
+    [4, "Home", "The one Fox banned from reruns"],
+    [4, "Sanguinarium"],
+    [5, "Detour"],
+    [5, "Chinga", "Co-written by Stephen King"],
+    [6, "Field Trip"],
+]
+
+[[playlists]]
+key = "funny"
+name = "The Funny Ones"
+description = "Darin Morgan's episodes plus the show's best comedies"
+episodes = [
+    [2, "Humbug", "Darin Morgan"],
+    [3, "Clyde Bruckman's Final Repose", "Darin Morgan"],
+    [3, "War of the Coprophages", "Darin Morgan"],
+    [3, "Jose Chung's From Outer Space", "Darin Morgan"],
+    [4, "Small Potatoes", "Darin Morgan acts in it"],
+    [5, "The Post-Modern Prometheus"],
+    [5, "Bad Blood"],
+    [7, "Hollywood A.D."],
+    [7, "Je Souhaite"],
+    [10, "Mulder and Scully Meet the Were-Monster", "Darin Morgan"],
+]
+
+[[playlists]]
+key = "gilligan"
+name = "Vince Gilligan Collection"
+description = "Episodes from the creator of Breaking Bad"
+episodes = [
+    [2, "Soft Light"],
+    [3, "Pusher"],
+    [4, "Paper Hearts"],
+    [4, "Small Potatoes"],
+    [5, "Unusual Suspects"],
+    [5, "Bad Blood"],
+    [5, "Folie a Deux"],
+    [6, "Drive", "Bryan Cranston: the proto-Walter White"],
+    [6, "Tithonus"],
+    [6, "Monday"],
+    [7, "Je Souhaite"],
+    [8, "Roadrunners"],
+]
+
+[[playlists]]
+key = "csm"
+name = "Cigarette Smoking Man"
+description = "The man behind the conspiracy"
+episodes = [
+    [3, "Talitha Cumi"],
+    [4, "Musings of a Cigarette Smoking Man"],
+    [6, "Two Fathers"],
+    [6, "One Son"],
+    [7, "En Ami"],
+]
+
+[[playlists]]
+key = "gunmen"
+name = "The Lone Gunmen"
+description = "Byers, Frohike and Langly"
+episodes = [
+    [1, "E.B.E.", "First appearance"],
+    [5, "Unusual Suspects", "Origin story"],
+    [6, "Three of a Kind"],
+    [9, "Jump the Shark"],
+]
+
+[[playlists]]
+key = "scully"
+name = "Scully Spotlight"
+description = "Dana Scully's defining episodes"
+episodes = [
+    [1, "Beyond the Sea"],
+    [2, "One Breath"],
+    [2, "Irresistible"],
+    [4, "Never Again"],
+    [4, "Memento Mori"],
+    [5, "Christmas Carol"],
+    [5, "Emily"],
+    [7, "all things", "Written and directed by Gillian Anderson"],
+]
+
+[[playlists]]
+key = "guests"
+name = "Before They Were Famous"
+description = "Guest stars on their way up"
+episodes = [
+    [1, "Deep Throat", "Seth Green"],
+    [2, "Soft Light", "Tony Shalhoub"],
+    [3, "D.P.O.", "Giovanni Ribisi, Jack Black"],
+    [3, "Clyde Bruckman's Final Repose", "Peter Boyle (won an Emmy)"],
+    [3, "Hell Money", "Lucy Liu"],
+    [6, "Drive", "Bryan Cranston"],
+    [9, "Improbable", "Burt Reynolds"],
+]
+
+[[playlists]]
+key = "mythology"
+name = "Complete Mythology"
+description = "Every conspiracy episode in order, Pilot through Requiem"
+episodes = [
+    [1, "Pilot"],
+    [1, "Deep Throat"],
+    [1, "Fallen Angel"],
+    [1, "E.B.E."],
+    [1, "The Erlenmeyer Flask"],
+    [2, "Little Green Men"],
+    [2, "Sleepless"],
+    [2, "Duane Barry"],
+    [2, "Ascension"],
+    [2, "One Breath"],
+    [2, "Red Museum"],
+    [2, "Colony"],
+    [2, "End Game"],
+    [2, "Anasazi"],
+    [3, "The Blessing Way"],
+    [3, "Paper Clip"],
+    [3, "Nisei"],
+    [3, "731"],
+    [3, "Piper Maru"],
+    [3, "Apocrypha"],
+    [3, "Wetwired"],
+    [3, "Talitha Cumi"],
+    [4, "Herrenvolk"],
+    [4, "Musings of a Cigarette Smoking Man"],
+    [4, "Tunguska"],
+    [4, "Terma"],
+    [4, "Memento Mori"],
+    [4, "Tempus Fugit"],
+    [4, "Max"],
+    [4, "Zero Sum"],
+    [4, "Gethsemane"],
+    [5, "Redux"],
+    [5, "Redux II"],
+    [5, "Christmas Carol"],
+    [5, "Emily"],
+    [5, "Patient X"],
+    [5, "The Red and the Black"],
+    { film = "fight_the_future" },
+    [6, "The Beginning"],
+    [6, "S.R. 819"],
+    [6, "Two Fathers"],
+    [6, "One Son"],
+    [6, "Biogenesis"],
+    [7, "The Sixth Extinction"],
+    [7, "Amor Fati"],
+    [7, "Sein und Zeit"],
+    [7, "Closure"],
+    [7, "En Ami"],
+    [7, "Requiem"],
+]

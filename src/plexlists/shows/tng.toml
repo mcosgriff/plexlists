@@ -1,0 +1,236 @@
+# Star Trek: The Next Generation.
+# A title without a part number ("Encounter at Farpoint") pulls in every part Plex
+# has in that season, in order. Two-parters that span seasons ("The Best of Both
+# Worlds") list each part explicitly.
+
+[show]
+title = "Star Trek: The Next Generation"
+label = "Star Trek: TNG"
+prefix = "TNG: "
+episode_minutes = 45
+long_episodes = ["All Good Things...", "Encounter at Farpoint"]
+colors = { top = "#1a2140", bottom = "#05060f", accent = "#f2a93b", text = "#f4f1ea" }
+
+[films.generations]
+name = "Star Trek Generations"
+search = "Generations"
+year = 1994
+minutes = 118
+
+[films.first_contact]
+name = "Star Trek: First Contact"
+search = "First Contact"
+year = 1996
+minutes = 111
+
+[films.insurrection]
+name = "Star Trek: Insurrection"
+search = "Insurrection"
+year = 1998
+minutes = 103
+
+[films.nemesis]
+name = "Star Trek: Nemesis"
+search = "Nemesis"
+year = 2002
+minutes = 116
+
+[[playlists]]
+key = "binge"
+name = "Weekend Binge"
+description = "The essential episodes, from Farpoint to All Good Things"
+episodes = [
+    [1, "Encounter at Farpoint", "Friday night"],
+    [2, "Elementary, Dear Data"],
+    [2, "The Measure of a Man"],
+    [2, "Q Who"],
+    [3, "Yesterday's Enterprise", "Saturday"],
+    [3, "The Offspring"],
+    [3, "Sins of the Father"],
+    [3, "Sarek"],
+    [3, "The Best of Both Worlds (1)"],
+    [4, "The Best of Both Worlds (2)"],
+    [4, "Family"],
+    [4, "The Drumhead"],
+    [5, "Darmok"],
+    [5, "I, Borg"],
+    [5, "Cause and Effect"],
+    [5, "The Inner Light", "Sunday"],
+    [6, "Relics"],
+    [6, "Chain of Command (1)"],
+    [6, "Chain of Command (2)"],
+    [6, "Tapestry"],
+    [7, "Lower Decks"],
+    [7, "Parallels"],
+    [7, "The Pegasus"],
+    [7, "All Good Things...", "Series finale"],
+]
+
+[[playlists]]
+key = "borg"
+name = "The Borg"
+description = "Every Borg episode in order, plus First Contact"
+episodes = [
+    [2, "Q Who", "First contact with the Borg"],
+    [3, "The Best of Both Worlds (1)"],
+    [4, "The Best of Both Worlds (2)"],
+    [4, "Family", "Picard's aftermath"],
+    [5, "I, Borg"],
+    [6, "Descent (1)"],
+    [7, "Descent (2)"],
+    { film = "first_contact" },
+]
+
+[[playlists]]
+key = "q"
+name = "Q"
+description = "Every Q episode, Farpoint to the finale"
+episodes = [
+    [1, "Encounter at Farpoint"],
+    [1, "Hide and Q"],
+    [2, "Q Who"],
+    [3, "Deja Q"],
+    [4, "Qpid"],
+    [6, "True Q"],
+    [6, "Tapestry"],
+    [7, "All Good Things..."],
+]
+
+[[playlists]]
+key = "data"
+name = "Data Spotlight"
+description = "Data's search for humanity"
+episodes = [
+    [1, "Datalore", "Meet Lore"],
+    [2, "Elementary, Dear Data"],
+    [2, "The Measure of a Man"],
+    [3, "The Ensigns of Command"],
+    [3, "The Offspring"],
+    [4, "Brothers"],
+    [4, "Data's Day"],
+    [4, "In Theory"],
+    [5, "Silicon Avatar"],
+    [5, "Hero Worship"],
+    [6, "A Fistful of Datas"],
+    [6, "Descent (1)"],
+    [7, "Descent (2)"],
+    [7, "Inheritance"],
+]
+
+[[playlists]]
+key = "picard"
+name = "Picard Spotlight"
+description = "Jean-Luc Picard's defining episodes"
+episodes = [
+    [2, "Samaritan Snare"],
+    [3, "Sarek"],
+    [3, "The Best of Both Worlds (1)"],
+    [4, "The Best of Both Worlds (2)"],
+    [4, "Family"],
+    [4, "The Drumhead"],
+    [5, "Darmok"],
+    [5, "The Inner Light"],
+    [6, "Chain of Command (1)"],
+    [6, "Chain of Command (2)"],
+    [6, "Tapestry"],
+    [6, "Lessons"],
+    [7, "The Pegasus"],
+    [7, "All Good Things..."],
+]
+
+[[playlists]]
+key = "klingon"
+name = "Worf and the Klingons"
+description = "Worf, his family and Klingon politics"
+episodes = [
+    [1, "Heart of Glory"],
+    [2, "A Matter of Honor", "Riker serves on a Klingon ship"],
+    [3, "Sins of the Father"],
+    [4, "Reunion"],
+    [4, "Redemption (1)"],
+    [5, "Redemption (2)"],
+    [5, "Ethics"],
+    [6, "Birthright (1)"],
+    [6, "Birthright (2)"],
+    [6, "Rightful Heir"],
+    [7, "Parallels"],
+    [7, "Firstborn"],
+]
+
+[[playlists]]
+key = "holodeck"
+name = "Holodeck"
+description = "When the holodeck goes wrong (or very right)"
+episodes = [
+    [1, "The Big Goodbye"],
+    [2, "Elementary, Dear Data"],
+    [3, "Hollow Pursuits"],
+    [6, "A Fistful of Datas"],
+    [6, "Ship in a Bottle", "Moriarty returns"],
+    [7, "Emergence"],
+]
+
+[[playlists]]
+key = "time"
+name = "Time Travel and Anomalies"
+description = "Loops, paradoxes and alternate timelines"
+episodes = [
+    [2, "Time Squared"],
+    [3, "Yesterday's Enterprise"],
+    [5, "A Matter of Time"],
+    [5, "Cause and Effect"],
+    [5, "Time's Arrow (1)"],
+    [6, "Time's Arrow (2)"],
+    [6, "Tapestry"],
+    [6, "Timescape"],
+    [7, "Parallels"],
+    [7, "All Good Things..."],
+]
+
+[[playlists]]
+key = "halloween"
+name = "Halloween"
+description = "The creepiest episodes"
+episodes = [
+    [1, "Conspiracy", "The one with the brain bugs"],
+    [2, "Where Silence Has Lease"],
+    [4, "Remember Me"],
+    [4, "Night Terrors"],
+    [4, "Identity Crisis"],
+    [6, "Realm of Fear"],
+    [6, "Schisms"],
+    [6, "Frame of Mind"],
+    [7, "Phantasms"],
+    [7, "Genesis"],
+]
+
+[[playlists]]
+key = "guests"
+name = "Famous Guest Stars"
+description = "Cameos and guest stars worth spotting"
+episodes = [
+    [2, "The Outrageous Okona", "Teri Hatcher"],
+    [3, "Sins of the Father", "Tony Todd"],
+    [4, "The Drumhead", "Jean Simmons"],
+    [5, "Darmok", "Paul Winfield, Ashley Judd"],
+    [5, "Unification (1)", "Leonard Nimoy as Spock"],
+    [5, "Unification (2)"],
+    [5, "Cause and Effect", "Kelsey Grammer"],
+    [5, "The Perfect Mate", "Famke Janssen"],
+    [6, "Relics", "James Doohan as Scotty"],
+    [6, "Second Chances", "Astronaut Mae Jemison"],
+    [6, "Descent (1)", "Stephen Hawking as himself"],
+    [7, "Dark Page", "Kirsten Dunst"],
+]
+
+[[playlists]]
+key = "films"
+name = "Finale and Films"
+description = "The series finale, then all four TNG movies"
+episodes = [
+    [7, "All Good Things..."],
+    { film = "generations" },
+    { film = "first_contact" },
+    { film = "insurrection" },
+    { film = "nemesis" },
+]
