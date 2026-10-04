@@ -873,7 +873,7 @@ class PlexlistsApp(App[None]):
 
     @work(thread=True, exclusive=True, group="posters")
     def make_posters(self, show: Show, keys: list[str], folder: Path) -> None:
-        from plexlists.posters import render_poster
+        from plexlists.posters import import_image, render_poster
 
         session = self.session
         try:  # artwork from Plex is a bonus: without a connection, write plain cards
@@ -891,6 +891,8 @@ class PlexlistsApp(App[None]):
                     backdrop = session.backdrop(show, k)
             plain += backdrop is None
             render_poster(show, k, folder / f"{k}.jpg", backdrop=backdrop)
+            if backdrop and not find_image(folder, f"{k}-art"):  # background art, if none yet
+                import_image(backdrop, folder / f"{k}-art.jpg", art=True)
         note = f" {plain} without artwork from Plex." if plain else ""
         self.call_from_thread(
             self.log_line,

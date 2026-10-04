@@ -282,6 +282,9 @@ def make_show_app(show: Show) -> typer.Typer:
             bool,
             typer.Option("--plain", help="Don't use artwork from Plex: text on a gradient only."),
         ] = False,
+        no_art: Annotated[
+            bool, typer.Option("--no-art", help="Don't write background art, only posters.")
+        ] = False,
         show_title: Annotated[
             str,
             typer.Option(
@@ -302,10 +305,13 @@ def make_show_app(show: Show) -> typer.Typer:
         key or "show"), otherwise the still of its first episode. With --plain, or
         when Plex can't be reached, the background is a gradient in the show's colors.
 
+        The same artwork, without the text, is also saved as the 16:9 background
+        [bold]<key>-art.jpg[/bold] if the playlist doesn't have one (or with --force).
+
         Playlists that already have an image are skipped unless you pass --force,
         so your own artwork is safe. Run [cyan]build[/cyan] afterwards to upload them.
         """
-        from plexlists.posters import render_poster
+        from plexlists.posters import import_image, render_poster
 
         keys = resolve(keys, all_)
         folder = posters_dir or config.posters_dir(show.slug)
@@ -339,6 +345,9 @@ def make_show_app(show: Show) -> typer.Typer:
                     note = f" [yellow](artwork failed: {type(exc).__name__}: plain)[/yellow]"
             render_poster(show, k, folder / f"{k}.jpg", backdrop=backdrop)
             console.print(f"[green]wrote[/green] {escape(str(folder / (k + '.jpg')))}{note}")
+            if backdrop and not no_art and (force or not find_image(folder, f"{k}-art")):
+                import_image(backdrop, folder / f"{k}-art.jpg", art=True)
+                console.print(f"[green]wrote[/green] {escape(str(folder / (k + '-art.jpg')))}")
         if todo:
             target = "--all" if all_ else " ".join(keys)
             console.print(

@@ -81,6 +81,10 @@ def test_posters_command_uses_plex_artwork(monkeypatch, server, tmp_path: Path) 
     out = invoke("tng", "posters", "borg", "q", "--posters-dir", str(tmp_path))
     assert "plain" not in out
     assert server._session.fetched == ["thumb-The Best of Both Worlds (1)", "thumb-Deja Q"]
+    assert Image.open(tmp_path / "borg-art.jpg").size == (1920, 1080)  # background art too
+    (tmp_path / "q-art.jpg").unlink()
+    out = invoke("tng", "posters", "q", "--posters-dir", str(tmp_path), "--force", "--no-art")
+    assert not (tmp_path / "q-art.jpg").exists()
     server._session.fetched.clear()
     invoke("tng", "posters", "borg", "--posters-dir", str(tmp_path), "--force", "--plain")
     assert server._session.fetched == []

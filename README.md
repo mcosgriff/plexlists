@@ -104,6 +104,9 @@ plexlists tng poster borg ~/Downloads/x.png  # your own image, cropped to a squa
 plexlists tng poster borg https://…/x.jpg --art   # …or to 16:9 background art
 ```
 
+`posters` also saves the same artwork, without the text, as the playlist's
+background art if it doesn't have any (`--no-art` turns that off).
+
 `posters` skips playlists that already have an image, and `poster` refuses to
 replace one, unless you pass `--force`.
 
