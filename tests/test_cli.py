@@ -227,3 +227,24 @@ def test_build_and_remove_as_collection(plex, shows) -> None:
     assert "drop --user" in invoke("tng", "build", "borg", "-c", "--user", "alice")
     assert "Deleted 1 collection" in invoke("tng", "remove", "borg", "-c", "--yes")
     assert plex.show.library_section.colls == []
+
+
+def test_build_all_builds_what_the_server_has(plex, shows) -> None:
+    out = invoke("build-all", "--no-artwork")
+    assert len(plex.pls) == len(shows["tng"].playlists)
+    assert "The X-Files: not in your Plex library" in out
+    assert invoke("build-all", "--no-artwork", "--quiet").strip() == ""  # nothing changed
+
+    plex.pls[0].delete()
+    out = invoke("build-all", "--no-artwork", "--quiet")
+    assert out.count("created") == 1 and "X-Files" not in out
+
+
+def test_build_all_exits_nonzero_on_errors(monkeypatch, plex) -> None:
+    def boom(*args, **kwargs):
+        raise RuntimeError("server went away")
+
+    monkeypatch.setattr(plex, "createPlaylist", boom)
+    result = runner.invoke(cli.make_app(), ["build-all", "--no-artwork"], env={"COLUMNS": "300"})
+    assert result.exit_code == 1
+    assert "server went away" in result.output and "had errors" in result.output

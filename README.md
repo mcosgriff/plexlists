@@ -84,6 +84,20 @@ plexlists status                      # login state and token expiry
 
 Tab completion: `plexlists --install-completion`.
 
+### On a schedule
+
+`plexlists build-all` builds every playlist of every show your server has, and
+skips the shows it doesn't. Run it from cron or launchd so playlists fill in as
+you add seasons:
+
+```cron
+# every night at 03:30; --quiet prints only what changed or went wrong
+30 3 * * * /Users/you/.local/bin/plexlists build-all --quiet
+```
+
+It exits with status 1 if a playlist couldn't be built. The saved login renews
+its token when the command runs.
+
 ## Posters
 
 Put images in `<config dir>/posters/<show>/`, named by playlist key:

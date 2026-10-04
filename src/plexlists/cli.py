@@ -1,6 +1,7 @@
 """Command-line interface.
 
 plexlists shows                         # available shows
+plexlists build-all                     # every show, e.g. from cron
 plexlists <show> list | show | build | posters | poster | pull-posters | remove
 plexlists login | status | logout | paths | new
 """
@@ -628,6 +629,65 @@ def make_app() -> typer.Typer:
 
     for slug, show in shows.items():
         app.add_typer(make_show_app(show), name=slug, rich_help_panel="Shows")
+
+    @app.command("build-all", rich_help_panel="General")
+    def build_all(
+        dry_run: Annotated[
+            bool,
+            typer.Option(
+                "--dry-run", "-n", help="Report what would change, without changing Plex."
+            ),
+        ] = False,
+        no_artwork: Annotated[
+            bool, typer.Option("--no-artwork", help="Don't upload posters or background art.")
+        ] = False,
+        quiet: Annotated[
+            bool,
+            typer.Option(
+                "--quiet", "-q", help="Only print playlists that changed or have problems."
+            ),
+        ] = False,
+        url: UrlOpt = None,
+        token: TokenOpt = None,
+    ) -> None:
+        """
+        Build every playlist of every show your server has.
+
+        Meant for a schedule (cron, launchd): playlists fill in as you add seasons.
+        Shows that aren't in your Plex library are skipped. Exits with status 1 if
+        a playlist couldn't be built, so a scheduler can report it. Missing episodes
+        alone aren't a failure.
+        """
+        session = Session(connect_plex(url, token))
+        existing = session.existing_playlists()
+        failed = 0
+        for show in shows.values():
+            title = os.environ.get(title_env(show), show.title)
+            try:
+                session.library(show, title)
+            except ShowNotFoundError:
+                if not quiet:
+                    console.print(f"[dim]{escape(show.title)}: not in your Plex library[/dim]")
+                continue
+            for key in show.playlists:
+                try:
+                    result = session.match(show, key, title)
+                    out = session.apply(
+                        show, result, dry_run=dry_run, artwork=not no_artwork, existing=existing
+                    )
+                except Exception as exc:
+                    failed += 1
+                    err_console.print(
+                        f"[red]{escape(show.plex_name(key))}: "
+                        f"{escape(f'{type(exc).__name__}: {exc}')}[/red]"
+                    )
+                    continue
+                failed += bool(out.artwork_error)
+                changed = out.action != "unchanged" or out.artwork or out.artwork_error
+                if not quiet or changed or result.missing:
+                    print_result(show, result, out)
+        if failed:
+            raise fail(f"{failed} playlist(s) had errors.")
 
     @app.command(rich_help_panel="General")
     def tui() -> None:
