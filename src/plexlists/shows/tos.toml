@@ -1,0 +1,205 @@
+# Star Trek (the original series).
+# Plex usually titles it just "Star Trek". If yours says "Star Trek: The Original
+# Series", pass --show-title or set PLEXLISTS_TOS_TITLE.
+
+[show]
+title = "Star Trek"
+label = "Star Trek: TOS"
+prefix = "TOS: "
+episode_minutes = 50
+colors = { top = "#4a3410", bottom = "#0d0903", accent = "#f0c040", text = "#f7f2e6" }
+
+[films.motion_picture]
+name = "Star Trek: The Motion Picture"
+search = "The Motion Picture"
+year = 1979
+minutes = 132
+
+[films.wrath_of_khan]
+name = "Star Trek II: The Wrath of Khan"
+search = "Wrath of Khan"
+year = 1982
+minutes = 113
+
+[films.search_for_spock]
+name = "Star Trek III: The Search for Spock"
+search = "Search for Spock"
+year = 1984
+minutes = 105
+
+[films.voyage_home]
+name = "Star Trek IV: The Voyage Home"
+search = "Voyage Home"
+year = 1986
+minutes = 119
+
+[films.final_frontier]
+name = "Star Trek V: The Final Frontier"
+search = "Final Frontier"
+year = 1989
+minutes = 107
+
+[films.undiscovered_country]
+name = "Star Trek VI: The Undiscovered Country"
+search = "Undiscovered Country"
+year = 1991
+minutes = 110
+
+[[playlists]]
+key = "binge"
+name = "Weekend Binge"
+description = "The essential episodes, ending with The Wrath of Khan"
+poster_from = "The City on the Edge of Forever"
+episodes = [
+    [1, "Where No Man Has Gone Before", "Friday night"],
+    [1, "The Corbomite Maneuver"],
+    [1, "Balance of Terror"],
+    [1, "Arena"],
+    [1, "Space Seed"],
+    [1, "The Devil in the Dark", "Saturday"],
+    [1, "Errand of Mercy"],
+    [1, "The City on the Edge of Forever"],
+    [2, "Amok Time"],
+    [2, "Mirror, Mirror"],
+    [2, "The Doomsday Machine"],
+    [2, "Journey to Babel", "Sunday"],
+    [2, "The Trouble with Tribbles"],
+    [3, "The Enterprise Incident"],
+    [3, "The Tholian Web"],
+    { film = "wrath_of_khan" },
+]
+
+[[playlists]]
+key = "klingons"
+name = "The Klingons"
+description = "The Empire, from the Organian treaty to Khitomer"
+poster_from = "Errand of Mercy"
+episodes = [
+    [1, "Errand of Mercy", "First appearance of the Klingons"],
+    [2, "Friday's Child"],
+    [2, "The Trouble with Tribbles"],
+    [2, "A Private Little War"],
+    [3, "Day of the Dove"],
+    [3, "Elaan of Troyius"],
+    { film = "undiscovered_country" },
+]
+
+[[playlists]]
+key = "romulans"
+name = "The Romulans"
+description = "The Neutral Zone and the people behind it"
+poster_from = "Balance of Terror"
+episodes = [
+    [1, "Balance of Terror"],
+    [2, "The Deadly Years"],
+    [3, "The Enterprise Incident"],
+]
+
+[[playlists]]
+key = "spock"
+name = "Spock"
+description = "The episodes that define him"
+poster_from = "Amok Time"
+episodes = [
+    [1, "The Menagerie (1)"],
+    [1, "The Menagerie (2)"],
+    [1, "The Galileo Seven"],
+    [1, "This Side of Paradise"],
+    [2, "Amok Time"],
+    [2, "Journey to Babel"],
+    [3, "The Enterprise Incident"],
+    [3, "All Our Yesterdays"],
+]
+
+[[playlists]]
+key = "khan"
+name = "The Genesis Trilogy"
+description = "Space Seed and the three films that follow from it"
+poster_from = "wrath_of_khan"
+episodes = [
+    [1, "Space Seed"],
+    { film = "wrath_of_khan" },
+    { film = "search_for_spock" },
+    { film = "voyage_home" },
+]
+
+[[playlists]]
+key = "funny"
+name = "The Funny Ones"
+description = "Tribbles, gangsters and Harry Mudd"
+poster_from = "The Trouble with Tribbles"
+episodes = [
+    [1, "Mudd's Women"],
+    [1, "Shore Leave"],
+    [2, "I, Mudd"],
+    [2, "The Trouble with Tribbles"],
+    [2, "A Piece of the Action"],
+    { film = "voyage_home" },
+]
+
+[[playlists]]
+key = "time"
+name = "Time Travel"
+description = "Trips to the past, and the cost of changing it"
+poster_from = "Tomorrow Is Yesterday"
+episodes = [
+    [1, "Tomorrow Is Yesterday"],
+    [1, "The City on the Edge of Forever"],
+    [2, "Assignment: Earth"],
+    [3, "All Our Yesterdays"],
+    { film = "voyage_home" },
+]
+
+[[playlists]]
+key = "legacy"
+name = "Picked Up Later"
+description = "Episodes that later Star Trek series returned to"
+poster_from = "Mirror, Mirror"
+episodes = [
+    [1, "The Naked Time", "The Next Generation: The Naked Now"],
+    [1, "The Menagerie (1)", "Discovery and Strange New Worlds"],
+    [1, "The Menagerie (2)"],
+    [1, "Balance of Terror", "Strange New Worlds: A Quality of Mercy"],
+    [1, "Space Seed", "The Wrath of Khan"],
+    [1, "Errand of Mercy", "Kor returns in Deep Space Nine"],
+    [2, "Mirror, Mirror", "The Mirror Universe"],
+    [2, "Journey to Babel", "Sarek returns in The Next Generation"],
+    [2, "The Trouble with Tribbles", "Deep Space Nine: Trials and Tribble-ations"],
+    [3, "Day of the Dove", "Kang returns in Deep Space Nine"],
+    [3, "The Tholian Web", "Enterprise: In a Mirror, Darkly"],
+]
+
+[[playlists]]
+key = "guests"
+name = "Guest Stars"
+description = "Familiar faces from the 1960s"
+poster_from = "Space Seed"
+episodes = [
+    [1, "Where No Man Has Gone Before", "Sally Kellerman, Gary Lockwood"],
+    [1, "Mudd's Women", "Roger C. Carmel"],
+    [1, "What Are Little Girls Made Of?", "Ted Cassidy"],
+    [1, "Miri", "Kim Darby"],
+    [1, "Balance of Terror", "Mark Lenard, before he played Sarek"],
+    [1, "Space Seed", "Ricardo Montalban"],
+    [1, "The City on the Edge of Forever", "Joan Collins"],
+    [2, "The Doomsday Machine", "William Windom"],
+    [2, "Journey to Babel", "Mark Lenard as Sarek"],
+    [2, "Friday's Child", "Julie Newmar"],
+    [2, "Assignment: Earth", "Teri Garr"],
+    [3, "Day of the Dove", "Michael Ansara"],
+    [3, "Let That Be Your Last Battlefield", "Frank Gorshin"],
+]
+
+[[playlists]]
+key = "films"
+name = "The Movies"
+description = "The six films with the original cast"
+poster_from = "show"
+episodes = [
+    { film = "motion_picture" },
+    { film = "wrath_of_khan" },
+    { film = "search_for_spock" },
+    { film = "voyage_home" },
+    { film = "final_frontier" },
+    { film = "undiscovered_country" },
+]

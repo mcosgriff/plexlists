@@ -1,0 +1,236 @@
+# Star Trek: Deep Space Nine.
+# "Emissary", "The Way of the Warrior" and "What You Leave Behind" are double
+# length; a title without a part number pulls in both halves if Plex splits them.
+
+[show]
+title = "Star Trek: Deep Space Nine"
+label = "Star Trek: DS9"
+prefix = "DS9: "
+episode_minutes = 45
+long_episodes = ["Emissary", "The Way of the Warrior", "What You Leave Behind"]
+colors = { top = "#2a1a3a", bottom = "#08050c", accent = "#d9a441", text = "#f3eef7" }
+
+[[playlists]]
+key = "binge"
+name = "Weekend Binge"
+description = "The essential episodes, from Emissary to What You Leave Behind"
+poster_from = "The Visitor"
+episodes = [
+    [1, "Emissary", "Friday night"],
+    [1, "Duet"],
+    [1, "In the Hands of the Prophets"],
+    [2, "The Jem'Hadar"],
+    [3, "The Search (1)"],
+    [3, "The Search (2)"],
+    [3, "Improbable Cause", "Saturday"],
+    [3, "The Die Is Cast"],
+    [4, "The Way of the Warrior"],
+    [4, "The Visitor"],
+    [4, "Homefront"],
+    [4, "Paradise Lost"],
+    [5, "Trials and Tribble-ations"],
+    [5, "In Purgatory's Shadow"],
+    [5, "By Inferno's Light"],
+    [5, "Call to Arms"],
+    [6, "A Time to Stand", "Sunday"],
+    [6, "Rocks and Shoals"],
+    [6, "Sacrifice of Angels"],
+    [6, "Far Beyond the Stars"],
+    [6, "In the Pale Moonlight"],
+    [6, "Tears of the Prophets"],
+    [7, "The Siege of AR-558"],
+    [7, "It's Only a Paper Moon"],
+    [7, "What You Leave Behind", "Finale"],
+]
+
+[[playlists]]
+key = "dominion"
+name = "The Dominion War"
+description = "From first contact with the Jem'Hadar to the end of the war"
+poster_from = "Sacrifice of Angels"
+episodes = [
+    [2, "The Jem'Hadar"],
+    [3, "The Search (1)"],
+    [3, "The Search (2)"],
+    [3, "Heart of Stone"],
+    [3, "Improbable Cause"],
+    [3, "The Die Is Cast"],
+    [3, "The Adversary"],
+    [4, "Homefront"],
+    [4, "Paradise Lost"],
+    [4, "To the Death"],
+    [4, "Broken Link"],
+    [5, "Apocalypse Rising"],
+    [5, "In Purgatory's Shadow"],
+    [5, "By Inferno's Light"],
+    [5, "Call to Arms"],
+    [6, "A Time to Stand"],
+    [6, "Rocks and Shoals"],
+    [6, "Sons and Daughters"],
+    [6, "Behind the Lines"],
+    [6, "Favor the Bold"],
+    [6, "Sacrifice of Angels"],
+    [6, "In the Pale Moonlight"],
+    [6, "Tears of the Prophets"],
+    [7, "Image in the Sand"],
+    [7, "Shadows and Symbols"],
+    [7, "The Siege of AR-558"],
+    [7, "Penumbra"],
+    [7, "'Til Death Do Us Part"],
+    [7, "Strange Bedfellows"],
+    [7, "The Changing Face of Evil"],
+    [7, "When It Rains..."],
+    [7, "Tacking Into the Wind"],
+    [7, "Extreme Measures"],
+    [7, "The Dogs of War"],
+    [7, "What You Leave Behind"],
+]
+
+[[playlists]]
+key = "emissary"
+name = "The Emissary"
+description = "Sisko, Bajor and the Prophets"
+poster_from = "Emissary"
+episodes = [
+    [1, "Emissary"],
+    [1, "In the Hands of the Prophets"],
+    [2, "The Homecoming"],
+    [2, "The Circle"],
+    [2, "The Siege"],
+    [2, "The Collaborator"],
+    [3, "Destiny"],
+    [4, "Accession"],
+    [5, "Rapture"],
+    [6, "The Reckoning"],
+    [6, "Tears of the Prophets"],
+    [7, "Image in the Sand"],
+    [7, "Shadows and Symbols"],
+    [7, "Covenant"],
+    [7, "What You Leave Behind"],
+]
+
+[[playlists]]
+key = "garak"
+name = "Garak"
+description = "Plain, simple Garak"
+poster_from = "The Wire"
+episodes = [
+    [1, "Past Prologue", "First appearance"],
+    [2, "Cardassians"],
+    [2, "The Wire"],
+    [3, "Second Skin"],
+    [3, "Improbable Cause"],
+    [3, "The Die Is Cast"],
+    [4, "Our Man Bashir"],
+    [5, "In Purgatory's Shadow"],
+    [5, "By Inferno's Light"],
+    [5, "Empok Nor"],
+    [6, "In the Pale Moonlight"],
+    [7, "Afterimage"],
+    [7, "The Dogs of War"],
+]
+
+[[playlists]]
+key = "ferengi"
+name = "The Ferengi"
+description = "Quark, Rom, Nog and the Rules of Acquisition"
+poster_from = "The Magnificent Ferengi"
+episodes = [
+    [1, "The Nagus"],
+    [2, "Rules of Acquisition"],
+    [3, "The House of Quark"],
+    [3, "Prophet Motive"],
+    [3, "Family Business"],
+    [4, "Little Green Men"],
+    [4, "Bar Association"],
+    [4, "Body Parts"],
+    [5, "Business as Usual"],
+    [5, "Ferengi Love Songs"],
+    [6, "The Magnificent Ferengi"],
+    [6, "Who Mourns for Morn?"],
+    [7, "The Dogs of War"],
+]
+
+[[playlists]]
+key = "mirror"
+name = "The Mirror Universe"
+description = "The other side, a century after Kirk"
+poster_from = "Crossover"
+episodes = [
+    [2, "Crossover"],
+    [3, "Through the Looking Glass"],
+    [4, "Shattered Mirror"],
+    [6, "Resurrection"],
+    [7, "The Emperor's New Cloak"],
+]
+
+[[playlists]]
+key = "klingon"
+name = "Klingon Saga"
+description = "Worf, Martok and the Empire"
+poster_from = "The Way of the Warrior"
+episodes = [
+    [2, "Blood Oath"],
+    [3, "The House of Quark"],
+    [4, "The Way of the Warrior", "Worf joins the station"],
+    [4, "The Sword of Kahless"],
+    [4, "Sons of Mogh"],
+    [4, "Rules of Engagement"],
+    [5, "Apocalypse Rising"],
+    [5, "Looking for par'Mach in All the Right Places"],
+    [5, "Soldiers of the Empire"],
+    [6, "Sons and Daughters"],
+    [6, "You Are Cordially Invited"],
+    [6, "Change of Heart"],
+    [7, "Once More Unto the Breach"],
+    [7, "Tacking Into the Wind"],
+]
+
+[[playlists]]
+key = "section31"
+name = "Section 31"
+description = "Starfleet's secret"
+poster_from = "Inquisition"
+episodes = [
+    [6, "Inquisition"],
+    [7, "Inter Arma Enim Silent Leges"],
+    [7, "Extreme Measures"],
+]
+
+[[playlists]]
+key = "standalones"
+name = "Best Standalones"
+description = "Self-contained episodes that need little arc knowledge"
+poster_from = "Far Beyond the Stars"
+episodes = [
+    [1, "Duet"],
+    [2, "Necessary Evil"],
+    [2, "Whispers"],
+    [2, "The Wire"],
+    [4, "The Visitor"],
+    [4, "Hard Time"],
+    [5, "Trials and Tribble-ations"],
+    [5, "Children of Time"],
+    [6, "Far Beyond the Stars"],
+    [6, "In the Pale Moonlight"],
+    [7, "Take Me Out to the Holosuite"],
+    [7, "It's Only a Paper Moon"],
+]
+
+[[playlists]]
+key = "guests"
+name = "Guest Stars"
+description = "Familiar faces on the station"
+poster_from = "Blood Oath"
+episodes = [
+    [1, "Q-Less", "John de Lancie"],
+    [1, "The Nagus", "Wallace Shawn"],
+    [1, "In the Hands of the Prophets", "Louise Fletcher"],
+    [2, "Blood Oath", "The three original-series Klingons"],
+    [3, "Defiant", "Jonathan Frakes"],
+    [4, "The Visitor", "Tony Todd"],
+    [5, "Things Past", "Kurtwood Smith"],
+    [5, "Business as Usual", "Steven Berkoff, Lawrence Tierney"],
+    [6, "The Magnificent Ferengi", "Iggy Pop"],
+    [6, "His Way", "James Darren"],
+]

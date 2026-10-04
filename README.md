@@ -8,9 +8,10 @@ Build curated TV show playlists in Plex, matched by episode title.
   recreating the playlist, so custom posters survive.
 - **Posters:** generate title cards over artwork from your Plex library, or
   import your own image and have it cropped to fit.
-- **Shows as TOML:** ships with *The X-Files*, *Star Trek: The Next Generation*,
-  *Star Trek: Enterprise*, *Babylon 5*, *Defiance*, *Stargate SG-1* and
-  *Stargate Atlantis*; add your own without writing Python.
+- **Shows as TOML:** ships with *The X-Files*, five *Star Trek* series (the
+  original, *The Next Generation*, *Deep Space Nine*, *Voyager*, *Enterprise*),
+  *Babylon 5*, *Defiance*, *Stargate SG-1* and *Stargate Atlantis*; add your
+  own without writing Python.
 - **Interactive app:** run `plexlists` with no command for a Textual TUI to browse,
   check, build and manage posters. Every action is also a CLI command for scripting.
 - **Secure login:** Plex's JWT device flow, with the key in your OS keychain
@@ -144,7 +145,7 @@ gradient.
 ## Adding a show
 
 ```sh
-plexlists new ds9 --title "Star Trek: Deep Space Nine"   # from a template
+plexlists new farscape --title "Farscape"                # from a template
 plexlists new tng --title x --copy tng                   # customize a built-in show
 ```
 

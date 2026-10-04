@@ -1,0 +1,209 @@
+# Star Trek: Voyager.
+# "Caretaker", "Dark Frontier", "Flesh and Blood" and "Endgame" are double length;
+# a title without a part number pulls in both halves if Plex splits them.
+
+[show]
+title = "Star Trek: Voyager"
+label = "Star Trek: VOY"
+prefix = "VOY: "
+episode_minutes = 45
+long_episodes = ["Caretaker", "Dark Frontier", "Flesh and Blood", "Endgame"]
+colors = { top = "#102a3c", bottom = "#03080c", accent = "#e0a23c", text = "#eef4f7" }
+
+[[playlists]]
+key = "binge"
+name = "Weekend Binge"
+description = "The essential episodes, from Caretaker to Endgame"
+poster_from = "Year of Hell (1)"
+episodes = [
+    [1, "Caretaker", "Friday night"],
+    [1, "Eye of the Needle"],
+    [2, "Death Wish"],
+    [2, "Tuvix"],
+    [3, "Future's End (1)"],
+    [3, "Future's End (2)"],
+    [3, "Distant Origin"],
+    [3, "Scorpion (1)", "Saturday"],
+    [4, "Scorpion (2)"],
+    [4, "Year of Hell (1)"],
+    [4, "Year of Hell (2)"],
+    [4, "Message in a Bottle"],
+    [4, "Living Witness"],
+    [5, "Timeless"],
+    [5, "Bride of Chaotica!"],
+    [5, "Dark Frontier"],
+    [5, "Equinox (1)", "Sunday"],
+    [6, "Equinox (2)"],
+    [6, "Tinker, Tenor, Doctor, Spy"],
+    [6, "Pathfinder"],
+    [6, "Blink of an Eye"],
+    [7, "Body and Soul"],
+    [7, "Author, Author"],
+    [7, "Endgame", "Finale"],
+]
+
+[[playlists]]
+key = "borg"
+name = "The Borg"
+description = "Voyager against the Collective"
+poster_from = "Scorpion (1)"
+episodes = [
+    [3, "Unity"],
+    [3, "Scorpion (1)"],
+    [4, "Scorpion (2)"],
+    [4, "The Gift"],
+    [4, "The Raven"],
+    [5, "Drone"],
+    [5, "Infinite Regress"],
+    [5, "Dark Frontier"],
+    [6, "Survival Instinct"],
+    [6, "Collective"],
+    [6, "Child's Play"],
+    [6, "Unimatrix Zero (1)"],
+    [7, "Unimatrix Zero (2)"],
+    [7, "Imperfection"],
+    [7, "Endgame"],
+]
+
+[[playlists]]
+key = "seven"
+name = "Seven of Nine"
+description = "From drone to individual"
+poster_from = "The Gift"
+episodes = [
+    [4, "The Gift"],
+    [4, "The Raven"],
+    [4, "One"],
+    [5, "Drone"],
+    [5, "Infinite Regress"],
+    [5, "Dark Frontier"],
+    [5, "Someone to Watch Over Me"],
+    [6, "Survival Instinct"],
+    [7, "Imperfection"],
+    [7, "Body and Soul"],
+    [7, "Human Error"],
+]
+
+[[playlists]]
+key = "doctor"
+name = "The Doctor"
+description = "Please state the nature of the medical emergency"
+poster_from = "Tinker, Tenor, Doctor, Spy"
+episodes = [
+    [1, "Heroes and Demons"],
+    [2, "Projections"],
+    [2, "Lifesigns"],
+    [3, "Real Life"],
+    [4, "Message in a Bottle"],
+    [4, "Living Witness"],
+    [5, "Latent Image"],
+    [5, "Someone to Watch Over Me"],
+    [6, "Tinker, Tenor, Doctor, Spy"],
+    [6, "Virtuoso"],
+    [6, "Life Line"],
+    [7, "Critical Care"],
+    [7, "Body and Soul"],
+    [7, "Flesh and Blood"],
+    [7, "Author, Author"],
+    [7, "Renaissance Man"],
+]
+
+[[playlists]]
+key = "q"
+name = "Q in the Delta Quadrant"
+description = "The Continuum comes calling"
+poster_from = "Death Wish"
+episodes = [
+    [2, "Death Wish"],
+    [3, "The Q and the Grey"],
+    [7, "Q2"],
+]
+
+[[playlists]]
+key = "time"
+name = "Time Travel"
+description = "Temporal mechanics, and the headaches they cause"
+poster_from = "Timeless"
+episodes = [
+    [1, "Time and Again"],
+    [1, "Eye of the Needle"],
+    [3, "Future's End (1)"],
+    [3, "Future's End (2)"],
+    [3, "Before and After"],
+    [4, "Year of Hell (1)"],
+    [4, "Year of Hell (2)"],
+    [5, "Timeless"],
+    [5, "Relativity"],
+    [6, "Blink of an Eye"],
+    [7, "Shattered"],
+    [7, "Endgame"],
+]
+
+[[playlists]]
+key = "hirogen"
+name = "The Hirogen"
+description = "The hunters"
+poster_from = "Prey"
+episodes = [
+    [4, "Message in a Bottle"],
+    [4, "Hunters"],
+    [4, "Prey"],
+    [4, "The Killing Game (1)"],
+    [4, "The Killing Game (2)"],
+    [6, "Tsunkatse"],
+    [7, "Flesh and Blood"],
+]
+
+[[playlists]]
+key = "home"
+name = "Contact with Home"
+description = "Every message that got through to the Alpha Quadrant"
+poster_from = "Pathfinder"
+episodes = [
+    [1, "Eye of the Needle"],
+    [4, "Message in a Bottle"],
+    [4, "Hunters"],
+    [4, "Hope and Fear"],
+    [6, "Pathfinder"],
+    [6, "Life Line"],
+    [7, "Inside Man"],
+    [7, "Author, Author"],
+    [7, "Endgame"],
+]
+
+[[playlists]]
+key = "holodeck"
+name = "Holodeck Stories"
+description = "Captain Proton, Fair Haven and other programs gone wrong"
+poster_from = "Bride of Chaotica!"
+episodes = [
+    [1, "Heroes and Demons"],
+    [3, "Worst Case Scenario"],
+    [4, "The Killing Game (1)"],
+    [4, "The Killing Game (2)"],
+    [5, "Bride of Chaotica!"],
+    [6, "Fair Haven"],
+    [6, "Spirit Folk"],
+]
+
+[[playlists]]
+key = "guests"
+name = "Guest Stars"
+description = "Familiar faces a long way from home"
+poster_from = "Tsunkatse"
+episodes = [
+    [2, "Death Wish", "John de Lancie, Jonathan Frakes"],
+    [2, "Investigations", "A cameo by the future King Abdullah II of Jordan"],
+    [2, "The Thaw", "Michael McKean"],
+    [3, "Flashback", "George Takei, Grace Lee Whitney"],
+    [3, "Future's End (1)", "Sarah Silverman, Ed Begley Jr."],
+    [3, "Future's End (2)"],
+    [4, "Year of Hell (1)", "Kurtwood Smith"],
+    [4, "Year of Hell (2)"],
+    [4, "Concerning Flight", "John Rhys-Davies"],
+    [4, "Message in a Bottle", "Andy Dick"],
+    [5, "Think Tank", "Jason Alexander"],
+    [6, "Pathfinder", "Dwight Schultz, Marina Sirtis"],
+    [6, "Tsunkatse", "Dwayne Johnson"],
+    [6, "Good Shepherd", "A cameo by Tom Morello"],
+]

@@ -8,7 +8,19 @@ from tests.fakeplex import Item
 
 @pytest.mark.parametrize("style", ["tmdb", "tvdb"])
 @pytest.mark.parametrize(
-    "slug", ["atlantis", "babylon5", "defiance", "enterprise", "sg1", "tng", "xfiles"]
+    "slug",
+    [
+        "atlantis",
+        "babylon5",
+        "defiance",
+        "ds9",
+        "enterprise",
+        "sg1",
+        "tng",
+        "tos",
+        "voyager",
+        "xfiles",
+    ],
 )
 def test_every_entry_matches(shows, slug: str, style: str) -> None:
     show = shows[slug]
