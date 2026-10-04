@@ -1,7 +1,7 @@
 """Command-line interface.
 
 plexlists shows                         # available shows
-plexlists <show> list | show | build | posters | poster | remove
+plexlists <show> list | show | build | posters | poster | pull-posters | remove
 plexlists login | status | logout | paths | new
 """
 
@@ -353,6 +353,37 @@ def make_show_app(show: Show) -> typer.Typer:
             console.print(
                 f"\nRun [cyan]plexlists {show.slug} build {target}[/cyan] to upload them."
             )
+
+    @app.command("pull-posters")
+    def pull_posters(
+        keys: KeysArg = None,
+        all_: AllOpt = False,
+        posters_dir: PostersOpt = None,
+        force: Annotated[
+            bool, typer.Option("--force", "-f", help="Replace images in the posters folder.")
+        ] = False,
+        url: UrlOpt = None,
+        token: TokenOpt = None,
+    ) -> None:
+        """
+        Save posters and art you chose in Plex into the posters folder.
+
+        If you picked or uploaded a playlist's artwork in Plex itself, this copies it
+        to [bold]<key>.jpg[/bold] / [bold]<key>-art.jpg[/bold] so it's kept with your other
+        posters and can be uploaded to another server. Plex's automatic collage
+        isn't saved.
+        """
+        keys = resolve(keys, all_)
+        folder = posters_dir or config.posters_dir(show.slug)
+        with console.status("Connecting to Plex..."):
+            session = Session(connect_plex(url, token))
+            existing = session.existing_playlists()
+        for k in keys:
+            try:
+                lines = session.pull_artwork(show, k, folder, force=force, existing=existing)
+            except Exception as exc:
+                lines = [f"[yellow]failed: {escape(f'{type(exc).__name__}: {exc}')}[/yellow]"]
+            console.print(f"[bold]{escape(show.plex_name(k))}[/bold]: {', '.join(lines)}")
 
     @app.command()
     def poster(

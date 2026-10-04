@@ -15,7 +15,14 @@ from typing import Any
 from plexlists import config
 from plexlists.matching import Library
 from plexlists.models import Ep, Show
-from plexlists.sync import find_films, find_show, sync_artwork, sync_playlist
+from plexlists.sync import (
+    file_hash,
+    find_films,
+    find_image,
+    find_show,
+    sync_artwork,
+    sync_playlist,
+)
 
 
 class EntryStatus(StrEnum):
@@ -254,6 +261,47 @@ class Session:
             if not dry_run:
                 config.write_json(config.artwork_state_file(), state)
         return out
+
+    def pull_artwork(
+        self,
+        show: Show,
+        key: str,
+        folder: Path,
+        *,
+        force: bool = False,
+        existing: dict[str, Any] | None = None,
+    ) -> list[str]:
+        """Save the poster and art a playlist has in Plex into the posters folder.
+
+        Only artwork someone chose is saved: Plex's automatic collage isn't. What's
+        saved is recorded as already uploaded, so `build` doesn't send it straight back.
+        """
+        from plexlists.posters import save_image
+
+        if existing is None:
+            existing = self.existing_playlists()
+        pl = existing.get(show.plex_name(key))
+        if pl is None:
+            return ["not in Plex"]
+        thumb = getattr(pl, "thumb", None)
+        if thumb == getattr(pl, "composite", None):
+            thumb = None  # the automatic collage of episode stills
+        state = config.read_json(config.artwork_state_file())
+        done = []
+        for kind, stem, path in (("poster", key, thumb), ("art", f"{key}-art", pl.art)):
+            if not path:
+                continue
+            if (old := find_image(folder, stem)) and not force:
+                done.append(f"{kind} skipped ({old.name} exists)")
+                continue
+            resp = self.plex._session.get(self.plex.url(path, includeToken=True), timeout=30)
+            resp.raise_for_status()
+            dest = folder / f"{stem}.jpg"
+            save_image(resp.content, dest)
+            state[f"{self.plex.machineIdentifier}/{pl.ratingKey}/{kind}"] = file_hash(dest)
+            done.append(f"{kind} saved ({dest.name})")
+        config.write_json(config.artwork_state_file(), state)
+        return done or ["no custom artwork in Plex"]
 
     def find_playlists(self, show: Show, keys: list[str]) -> list[Any]:
         names = {show.plex_name(k) for k in keys}

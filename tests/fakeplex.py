@@ -35,6 +35,8 @@ class FakePlaylist:
         self.summary = ""
         self.entries: list[tuple[int, Item]] = []
         self.addedAt = self.updatedAt = datetime(2026, 10, 3, 21, 14, 5)
+        self.composite = self.thumb = f"/playlists/{rating_key}/composite/1"
+        self.art: str | None = None
         self.posters: list[str] = []
         self.arts: list[str] = []
         self.addItems(items)
@@ -125,6 +127,9 @@ class FakeServer:
         self.next_pid = 0
         self.next_rk = 1000
         self._session = _Session()
+
+    def url(self, path: str, includeToken: bool = False) -> str:  # noqa: N803
+        return path
 
     def playlists(self, **_: Any) -> list[FakePlaylist]:
         return list(self.pls)

@@ -102,6 +102,7 @@ plexlists tng posters --all                  # title cards over artwork from Ple
 plexlists tng posters --all --plain          # text on a gradient, no Plex needed
 plexlists tng poster borg ~/Downloads/x.png  # your own image, cropped to a square
 plexlists tng poster borg https://…/x.jpg --art   # …or to 16:9 background art
+plexlists tng pull-posters --all             # save artwork you chose in Plex itself
 ```
 
 `posters` also saves the same artwork, without the text, as the playlist's

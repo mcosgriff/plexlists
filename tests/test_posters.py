@@ -138,3 +138,24 @@ def test_read_source_downloads_urls(monkeypatch) -> None:
     monkeypatch.setattr("plexlists.posters.urllib.request.urlopen", urlopen)
     assert read_source("https://example.com/a.jpg") == b"data"
     assert seen == ["https://example.com/a.jpg"]
+
+
+def test_pull_posters_saves_only_chosen_artwork(monkeypatch, server, tmp_path: Path) -> None:
+    monkeypatch.setattr(cli, "connect_plex", lambda url, token: server)
+    folder = str(tmp_path)
+    invoke("tng", "build", "borg", "q", "--no-artwork")
+    borg = server.pls[0]
+    assert "no custom artwork" in invoke("tng", "pull-posters", "borg", "--posters-dir", folder)
+    assert "not in Plex" in invoke("tng", "pull-posters", "data", "--posters-dir", folder)
+
+    borg.thumb, borg.art = "/library/metadata/1/thumb/2", "/library/metadata/1/art/3"
+    server._session.images[borg.thumb] = image_bytes("#112233", (600, 900))
+    server._session.images[borg.art] = image_bytes("#445566", (1280, 720))
+    out = invoke("tng", "pull-posters", "--all", "--posters-dir", folder)
+    assert "poster saved (borg.jpg), art saved (borg-art.jpg)" in out
+    assert Image.open(tmp_path / "borg.jpg").size == (600, 900)  # kept as it is in Plex
+    assert "skipped" in invoke("tng", "pull-posters", "borg", "--posters-dir", folder)
+
+    # What came from Plex isn't uploaded back to it.
+    assert "uploaded" not in invoke("tng", "build", "borg", "--posters-dir", folder)
+    assert borg.posters == [] and borg.arts == []

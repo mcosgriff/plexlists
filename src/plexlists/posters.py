@@ -146,6 +146,11 @@ def read_source(source: str) -> bytes:
     return Path(source).expanduser().read_bytes()
 
 
+def save_image(data: bytes, path: Path) -> None:
+    """Save image bytes as path (a .jpg) at their own size and shape."""
+    _save(_open(data), path)
+
+
 def import_image(data: bytes, path: Path, art: bool = False) -> None:
     """Crop image bytes to a square poster (or 16:9 background art) and save as path."""
     _save(ImageOps.fit(_open(data), ART_SIZE if art else POSTER_SIZE), path)
