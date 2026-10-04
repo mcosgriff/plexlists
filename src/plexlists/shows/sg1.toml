@@ -32,6 +32,7 @@ minutes = 98
 key = "binge"
 name = "Weekend Binge"
 description = "The essential episodes, from the original film to Unending"
+poster_from = "Children of the Gods"
 episodes = [
     { film = "stargate", note = "Friday night" },
     [1, "Children of the Gods"],
@@ -67,6 +68,7 @@ episodes = [
 key = "goauld"
 name = "The Goa'uld War"
 description = "Apophis, the System Lords and Anubis"
+poster_from = "The Serpent's Lair"
 episodes = [
     [1, "Children of the Gods"],
     [1, "Within the Serpent's Grasp"],
@@ -100,6 +102,7 @@ episodes = [
 key = "replicators"
 name = "The Replicators"
 description = "The Asgard's enemy becomes everyone's problem"
+poster_from = "Nemesis"
 episodes = [
     [3, "Nemesis"],
     [4, "Small Victories"],
@@ -117,6 +120,7 @@ episodes = [
 key = "asgard"
 name = "Thor and the Asgard"
 description = "Earth's little grey allies"
+poster_from = "Thor's Chariot"
 episodes = [
     [1, "Thor's Hammer"],
     [2, "Thor's Chariot"],
@@ -137,6 +141,7 @@ episodes = [
 key = "ascension"
 name = "Ascension"
 description = "Daniel Jackson, Oma Desala and the Ancients"
+poster_from = "Meridian"
 episodes = [
     [3, "Maternal Instinct"],
     [5, "Meridian"],
@@ -150,6 +155,7 @@ episodes = [
 key = "ori"
 name = "The Ori"
 description = "The season nine and ten arc, concluded in The Ark of Truth"
+poster_from = "Camelot"
 episodes = [
     [9, "Avalon (1)"],
     [9, "Avalon (2)"],
@@ -175,6 +181,7 @@ episodes = [
 key = "time"
 name = "Time Travel and Other Realities"
 description = "Time loops, alternate timelines and parallel universes"
+poster_from = "Window of Opportunity"
 episodes = [
     [1, "There But for the Grace of God"],
     [2, "1969"],
@@ -194,6 +201,7 @@ episodes = [
 key = "funny"
 name = "The Funny Ones"
 description = "The show at its most self-aware"
+poster_from = "Wormhole X-Treme!"
 episodes = [
     [3, "Urgo"],
     [4, "Upgrades"],
@@ -211,6 +219,7 @@ episodes = [
 key = "guests"
 name = "Guest Stars"
 description = "Familiar faces through the gate"
+poster_from = "Urgo"
 episodes = [
     [1, "Politics", "Ronny Cox"],
     [3, "Urgo", "Dom DeLuise"],
@@ -233,6 +242,7 @@ episodes = [
 key = "films"
 name = "The Movies"
 description = "The original film and the two direct-to-video finales"
+poster_from = "stargate"
 episodes = [
     { film = "stargate" },
     { film = "ark_of_truth" },

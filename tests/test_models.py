@@ -73,3 +73,13 @@ def test_user_dir_overrides_builtin_and_reports_bad_files(tmp_path: Path) -> Non
     assert "xfiles" in shows
     assert len(errors) == 1
     assert "broken.toml" in errors[0]
+
+
+def test_builtin_playlists_pick_distinct_poster_artwork(shows) -> None:
+    for show in shows.values():
+        titles = {e.title for p in show.playlists.values() for e in p.episodes if not e.film}
+        picks = [p.poster_from for p in show.playlists.values()]
+        assert all(picks), show.slug
+        assert len(set(picks)) == len(picks), f"{show.slug}: repeated poster_from"
+        for pick in picks:
+            assert pick == "show" or pick in show.films or pick in titles, (show.slug, pick)

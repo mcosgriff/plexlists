@@ -14,6 +14,7 @@ colors = { top = "#0f2f4f", bottom = "#030a12", accent = "#7fd6c2", text = "#eef
 key = "binge"
 name = "Weekend Binge"
 description = "The essential episodes, from Rising to Enemy at the Gate"
+poster_from = "Rising"
 episodes = [
     [1, "Rising", "Friday night"],
     [1, "Thirty-Eight Minutes"],
@@ -51,6 +52,7 @@ episodes = [
 key = "wraith"
 name = "The Wraith War"
 description = "Waking the Wraith and living with the consequences"
+poster_from = "The Hive"
 episodes = [
     [1, "Rising"],
     [1, "The Defiant One"],
@@ -73,6 +75,7 @@ episodes = [
 key = "michael"
 name = "Michael"
 description = "The experiment that came back to haunt Atlantis"
+poster_from = "Michael"
 episodes = [
     [2, "Michael", "Connor Trinneer"],
     [2, "Allies"],
@@ -89,6 +92,7 @@ episodes = [
 key = "asurans"
 name = "The Asurans"
 description = "The Pegasus galaxy's Replicators"
+poster_from = "Be All My Sins Remember'd"
 episodes = [
     [3, "Progeny"],
     [3, "The Real World"],
@@ -106,6 +110,7 @@ episodes = [
 key = "genii"
 name = "The Genii"
 description = "Kolya and the not-so-simple farmers"
+poster_from = "The Storm"
 episodes = [
     [1, "Underground"],
     [1, "The Storm"],
@@ -121,6 +126,7 @@ episodes = [
 key = "todd"
 name = "Todd the Wraith"
 description = "The enemy of my enemy"
+poster_from = "Common Ground"
 episodes = [
     [3, "Common Ground", "First appearance"],
     [4, "The Seer"],
@@ -136,6 +142,7 @@ episodes = [
 key = "mckay"
 name = "Rodney McKay"
 description = "The smartest man in two galaxies, by his own account"
+poster_from = "Grace Under Pressure"
 episodes = [
     [2, "Duet"],
     [2, "Trinity"],
@@ -153,6 +160,7 @@ episodes = [
 key = "crossovers"
 name = "SG-1 Crossovers"
 description = "Visitors from Stargate Command"
+poster_from = "Midway"
 episodes = [
     [1, "Rising", "Jack O'Neill and Daniel Jackson"],
     [3, "The Real World", "Jack O'Neill"],
@@ -171,6 +179,7 @@ episodes = [
 key = "funny"
 name = "The Funny Ones"
 description = "The lighter side of the Pegasus galaxy"
+poster_from = "Duet"
 episodes = [
     [2, "Duet"],
     [3, "Irresistible"],
@@ -185,6 +194,7 @@ episodes = [
 key = "guests"
 name = "Guest Stars"
 description = "Familiar faces in another galaxy"
+poster_from = "Brain Storm"
 episodes = [
     [1, "Rising", "Robert Patrick"],
     [1, "Underground", "Colm Meaney"],

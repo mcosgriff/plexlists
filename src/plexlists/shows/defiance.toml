@@ -12,6 +12,7 @@ colors = { top = "#3a2416", bottom = "#0b0705", accent = "#e8873a", text = "#f5e
 key = "binge"
 name = "Weekend Binge"
 description = "The main story across all three seasons"
+poster_from = "Pilot"
 episodes = [
     [1, "Pilot", "Friday night"],
     [1, "Down in the Ground Where the Dead Men Go"],
@@ -42,6 +43,7 @@ episodes = [
 key = "irisa"
 name = "Irisa and the Kaziri"
 description = "Irisa's visions and the ship buried under the town"
+poster_from = "Bottom of the World"
 episodes = [
     [1, "The Devil in the Dark"],
     [1, "Goodbye Blue Sky"],
@@ -59,6 +61,7 @@ episodes = [
 key = "tarrs"
 name = "House Tarr"
 description = "Datak, Stahma and Alak"
+poster_from = "My Name Is Datak Tarr and I Have Come to Kill You"
 episodes = [
     [1, "Pilot"],
     [1, "A Well Respected Man"],
@@ -77,6 +80,7 @@ episodes = [
 key = "omec"
 name = "The Omec"
 description = "The season three arc"
+poster_from = "The Last Unicorns"
 episodes = [
     [3, "The World We Seize"],
     [3, "The Last Unicorns"],
@@ -94,6 +98,7 @@ episodes = [
 key = "standalones"
 name = "Best Standalones"
 description = "Self-contained stories from around town"
+poster_from = "I Just Wasn't Made for These Times"
 episodes = [
     [1, "The Devil in the Dark"],
     [1, "The Serpent's Egg"],

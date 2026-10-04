@@ -40,7 +40,8 @@ def server(make_server, shows) -> FakeServer:
 
 
 def test_backdrop_defaults_to_first_episode(server, shows) -> None:
-    assert Session(server).backdrop(shows["tng"], "borg") is not None
+    show = with_poster_from(shows["tng"], "borg", "")
+    assert Session(server).backdrop(show, "borg") is not None
     assert server._session.fetched == ["thumb-Q Who"]
 
 
@@ -79,7 +80,7 @@ def test_posters_command_uses_plex_artwork(monkeypatch, server, tmp_path: Path) 
     monkeypatch.setattr(cli, "connect_plex", lambda url, token: server)
     out = invoke("tng", "posters", "borg", "q", "--posters-dir", str(tmp_path))
     assert "plain" not in out
-    assert server._session.fetched == ["thumb-Q Who", "thumb-Encounter at Farpoint"]
+    assert server._session.fetched == ["thumb-The Best of Both Worlds (1)", "thumb-Deja Q"]
     server._session.fetched.clear()
     invoke("tng", "posters", "borg", "--posters-dir", str(tmp_path), "--force", "--plain")
     assert server._session.fetched == []

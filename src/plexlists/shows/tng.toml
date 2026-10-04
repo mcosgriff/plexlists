@@ -39,6 +39,7 @@ minutes = 116
 key = "binge"
 name = "Weekend Binge"
 description = "The essential episodes, from Farpoint to All Good Things"
+poster_from = "The Inner Light"
 episodes = [
     [1, "Encounter at Farpoint", "Friday night"],
     [2, "Elementary, Dear Data"],
@@ -70,6 +71,7 @@ episodes = [
 key = "borg"
 name = "The Borg"
 description = "Every Borg episode in order, plus First Contact"
+poster_from = "The Best of Both Worlds (1)"
 episodes = [
     [2, "Q Who", "First contact with the Borg"],
     [3, "The Best of Both Worlds (1)"],
@@ -85,6 +87,7 @@ episodes = [
 key = "q"
 name = "Q"
 description = "Every Q episode, Farpoint to the finale"
+poster_from = "Deja Q"
 episodes = [
     [1, "Encounter at Farpoint"],
     [1, "Hide and Q"],
@@ -100,6 +103,7 @@ episodes = [
 key = "data"
 name = "Data Spotlight"
 description = "Data's search for humanity"
+poster_from = "The Measure of a Man"
 episodes = [
     [1, "Datalore", "Meet Lore"],
     [2, "Elementary, Dear Data"],
@@ -121,6 +125,7 @@ episodes = [
 key = "picard"
 name = "Picard Spotlight"
 description = "Jean-Luc Picard's defining episodes"
+poster_from = "Tapestry"
 episodes = [
     [2, "Samaritan Snare"],
     [3, "Sarek"],
@@ -142,6 +147,7 @@ episodes = [
 key = "klingon"
 name = "Worf and the Klingons"
 description = "Worf, his family and Klingon politics"
+poster_from = "Sins of the Father"
 episodes = [
     [1, "Heart of Glory"],
     [2, "A Matter of Honor", "Riker serves on a Klingon ship"],
@@ -161,6 +167,7 @@ episodes = [
 key = "holodeck"
 name = "Holodeck"
 description = "When the holodeck goes wrong (or very right)"
+poster_from = "The Big Goodbye"
 episodes = [
     [1, "The Big Goodbye"],
     [2, "Elementary, Dear Data"],
@@ -174,6 +181,7 @@ episodes = [
 key = "time"
 name = "Time Travel and Anomalies"
 description = "Loops, paradoxes and alternate timelines"
+poster_from = "Cause and Effect"
 episodes = [
     [2, "Time Squared"],
     [3, "Yesterday's Enterprise"],
@@ -191,6 +199,7 @@ episodes = [
 key = "halloween"
 name = "Halloween"
 description = "The creepiest episodes"
+poster_from = "Frame of Mind"
 episodes = [
     [1, "Conspiracy", "The one with the brain bugs"],
     [2, "Where Silence Has Lease"],
@@ -208,6 +217,7 @@ episodes = [
 key = "guests"
 name = "Famous Guest Stars"
 description = "Cameos and guest stars worth spotting"
+poster_from = "Relics"
 episodes = [
     [2, "The Outrageous Okona", "Teri Hatcher"],
     [3, "Sins of the Father", "Tony Todd"],
@@ -227,6 +237,7 @@ episodes = [
 key = "films"
 name = "Finale and Films"
 description = "The series finale, then all four TNG movies"
+poster_from = "first_contact"
 episodes = [
     [7, "All Good Things..."],
     { film = "generations" },

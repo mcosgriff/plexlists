@@ -13,6 +13,7 @@ colors = { top = "#16304a", bottom = "#04090f", accent = "#c9a45c", text = "#eef
 key = "binge"
 name = "Weekend Binge"
 description = "The essential episodes, from Broken Bow to Terra Prime"
+poster_from = "Broken Bow"
 episodes = [
     [1, "Broken Bow", "Friday night"],
     [1, "The Andorian Incident"],
@@ -47,6 +48,7 @@ episodes = [
 key = "xindi"
 name = "The Xindi Arc"
 description = "The attack on Earth and the mission into the Delphic Expanse"
+poster_from = "Azati Prime"
 episodes = [
     [2, "The Expanse", "The attack on Earth"],
     [3, "The Xindi"],
@@ -72,6 +74,7 @@ episodes = [
 key = "tcw"
 name = "Temporal Cold War"
 description = "Daniels, the Suliban and the war fought across time"
+poster_from = "Storm Front (1)"
 episodes = [
     [1, "Broken Bow"],
     [1, "Cold Front"],
@@ -91,6 +94,7 @@ episodes = [
 key = "andorians"
 name = "Shran and the Andorians"
 description = "Archer's most reluctant ally"
+poster_from = "The Andorian Incident"
 episodes = [
     [1, "The Andorian Incident", "First appearance of Shran"],
     [1, "Shadows of P'Jem"],
@@ -108,6 +112,7 @@ episodes = [
 key = "vulcan"
 name = "Vulcan"
 description = "T'Pol, the High Command and the rediscovery of Surak"
+poster_from = "The Forge"
 episodes = [
     [1, "The Andorian Incident"],
     [1, "Breaking the Ice"],
@@ -128,6 +133,7 @@ episodes = [
 key = "federation"
 name = "Road to the Federation"
 description = "The season four arcs that set up the Original Series"
+poster_from = "United"
 episodes = [
     [4, "Borderland"],
     [4, "Cold Station 12"],
@@ -148,6 +154,7 @@ episodes = [
 key = "prequel"
 name = "Prequel Tie-Ins"
 description = "Episodes that connect to the rest of Star Trek"
+poster_from = "In a Mirror, Darkly (1)"
 episodes = [
     [1, "Acquisition", "The Ferengi"],
     [2, "Minefield", "The Romulans"],
@@ -167,6 +174,7 @@ episodes = [
 key = "standalones"
 name = "Best Standalones"
 description = "Self-contained episodes that need no arc knowledge"
+poster_from = "Shuttlepod One"
 episodes = [
     [1, "Dear Doctor"],
     [1, "Shuttlepod One"],
@@ -186,6 +194,7 @@ episodes = [
 key = "guests"
 name = "Guest Stars"
 description = "Familiar faces, many from other Trek series"
+poster_from = "Borderland"
 episodes = [
     [1, "The Andorian Incident", "Jeffrey Combs as Shran"],
     [1, "Acquisition", "Jeffrey Combs, Ethan Phillips, Clint Howard"],

@@ -41,6 +41,7 @@ minutes = 94
 key = "binge"
 name = "Weekend Binge"
 description = "The spine of the five-year arc, from the Firing Line to Sleeping in Light"
+poster_from = "Severed Dreams"
 episodes = [
     [1, "Midnight on the Firing Line", "Friday night"],
     [1, "And the Sky Full of Stars"],
@@ -71,6 +72,7 @@ episodes = [
 key = "shadows"
 name = "The Shadow War"
 description = "From Morden's first question to the last of the First Ones"
+poster_from = "Z'ha'dum"
 episodes = [
     [1, "Signs and Portents", "What do you want?"],
     [1, "Chrysalis"],
@@ -100,6 +102,7 @@ episodes = [
 key = "earth"
 name = "Earth Civil War"
 description = "President Clark, Nightwatch and the fight to take Earth back"
+poster_from = "Endgame"
 episodes = [
     [1, "Chrysalis"],
     [2, "Revelations"],
@@ -128,6 +131,7 @@ episodes = [
 key = "londo-gkar"
 name = "Londo and G'Kar"
 description = "The Centauri, the Narn and the two men at the center of it"
+poster_from = "The Long, Twilight Struggle"
 episodes = [
     [1, "Midnight on the Firing Line"],
     [1, "Signs and Portents"],
@@ -151,6 +155,7 @@ episodes = [
 key = "psicorps"
 name = "Psi Corps"
 description = "Bester and the telepaths"
+poster_from = "Mind War"
 episodes = [
     [1, "Mind War", "Walter Koenig's first appearance as Bester"],
     [2, "A Race Through Dark Places"],
@@ -171,6 +176,7 @@ episodes = [
 key = "valen"
 name = "Sinclair and Valen"
 description = "The Battle of the Line, Babylon 4 and the Minbari prophecy"
+poster_from = "War Without End (1)"
 episodes = [
     { film = "in_the_beginning", note = "Prequel: spoils the first-season mysteries" },
     [1, "And the Sky Full of Stars"],
@@ -185,6 +191,7 @@ episodes = [
 key = "standalones"
 name = "Best Standalones"
 description = "Self-contained episodes that work without the arc"
+poster_from = "Passing Through Gethsemane"
 episodes = [
     [1, "The Parliament of Dreams"],
     [1, "Believers"],
@@ -203,6 +210,7 @@ episodes = [
 key = "guests"
 name = "Guest Stars"
 description = "Familiar faces passing through the station"
+poster_from = "Day of the Dead"
 episodes = [
     [1, "Mind War", "Walter Koenig"],
     [1, "Deathwalker", "Sarah Douglas"],
@@ -222,6 +230,7 @@ episodes = [
 key = "films"
 name = "The Movies"
 description = "The TV movies, in story order"
+poster_from = "show"
 episodes = [
     { film = "in_the_beginning" },
     { film = "gathering", note = "The original pilot" },

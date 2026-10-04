@@ -17,6 +17,7 @@ minutes = 121
 key = "binge"
 name = "Weekend Binge"
 description = "Mythology spine through the Syndicate's end, plus the best standalones"
+poster_from = "Pilot"
 episodes = [
     [1, "Pilot", "Friday night"],
     [1, "Deep Throat"],
@@ -51,6 +52,7 @@ episodes = [
 key = "monsters"
 name = "Monster of the Week"
 description = "The best standalone episodes, scary and funny"
+poster_from = "The Host"
 episodes = [
     [1, "Squeeze"],
     [1, "Ice"],
@@ -84,6 +86,7 @@ episodes = [
 key = "halloween"
 name = "Halloween"
 description = "The scariest episodes, with no comic relief"
+poster_from = "Home"
 episodes = [
     [1, "Squeeze"],
     [1, "Ice"],
@@ -102,6 +105,7 @@ episodes = [
 key = "funny"
 name = "The Funny Ones"
 description = "Darin Morgan's episodes plus the show's best comedies"
+poster_from = "Bad Blood"
 episodes = [
     [2, "Humbug", "Darin Morgan"],
     [3, "Clyde Bruckman's Final Repose", "Darin Morgan"],
@@ -119,6 +123,7 @@ episodes = [
 key = "gilligan"
 name = "Vince Gilligan Collection"
 description = "Episodes from the creator of Breaking Bad"
+poster_from = "Drive"
 episodes = [
     [2, "Soft Light"],
     [3, "Pusher"],
@@ -138,6 +143,7 @@ episodes = [
 key = "csm"
 name = "Cigarette Smoking Man"
 description = "The man behind the conspiracy"
+poster_from = "Musings of a Cigarette Smoking Man"
 episodes = [
     [3, "Talitha Cumi"],
     [4, "Musings of a Cigarette Smoking Man"],
@@ -150,6 +156,7 @@ episodes = [
 key = "gunmen"
 name = "The Lone Gunmen"
 description = "Byers, Frohike and Langly"
+poster_from = "Unusual Suspects"
 episodes = [
     [1, "E.B.E.", "First appearance"],
     [5, "Unusual Suspects", "Origin story"],
@@ -161,6 +168,7 @@ episodes = [
 key = "scully"
 name = "Scully Spotlight"
 description = "Dana Scully's defining episodes"
+poster_from = "Beyond the Sea"
 episodes = [
     [1, "Beyond the Sea"],
     [2, "One Breath"],
@@ -176,6 +184,7 @@ episodes = [
 key = "guests"
 name = "Before They Were Famous"
 description = "Guest stars on their way up"
+poster_from = "Clyde Bruckman's Final Repose"
 episodes = [
     [1, "Deep Throat", "Seth Green"],
     [2, "Soft Light", "Tony Shalhoub"],
@@ -190,6 +199,7 @@ episodes = [
 key = "mythology"
 name = "Complete Mythology"
 description = "Every conspiracy episode in order, Pilot through Requiem"
+poster_from = "Anasazi"
 episodes = [
     [1, "Pilot"],
     [1, "Deep Throat"],
