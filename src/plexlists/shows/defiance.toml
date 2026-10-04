@@ -1,0 +1,104 @@
+# Defiance (2013-2015). The two-hour pilot counts double when stored as one file.
+
+[show]
+title = "Defiance"
+label = "Defiance"
+prefix = "Defiance: "
+episode_minutes = 43
+long_episodes = ["Pilot"]
+colors = { top = "#3a2416", bottom = "#0b0705", accent = "#e8873a", text = "#f5efe8" }
+
+[[playlists]]
+key = "binge"
+name = "Weekend Binge"
+description = "The main story across all three seasons"
+episodes = [
+    [1, "Pilot", "Friday night"],
+    [1, "Down in the Ground Where the Dead Men Go"],
+    [1, "A Well Respected Man"],
+    [1, "Goodbye Blue Sky"],
+    [1, "If I Ever Leave This World Alive"],
+    [1, "The Bride Wore Black"],
+    [1, "Past Is Prologue"],
+    [1, "Everything Is Broken"],
+    [2, "The Opposite of Hallelujah", "Saturday"],
+    [2, "The Cord and the Ax"],
+    [2, "This Woman's Work"],
+    [2, "Slouching Towards Bethlehem"],
+    [2, "Bottom of the World"],
+    [2, "All Things Must Pass"],
+    [2, "I Almost Prayed"],
+    [3, "The World We Seize", "Sunday"],
+    [3, "The Last Unicorns"],
+    [3, "The Broken Bough"],
+    [3, "Where the Apples Fell"],
+    [3, "My Name Is Datak Tarr and I Have Come to Kill You"],
+    [3, "Ostinato in White"],
+    [3, "The Awakening"],
+    [3, "Upon the March We Fittest Die", "Finale"],
+]
+
+[[playlists]]
+key = "irisa"
+name = "Irisa and the Kaziri"
+description = "Irisa's visions and the ship buried under the town"
+episodes = [
+    [1, "The Devil in the Dark"],
+    [1, "Goodbye Blue Sky"],
+    [1, "Past Is Prologue"],
+    [1, "Everything Is Broken"],
+    [2, "The Opposite of Hallelujah"],
+    [2, "The Cord and the Ax"],
+    [2, "Bottom of the World"],
+    [2, "Doll Parts"],
+    [2, "All Things Must Pass"],
+    [2, "I Almost Prayed"],
+]
+
+[[playlists]]
+key = "tarrs"
+name = "House Tarr"
+description = "Datak, Stahma and Alak"
+episodes = [
+    [1, "Pilot"],
+    [1, "A Well Respected Man"],
+    [1, "The Bride Wore Black"],
+    [1, "Everything Is Broken"],
+    [2, "In My Secret Life"],
+    [2, "The Cord and the Ax"],
+    [2, "This Woman's Work"],
+    [2, "I Almost Prayed"],
+    [3, "The Broken Bough"],
+    [3, "Where the Apples Fell"],
+    [3, "My Name Is Datak Tarr and I Have Come to Kill You"],
+]
+
+[[playlists]]
+key = "omec"
+name = "The Omec"
+description = "The season three arc"
+episodes = [
+    [3, "The World We Seize"],
+    [3, "The Last Unicorns"],
+    [3, "The Broken Bough"],
+    [3, "Dead Air"],
+    [3, "The Beauty of Our Weapons"],
+    [3, "Ostinato in White"],
+    [3, "When Twilight Dims the Sky Above"],
+    [3, "Of a Demon in My View"],
+    [3, "The Awakening"],
+    [3, "Upon the March We Fittest Die"],
+]
+
+[[playlists]]
+key = "standalones"
+name = "Best Standalones"
+description = "Self-contained stories from around town"
+episodes = [
+    [1, "The Devil in the Dark"],
+    [1, "The Serpent's Egg"],
+    [1, "Brothers in Arms"],
+    [1, "I Just Wasn't Made for These Times"],
+    [2, "Put the Damage On"],
+    [2, "Painted from Memory"],
+]
