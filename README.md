@@ -36,7 +36,8 @@ playlists, or select a single playlist.
 
 With a saved login the app connects to Plex in the background as it opens and
 checks every playlist, so the match marks and episode details fill in by
-themselves. The header shows the state: 🟢 connected, 🟡 connecting, 🔴 the last attempt failed,
+themselves; shows your server doesn't have are dimmed. The header shows how far
+that check has got, and the connection state: 🟢 connected, 🟡 connecting, 🔴 the last attempt failed,
 ⚪ not connected (or not logged in).
 
 Each playlist shows when it was created and last updated in Plex. Plex keeps

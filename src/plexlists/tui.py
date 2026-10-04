@@ -297,6 +297,7 @@ class PlexlistsApp(App[None]):
         # Shows whose episode details we stop loading unasked ("*" = can't connect at all).
         self.no_auto: set[str] = set()
         self.absent: set[str] = set()  # shows the connected server doesn't have
+        self.scan: tuple[int, int] | None = None  # background check progress
         self.connect_lock = threading.Lock()
         self.nodes: dict[Nav, Any] = {}
         self.current: Nav | None = None
@@ -336,7 +337,9 @@ class PlexlistsApp(App[None]):
             return
         with contextlib.suppress(Exception):
             self.call_from_thread(self.set_times, session.playlist_times())
-        for show in list(self.shows.values()):
+        shows = list(self.shows.values())
+        for n, show in enumerate(shows):
+            self.call_from_thread(self.set_scan, (n, len(shows)))
             try:
                 results = [session.match(show, key) for key in show.playlists]
             except ShowNotFoundError:
@@ -352,6 +355,12 @@ class PlexlistsApp(App[None]):
                 )
                 continue
             self.call_from_thread(self.store_scan, show, results)
+        self.call_from_thread(self.set_scan, None)
+
+    def set_scan(self, progress: tuple[int, int] | None) -> None:
+        """How far the background check has got: (shows done, shows in total), or None."""
+        self.scan = progress
+        self.update_subtitle(self.session.server_name if self.session else None)
 
     def mark_absent(self, show: Show) -> None:
         """The server doesn't have this show: dim it in the tree."""
@@ -410,7 +419,8 @@ class PlexlistsApp(App[None]):
     def update_subtitle(self, connected: str | None = None, state: str = "idle") -> None:
         """Header status: 🟢 connected, 🟡 connecting, 🔴 couldn't connect, ⚪ not connected."""
         if connected:
-            self.sub_title = f"🟢 connected to {connected}"
+            checking = f" · checking shows {self.scan[0] + 1}/{self.scan[1]}…" if self.scan else ""
+            self.sub_title = f"🟢 connected to {connected}{checking}"
             return
         icon, state = {
             "connecting": ("🟡", "connecting…"),

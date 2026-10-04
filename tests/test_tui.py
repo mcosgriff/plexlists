@@ -240,7 +240,7 @@ async def test_connects_on_startup_when_logged_in(server, shows) -> None:
     async with app.run_test(size=(160, 40)) as pilot:
         await settle(app, pilot)
         assert app.session is not None
-        assert "🟢 connected to TestServer" in app.sub_title
+        assert app.sub_title == "🟢 connected to TestServer"  # the check has finished
         await select(app, pilot, Nav("tng"))
         assert cell(app, 1, 6) == "2026-10-03"  # playlist times were read from Plex
         # Every playlist was checked without being selected.
@@ -268,3 +268,14 @@ async def test_startup_connection_failure_turns_the_icon_red(monkeypatch) -> Non
         await select(app, pilot, Nav("tng", "borg"))
         await settle(app, pilot)
         assert ("tng", "borg") not in app.results  # no retry on every playlist
+
+
+async def test_header_shows_background_check_progress(server) -> None:
+    app = PlexlistsApp()
+    async with app.run_test(size=(160, 40)) as pilot:
+        await pilot.press("c")
+        await settle(app, pilot)
+        app.set_scan((2, 7))
+        assert app.sub_title == "🟢 connected to TestServer · checking shows 3/7…"
+        app.set_scan(None)
+        assert app.sub_title == "🟢 connected to TestServer"
