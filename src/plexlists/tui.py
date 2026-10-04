@@ -236,7 +236,7 @@ class AccountScreen(ModalScreen[str]):
 class PlexlistsApp(App[None]):
     TITLE = "plexlists"
     CSS = """
-    #nav { width: 34; border-right: solid $panel; padding-right: 1; }
+    #nav { width: 46; border-right: solid $panel; padding-right: 1; }
     #main { width: 1fr; }
     #summary { height: auto; padding: 0 1 1 1; }
     #table { height: 1fr; }
@@ -266,7 +266,7 @@ class PlexlistsApp(App[None]):
         Binding("x", "remove", "Remove"),
         Binding("r", "reload", "Reload"),
         Binding("a", "account", "Account"),
-        Binding("g", "toggle_log", "Log", show=False),
+        Binding("g", "toggle_log", "Log"),
         Binding("q", "quit", "Quit"),
     ]
 

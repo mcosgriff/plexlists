@@ -19,11 +19,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="58c68fc5-f407-48bb-9d62-5cd6b24ff055" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/plexlists/report.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/plexlists/report.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/plexlists/tui.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/plexlists/tui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/fakeplex.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fakeplex.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_tui.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_tui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,7 +156,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1791081141604</updated>
-      <workItem from="1791081142615" duration="3391000" />
+      <workItem from="1791081142615" duration="3733000" />
     </task>
     <task id="LOCAL-00001" summary="chore: add JetBrains IDE project files to .idea directory">
       <option name="closed" value="true" />
@@ -186,7 +182,23 @@
       <option name="project" value="LOCAL" />
       <updated>1791084240088</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat(tui): add episode details display and auto-loading&#10;&#10;- Display episode details (number, air date, duration, watched status) and Plex summary in the TUI.&#10;- Implement automatic loading of episode details upon playlist navigation with a saved login.&#10;- Update playlist handling and UI to support detailed entry views under the table.&#10;- Adjust tests to validate episode detail functionality.&#10;- Update README to document the new feature.">
+      <option name="closed" value="true" />
+      <created>1791084571603</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1791084571603</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat(tui): improve connection status UI and logging&#10;&#10;- Update subtitle to display connection statuses with icons: 🟢 connected, ⚪ not connected, 🔴 connection failed.&#10;- Add detailed logging for successful connection events.&#10;- Refactor subtitle updates to include connection error states.&#10;- Update tests to validate new subtitle logic and connection status handling.&#10;- Document header connection status icons in the README.">
+      <option name="closed" value="true" />
+      <created>1791084798092</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1791084798092</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,6 +220,8 @@
     <MESSAGE value="chore: add JetBrains IDE project files to .idea directory" />
     <MESSAGE value="feat(posters): enable art-based title card generation and custom uploads&#10;&#10;- Add support for generating title-card posters with artwork from Plex.&#10;- Allow importing custom images (file or URL) as posters or 16:9 background art.&#10;- Refactor poster rendering logic to integrate Plex artwork and fallback to plain gradients.&#10;- Update CLI and documentation to include new options, such as specifying `poster_from` in show files to select artwork.&#10;- Enhance tests to cover validation and new functionality." />
     <MESSAGE value="feat(tui): display and cache Plex playlist creation and update times&#10;&#10;- Add support for displaying Plex playlist creation and update timestamps in the TUI.  &#10;- Cache playlist times per server for immediate display upon app launch before connecting.  &#10;- Update playlist handling logic to fetch and store timestamps from Plex.  &#10;- Extend testing and TUI logic to validate and integrate this functionality.  &#10;- Update README to document the new feature." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(tui): display and cache Plex playlist creation and update times&#10;&#10;- Add support for displaying Plex playlist creation and update timestamps in the TUI.  &#10;- Cache playlist times per server for immediate display upon app launch before connecting.  &#10;- Update playlist handling logic to fetch and store timestamps from Plex.  &#10;- Extend testing and TUI logic to validate and integrate this functionality.  &#10;- Update README to document the new feature." />
+    <MESSAGE value="feat(tui): add episode details display and auto-loading&#10;&#10;- Display episode details (number, air date, duration, watched status) and Plex summary in the TUI.&#10;- Implement automatic loading of episode details upon playlist navigation with a saved login.&#10;- Update playlist handling and UI to support detailed entry views under the table.&#10;- Adjust tests to validate episode detail functionality.&#10;- Update README to document the new feature." />
+    <MESSAGE value="feat(tui): improve connection status UI and logging&#10;&#10;- Update subtitle to display connection statuses with icons:  connected, ⚪ not connected,  connection failed.&#10;- Add detailed logging for successful connection events.&#10;- Refactor subtitle updates to include connection error states.&#10;- Update tests to validate new subtitle logic and connection status handling.&#10;- Document header connection status icons in the README." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(tui): improve connection status UI and logging&#10;&#10;- Update subtitle to display connection statuses with icons:  connected, ⚪ not connected,  connection failed.&#10;- Add detailed logging for successful connection events.&#10;- Refactor subtitle updates to include connection error states.&#10;- Update tests to validate new subtitle logic and connection status handling.&#10;- Document header connection status icons in the README." />
   </component>
 </project>
