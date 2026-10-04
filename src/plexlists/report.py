@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from typing import Any
+
 from rich.markup import escape
 
 from plexlists.models import Show
@@ -24,6 +27,47 @@ def entry_status(show: Show, r: EntryResult) -> str:
         return "[dim]not in movie library[/dim]"
     hint = f" [dim](closest: {escape(', '.join(r.suggestions))})[/dim]" if r.suggestions else ""
     return f"[red]✗ missing[/red]{hint}"
+
+
+@dataclass(frozen=True)
+class EntryDetails:
+    """What Plex knows about the item(s) an entry matched, as display strings ("" = unknown)."""
+
+    episode: str  # "S2E16", "S3E26 + S4E01", or a film's year
+    aired: str
+    length: str
+    watched: str  # "✓", "—", or "1/2" for a partly watched two-parter
+    summary: str
+
+
+def _code(item: Any) -> str:
+    season, number = getattr(item, "seasonNumber", None), getattr(item, "index", None)
+    if season is None or not number:
+        return str(getattr(item, "year", None) or "")
+    return f"S{season}E{number:02d}"
+
+
+def _minutes(ms: int) -> str:
+    h, m = divmod(round(ms / 60000), 60)
+    return f"{h}h {m:02d}m" if h else f"{m}m"
+
+
+def entry_details(r: EntryResult) -> EntryDetails | None:
+    """Details for a matched entry, or None if it didn't match anything in Plex."""
+    if not r.items:
+        return None
+    aired = getattr(r.items[0], "originallyAvailableAt", None)
+    durations = [getattr(i, "duration", None) or 0 for i in r.items]
+    played = sum(bool(getattr(i, "isPlayed", False)) for i in r.items)
+    watched = "✓" if played == len(r.items) else "—" if not played else f"{played}/{len(r.items)}"
+    summaries = [s for i in r.items if (s := (getattr(i, "summary", None) or "").strip())]
+    return EntryDetails(
+        episode=" + ".join(c for i in r.items if (c := _code(i))),
+        aired=f"{aired:%Y-%m-%d}" if aired else "",
+        length=_minutes(sum(durations)) if all(durations) else "",
+        watched=watched,
+        summary="\n".join(summaries),
+    )
 
 
 def result_lines(show: Show, result: MatchResult, out: ApplyResult | None = None) -> list[str]:

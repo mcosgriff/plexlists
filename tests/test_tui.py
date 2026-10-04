@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -193,3 +194,33 @@ async def test_created_time_comes_from_plex_and_is_remembered(server, config_dir
         assert again.session is None
         assert cell(again, 1, 6) == "2026-10-03"
         assert cell(again, 0, 6) == "—"
+
+
+async def test_playlist_shows_episode_details_from_plex(server) -> None:
+    for e in server.show.eps:
+        if e.title == "Q Who":
+            e.seasonNumber, e.index = 2, 16
+            e.originallyAvailableAt = datetime(1989, 5, 8)
+            e.duration = 45 * 60 * 1000
+            e.isPlayed = True
+            e.summary = "Q flings the Enterprise into the path of the Borg."
+    app = PlexlistsApp()
+    async with app.run_test(size=(180, 40)) as pilot:
+        await select(app, pilot, Nav("tng", "borg"))
+        assert cell(app, 0, 5) == "—"  # not connected: nothing loaded unasked
+        assert app.query_one("#detail", Static).has_class("hidden")
+        await pilot.press("c")
+        await settle(app, pilot)
+        assert [cell(app, 0, c) for c in (5, 6, 7, 8)] == ["S2E16", "1989-05-08", "45m", "✓"]
+        detail = app.query_one("#detail", Static)
+        assert not detail.has_class("hidden")
+        assert "path of the Borg" in str(detail.render())
+        assert cell(app, 1, 8) == "—"  # matched, not watched
+
+        # Once connected, other playlists load their details when opened.
+        await select(app, pilot, Nav("tng", "q"))
+        await settle(app, pilot)
+        assert ("tng", "q") in app.results
+        assert cell(app, 2, 5) == "S2E16"  # Q Who again
+        await select(app, pilot, Nav("tng"))
+        assert app.query_one("#detail", Static).has_class("hidden")

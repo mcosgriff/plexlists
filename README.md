@@ -38,6 +38,10 @@ Each playlist shows when it was created and last updated in Plex. Plex keeps
 those times itself, per server; plexlists reads them whenever it connects and
 remembers the last answer, so they're shown as soon as the app opens.
 
+Opening a playlist lists each entry's episode number, air date, length and
+whether you've watched it, with Plex's summary of the highlighted episode
+underneath. With a saved login this loads by itself; otherwise press `c` once.
+
 | Key | Action |
 |---|---|
 | `c` | Check: match episodes against your library without changing Plex |

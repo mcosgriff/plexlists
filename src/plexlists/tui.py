@@ -37,7 +37,7 @@ from textual.widgets.option_list import Option
 
 from plexlists import auth, config
 from plexlists.models import BUILTIN_DIR, Show, discover
-from plexlists.report import entry_status, match_summary, result_lines
+from plexlists.report import entry_details, entry_status, match_summary, result_lines
 from plexlists.service import (
     ApplyResult,
     MatchResult,
@@ -240,6 +240,8 @@ class PlexlistsApp(App[None]):
     #main { width: 1fr; }
     #summary { height: auto; padding: 0 1 1 1; }
     #table { height: 1fr; }
+    #detail { height: auto; max-height: 7; border-top: solid $panel; padding: 0 1; }
+    #detail.hidden { display: none; }
     #log { height: 8; border-top: solid $panel; padding: 0 1; }
     #log.hidden { display: none; }
     ModalScreen { align: center middle; }
@@ -276,6 +278,8 @@ class PlexlistsApp(App[None]):
         self.actions: dict[tuple[str, str], str] = {}
         # Plex playlist name -> times, as of the last time we asked. None = never asked.
         self.times: dict[str, PlaylistTimes] | None = None
+        # Shows whose episode details we stop loading unasked ("*" = can't connect at all).
+        self.no_auto: set[str] = set()
         self.nodes: dict[Nav, Any] = {}
         self.current: Nav | None = None
 
@@ -290,6 +294,7 @@ class PlexlistsApp(App[None]):
             with Vertical(id="main"):
                 yield Static(id="summary")
                 yield DataTable(id="table", cursor_type="row", zebra_stripes=True)
+                yield Static(id="detail", classes="hidden")
                 yield RichLog(id="log", markup=True, wrap=True)
         yield Footer()
 
@@ -409,6 +414,7 @@ class PlexlistsApp(App[None]):
         table = self.query_one("#table", DataTable)
         table.clear(columns=True)
         table.add_columns("Key", "Name in Plex", "Items", "Runtime", "Poster", "Plex", "Created")
+        self.show_detail(None)
         folder = config.posters_dir(show.slug)
         for key, p in show.playlists.items():
             table.add_row(
@@ -442,21 +448,53 @@ class PlexlistsApp(App[None]):
         )
         table = self.query_one("#table", DataTable)
         table.clear(columns=True)
-        table.add_columns("#", "S", "Title", "Note", "In Plex")
+        table.add_columns(
+            "#", "S", "Title", "Note", "In Plex", "Episode", "Aired", "Length", "Watched"
+        )
         result = self.results.get((show.slug, key))
+        blank = Text("—", style="dim")
         for i, e in enumerate(p.episodes):
-            status = (
-                Text.from_markup(entry_status(show, result.entries[i]))
-                if result
-                else Text("—", style="dim")
-            )
+            status = Text.from_markup(entry_status(show, result.entries[i])) if result else blank
+            d = entry_details(result.entries[i]) if result else None
+            info = [d.episode, d.aired, d.length, d.watched] if d else [""] * 4
             table.add_row(
                 str(i + 1),
                 "film" if e.film else str(e.season),
                 show.display(e),
                 Text(e.note, style="dim"),
                 status,
+                *(v or blank for v in info),
             )
+        self.show_detail(0)
+        if result is None and self.can_auto_load(show):
+            self.load_details(show, key)
+
+    def can_auto_load(self, show: Show) -> bool:
+        """Whether to fetch episode details unasked: only with a connection or a saved login."""
+        if self.no_auto & {"*", show.slug}:
+            return False
+        return self.session is not None or bool(config.load_config().get("client_id"))
+
+    @on(DataTable.RowHighlighted, "#table")
+    def row_highlighted(self, event: DataTable.RowHighlighted) -> None:
+        self.show_detail(event.cursor_row)
+
+    def show_detail(self, row: int | None) -> None:
+        """Under the table: Plex's summary of the highlighted episode, once it's known."""
+        detail = self.query_one("#detail", Static)
+        nav = self.current
+        result = self.results.get((nav.slug, nav.key)) if nav and nav.key else None
+        entry = None
+        if result is not None and row is not None and 0 <= row < len(result.entries):
+            entry = result.entries[row]
+        d = entry_details(entry) if entry else None
+        if nav is None or entry is None or d is None or not d.summary:
+            detail.add_class("hidden")
+            return
+        title = self.shows[nav.slug].display(entry.ep)
+        facts = " · ".join(v for v in (d.episode, d.aired, d.length) if v)
+        detail.update(f"[bold]{escape(title)}[/bold]  [dim]{facts}[/dim]\n{escape(d.summary)}")
+        detail.remove_class("hidden")
 
     def refresh_view(self) -> None:
         self.show_nav(self.current)
@@ -541,11 +579,28 @@ class PlexlistsApp(App[None]):
         msg = f"{done} {len(keys)} playlist(s)" + (f", {missing} missing" if missing else "")
         self.call_from_thread(self.notify, msg, severity="warning" if missing else "information")
 
-    def store_result(self, show: Show, result: MatchResult, out: ApplyResult | None) -> None:
+    @work(thread=True, exclusive=True, group="details")
+    def load_details(self, show: Show, key: str) -> None:
+        """Match one playlist quietly so its episode details can be shown."""
+        session = self.get_session()
+        if session is None:
+            self.no_auto.add("*")
+            return
+        try:
+            result = session.match(show, key)
+        except Exception as exc:
+            self.no_auto.add(show.slug)
+            self.call_from_thread(self.report_error, f"{type(exc).__name__}: {exc}")
+            return
+        self.call_from_thread(self.store_result, show, result, None, True)
+
+    def store_result(
+        self, show: Show, result: MatchResult, out: ApplyResult | None, quiet: bool = False
+    ) -> None:
         self.results[(show.slug, result.key)] = result
         if out is not None:
             self.actions[(show.slug, result.key)] = (out.skipped and "skipped") or out.action
-        for line in result_lines(show, result, out):
+        for line in [] if quiet else result_lines(show, result, out):
             self.log_line(line)
         self.refresh_labels(show.slug)
         self.refresh_view()
@@ -680,6 +735,7 @@ class PlexlistsApp(App[None]):
         """Re-read show files and forget cached Plex episode lists."""
         self.results.clear()
         self.actions.clear()
+        self.no_auto.clear()
         if self.session is not None:
             self.session.forget()
         self.load_shows()
@@ -700,6 +756,7 @@ class PlexlistsApp(App[None]):
     def after_login(self, ok: bool | None) -> None:
         if ok:
             self.session = None
+            self.no_auto.clear()
             self.load_cached_times()
             self.update_subtitle()
             self.refresh_view()

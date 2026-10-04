@@ -19,6 +19,10 @@ class Item:
     playlistItemID: int | None = None  # noqa: N815
     thumbUrl: str | None = None  # noqa: N815
     artUrl: str | None = None  # noqa: N815
+    originallyAvailableAt: datetime | None = None  # noqa: N815
+    duration: int | None = None  # milliseconds
+    isPlayed: bool = False  # noqa: N815
+    summary: str = ""
 
 
 class FakePlaylist:

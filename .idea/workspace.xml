@@ -19,10 +19,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="58c68fc5-f407-48bb-9d62-5cd6b24ff055" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/plexlists/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/plexlists/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/plexlists/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/plexlists/service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/plexlists/report.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/plexlists/report.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/plexlists/tui.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/plexlists/tui.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/fakeplex.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/fakeplex.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_tui.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_tui.py" afterDir="false" />
@@ -162,7 +160,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1791081141604</updated>
-      <workItem from="1791081142615" duration="3059000" />
+      <workItem from="1791081142615" duration="3391000" />
     </task>
     <task id="LOCAL-00001" summary="chore: add JetBrains IDE project files to .idea directory">
       <option name="closed" value="true" />
@@ -180,7 +178,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791083774095</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat(tui): display and cache Plex playlist creation and update times&#10;&#10;- Add support for displaying Plex playlist creation and update timestamps in the TUI.  &#10;- Cache playlist times per server for immediate display upon app launch before connecting.  &#10;- Update playlist handling logic to fetch and store timestamps from Plex.  &#10;- Extend testing and TUI logic to validate and integrate this functionality.  &#10;- Update README to document the new feature.">
+      <option name="closed" value="true" />
+      <created>1791084240088</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1791084240088</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -201,6 +207,7 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="chore: add JetBrains IDE project files to .idea directory" />
     <MESSAGE value="feat(posters): enable art-based title card generation and custom uploads&#10;&#10;- Add support for generating title-card posters with artwork from Plex.&#10;- Allow importing custom images (file or URL) as posters or 16:9 background art.&#10;- Refactor poster rendering logic to integrate Plex artwork and fallback to plain gradients.&#10;- Update CLI and documentation to include new options, such as specifying `poster_from` in show files to select artwork.&#10;- Enhance tests to cover validation and new functionality." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(posters): enable art-based title card generation and custom uploads&#10;&#10;- Add support for generating title-card posters with artwork from Plex.&#10;- Allow importing custom images (file or URL) as posters or 16:9 background art.&#10;- Refactor poster rendering logic to integrate Plex artwork and fallback to plain gradients.&#10;- Update CLI and documentation to include new options, such as specifying `poster_from` in show files to select artwork.&#10;- Enhance tests to cover validation and new functionality." />
+    <MESSAGE value="feat(tui): display and cache Plex playlist creation and update times&#10;&#10;- Add support for displaying Plex playlist creation and update timestamps in the TUI.  &#10;- Cache playlist times per server for immediate display upon app launch before connecting.  &#10;- Update playlist handling logic to fetch and store timestamps from Plex.  &#10;- Extend testing and TUI logic to validate and integrate this functionality.  &#10;- Update README to document the new feature." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(tui): display and cache Plex playlist creation and update times&#10;&#10;- Add support for displaying Plex playlist creation and update timestamps in the TUI.  &#10;- Cache playlist times per server for immediate display upon app launch before connecting.  &#10;- Update playlist handling logic to fetch and store timestamps from Plex.  &#10;- Extend testing and TUI logic to validate and integrate this functionality.  &#10;- Update README to document the new feature." />
   </component>
 </project>
