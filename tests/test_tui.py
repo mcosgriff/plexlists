@@ -40,7 +40,7 @@ async def test_starts_with_shows_and_playlists() -> None:
         await select(app, pilot, Nav("tng", "borg"))
         table = app.query_one("#table", DataTable)
         assert table.row_count == 8
-        assert cell(app, 7, 2) == "Star Trek: First Contact"
+        assert cell(app, 7, 3) == "Star Trek: First Contact"
         assert "⚪ not logged in" in app.sub_title
 
 
@@ -62,7 +62,7 @@ async def test_check_marks_episodes(server) -> None:
         await pilot.press("c")
         await settle(app, pilot)
         assert ("tng", "q") in app.results
-        assert cell(app, 1, 4) == "✓"  # Hide and Q
+        assert cell(app, 1, 5) == "✓"  # Hide and Q
         assert "all matched" in str(app.query_one("#summary", Static).render())
         assert server.pls == []  # checking never changes Plex
         assert "🟢 connected to TestServer" in app.sub_title
@@ -93,7 +93,7 @@ async def test_missing_episode_shows_suggestion(server) -> None:
         await select(app, pilot, Nav("tng", "holodeck"))
         await pilot.press("c")
         await settle(app, pilot)
-        assert "missing" in cell(app, 2, 4) and "Hollow Persuits" in cell(app, 2, 4)
+        assert "missing" in cell(app, 2, 5) and "Hollow Persuits" in cell(app, 2, 5)
         label = app.nodes[Nav("tng", "holodeck")].label.plain
         assert "1✗" in label
 
@@ -210,11 +210,12 @@ async def test_playlist_shows_episode_details_from_plex(server) -> None:
     app = PlexlistsApp()
     async with app.run_test(size=(180, 40)) as pilot:
         await select(app, pilot, Nav("tng", "borg"))
-        assert cell(app, 0, 5) == "—"  # not connected: nothing loaded unasked
+        assert cell(app, 0, 2) == "—"  # not connected: nothing loaded unasked
         assert app.query_one("#detail", Static).has_class("hidden")
         await pilot.press("c")
         await settle(app, pilot)
-        assert [cell(app, 0, c) for c in (5, 6, 7, 8)] == ["S2E16", "1989-05-08", "45m", "✓"]
+        assert [cell(app, 0, c) for c in (1, 2)] == ["2", "16"]  # season, then episode
+        assert [cell(app, 0, c) for c in (6, 7, 8)] == ["1989-05-08", "45m", "✓"]
         detail = app.query_one("#detail", Static)
         assert not detail.has_class("hidden")
         assert "path of the Borg" in str(detail.render())
@@ -227,7 +228,7 @@ async def test_playlist_shows_episode_details_from_plex(server) -> None:
         await select(app, pilot, Nav("tng", "q"))
         await settle(app, pilot)
         assert ("tng", "q") in app.results
-        assert cell(app, 2, 5) == "S2E16"  # Q Who again
+        assert cell(app, 2, 2) == "16"  # Q Who again
         await select(app, pilot, Nav("tng"))
         assert app.query_one("#detail", Static).has_class("hidden")
         assert cell(app, 1, 7) == "1/8"  # the Borg row of the show view
@@ -297,7 +298,7 @@ async def test_filter_narrows_the_tree_and_finds_episodes() -> None:
         await pilot.press("enter")
         await select(app, pilot, Nav("tng", "binge"))
         table = app.query_one("#table", DataTable)
-        assert cell(app, table.cursor_row, 2) == "I, Borg"  # jumps to the episode
+        assert cell(app, table.cursor_row, 3) == "I, Borg"  # jumps to the episode
 
         await pilot.press("slash", "escape")
         await pilot.pause()

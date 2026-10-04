@@ -34,6 +34,7 @@ class EntryDetails:
     """What Plex knows about the item(s) an entry matched, as display strings ("" = unknown)."""
 
     episode: str  # "S2E16", "S3E26 + S4E01", or a film's year
+    number: str  # episode number within the season: "16", "1+2" for a two-parter, "" for a film
     aired: str
     length: str
     watched: str  # "✓", "—", or "1/2" for a partly watched two-parter
@@ -63,6 +64,7 @@ def entry_details(r: EntryResult) -> EntryDetails | None:
     summaries = [s for i in r.items if (s := (getattr(i, "summary", None) or "").strip())]
     return EntryDetails(
         episode=" + ".join(c for i in r.items if (c := _code(i))),
+        number="" if r.ep.film else "+".join(str(n) for i in r.items if (n := i.index)),
         aired=f"{aired:%Y-%m-%d}" if aired else "",
         length=_minutes(sum(durations)) if all(durations) else "",
         watched=watched,

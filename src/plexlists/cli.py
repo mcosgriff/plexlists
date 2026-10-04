@@ -282,10 +282,12 @@ def make_show_app(show: Show) -> typer.Typer:
         )
         t.add_column("#", justify="right", style="dim")
         t.add_column("S", justify="right")
+        if result:
+            t.add_column("E", justify="right")
         t.add_column("Title", style="bold")
         t.add_column("Note", style="dim")
         if result:
-            for name in ("In Plex", "Episode", "Aired", "Length", "Watched"):
+            for name in ("In Plex", "Aired", "Length", "Watched"):
                 t.add_column(name)
         up_next = next_unwatched(result) if result else None
         for i, e in enumerate(p.episodes, 1):
@@ -298,9 +300,10 @@ def make_show_app(show: Show) -> typer.Typer:
             if result:
                 entry = result.entries[i - 1]
                 d = entry_details(entry)
-                info = [d.episode, d.aired, d.length, d.watched] if d else [""] * 4
+                info = [d.aired, d.length, d.watched] if d else [""] * 3
                 if i - 1 == up_next:
-                    info[3] = "[bold]▶ next[/bold]"
+                    info[2] = "[bold]▶ next[/bold]"
+                row.insert(2, (d.number if d else "") or "[dim]—[/dim]")
                 row += [entry_status(show, entry), *(v or "[dim]—[/dim]" for v in info)]
             t.add_row(*row)
         console.print(t)

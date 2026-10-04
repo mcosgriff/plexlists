@@ -626,20 +626,19 @@ class PlexlistsApp(App[None]):
         )
         table = self.query_one("#table", DataTable)
         table.clear(columns=True)
-        table.add_columns(
-            "#", "S", "Title", "Note", "In Plex", "Episode", "Aired", "Length", "Watched"
-        )
+        table.add_columns("#", "S", "E", "Title", "Note", "In Plex", "Aired", "Length", "Watched")
         blank = Text("—", style="dim")
         up_next = next_unwatched(result) if result else None
         for i, e in enumerate(p.episodes):
             status = Text.from_markup(entry_status(show, result.entries[i])) if result else blank
             d = entry_details(result.entries[i]) if result else None
-            info: list[Any] = [d.episode, d.aired, d.length, d.watched] if d else [""] * 4
+            info: list[Any] = [d.aired, d.length, d.watched] if d else [""] * 3
             if i == up_next:
-                info[3] = Text("▶ next", style="bold")
+                info[2] = Text("▶ next", style="bold")
             table.add_row(
                 str(i + 1),
                 "film" if e.film else str(e.season),
+                (d.number if d else "") or blank,
                 show.display(e),
                 Text(e.note, style="dim"),
                 status,

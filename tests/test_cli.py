@@ -265,6 +265,6 @@ def test_list_and_show_with_plex_details(plex) -> None:
 
     out = invoke("tng", "show", "borg", "--plex")
     q_who = next(line for line in out.splitlines() if "Q Who" in line)
-    assert "S2E16" in q_who and "45m" in q_who and "✓" in q_who
+    assert "2 │ 16 │ Q Who" in q_who and "45m" in q_who and "✓" in q_who
     assert "▶ next" in next(line for line in out.splitlines() if "Both Worlds (1)" in line)
     assert "all matched · 1/8 watched" in out
