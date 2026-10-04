@@ -227,3 +227,36 @@ async def test_playlist_shows_episode_details_from_plex(server) -> None:
         assert cell(app, 2, 5) == "S2E16"  # Q Who again
         await select(app, pilot, Nav("tng"))
         assert app.query_one("#detail", Static).has_class("hidden")
+
+
+async def test_connects_on_startup_when_logged_in(server, shows) -> None:
+    server.createPlaylist("TNG: The Borg", [])
+    config.save_config({"client_id": "abc", "server_id": server.machineIdentifier})
+    app = PlexlistsApp()
+    async with app.run_test(size=(160, 40)) as pilot:
+        await settle(app, pilot)
+        assert app.session is not None
+        assert "🟢 connected to TestServer" in app.sub_title
+        await select(app, pilot, Nav("tng"))
+        assert cell(app, 1, 6) == "2026-10-03"  # playlist times were read from Plex
+        # Every playlist was checked without being selected.
+        assert {k for slug, k in app.results if slug == "tng"} == set(shows["tng"].playlists)
+        assert "✓" in app.nodes[Nav("tng", "holodeck")].label.plain
+        assert "all matched" in cell(app, 0, 5)
+        assert "xfiles" in app.no_auto  # not on this server: skipped quietly
+        assert not [k for k in app.results if k[0] == "xfiles"]
+
+
+async def test_startup_connection_failure_turns_the_icon_red(monkeypatch) -> None:
+    def boom() -> tui.Session:
+        raise ConnectionError("server is asleep")
+
+    monkeypatch.setattr(tui, "connect_session", boom)
+    config.save_config({"client_id": "abc", "username": "me", "server_name": "TheLab"})
+    app = PlexlistsApp()
+    async with app.run_test(size=(160, 40)) as pilot:
+        await settle(app, pilot)
+        assert app.sub_title == "🔴 can't connect · me @ TheLab"
+        await select(app, pilot, Nav("tng", "borg"))
+        await settle(app, pilot)
+        assert ("tng", "borg") not in app.results  # no retry on every playlist

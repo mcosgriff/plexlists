@@ -34,8 +34,10 @@ plexlists
 Shows and playlists are listed on the left. Select a show to act on all of its
 playlists, or select a single playlist.
 
-The header shows the connection to Plex: 🟢 connected, ⚪ not connected yet (or
-not logged in), 🔴 the last attempt failed.
+With a saved login the app connects to Plex in the background as it opens and
+checks every playlist, so the match marks and episode details fill in by
+themselves. The header shows the state: 🟢 connected, 🟡 connecting, 🔴 the last attempt failed,
+⚪ not connected (or not logged in).
 
 Each playlist shows when it was created and last updated in Plex. Plex keeps
 those times itself, per server; plexlists reads them whenever it connects and
@@ -43,7 +45,8 @@ remembers the last answer, so they're shown as soon as the app opens.
 
 Opening a playlist lists each entry's episode number, air date, length and
 whether you've watched it, with Plex's summary of the highlighted episode
-underneath. With a saved login this loads by itself; otherwise press `c` once.
+underneath. This loads by itself once connected; without a saved login, press
+`c` to connect.
 
 | Key | Action |
 |---|---|

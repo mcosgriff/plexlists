@@ -19,7 +19,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="58c68fc5-f407-48bb-9d62-5cd6b24ff055" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/plexlists/tui.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/plexlists/tui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_tui.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_tui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,61 +53,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.650191487681497" />
-      <entry key="MS500" value="3.976540925105046" />
-      <entry key="S2" value="9.086229062269126" />
-      <entry key="S5" value="14.655243291952392" />
-      <entry key="S10" value="18.10306499628017" />
-      <entry key="S30" value="21.221031188044233" />
-      <entry key="S60" value="22.8620668518231" />
-      <entry key="M2" value="26.195707609182175" />
-      <entry key="M5" value="32.72251854770608" />
-      <entry key="M10" value="36.92855658170181" />
-      <entry key="M15" value="38.707719272595305" />
-      <entry key="M30" value="40.72051326054578" />
-      <entry key="H1" value="41.82467137350383" />
-      <entry key="H2" value="42.403141069783025" />
-      <entry key="H4" value="42.69923345879748" />
-      <entry key="D1" value="42.94954433393937" />
-      <entry key="W1" value="42.99278397367561" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.0000000270672806" />
+      <entry key="M5" value="1.0083278428141127" />
+      <entry key="M10" value="1.5891219864688206" />
+      <entry key="M15" value="3.4529734538562" />
+      <entry key="M30" value="11.250873548229642" />
+      <entry key="H1" value="21.98487340976598" />
+      <entry key="H2" value="31.035504903728626" />
+      <entry key="H4" value="36.936728013415824" />
+      <entry key="D1" value="42.73287485067066" />
+      <entry key="W1" value="43.816648988783655" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="9.291845460856727E-223" />
-      <entry key="S2" value="3.1047418414737157E-56" />
-      <entry key="S5" value="6.263400718855307E-23" />
-      <entry key="S10" value="7.914164971022085E-12" />
-      <entry key="S30" value="1.9928213452043546E-4" />
-      <entry key="S60" value="0.014116732430716235" />
-      <entry key="M2" value="0.11881385622357434" />
-      <entry key="M5" value="0.4265273030410191" />
-      <entry key="M10" value="0.6530905779759948" />
-      <entry key="M15" value="0.7527468478083512" />
-      <entry key="M30" value="0.8676098476898191" />
-      <entry key="H1" value="0.9314557679728115" />
-      <entry key="H2" value="0.9651195614911197" />
-      <entry key="H4" value="0.9824049885312666" />
-      <entry key="D1" value="0.9970457650821268" />
-      <entry key="W1" value="0.9995774311240597" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="1.373909125584617E-238" />
+      <entry key="S10" value="1.1721386972473074E-119" />
+      <entry key="S30" value="2.271571099710977E-40" />
+      <entry key="S60" value="1.5071732148996602E-20" />
+      <entry key="M2" value="1.227669831387762E-10" />
+      <entry key="M5" value="1.0855070126935648E-4" />
+      <entry key="M10" value="0.010418766782559078" />
+      <entry key="M15" value="0.04770283731118977" />
+      <entry key="M30" value="0.21840979215957732" />
+      <entry key="H1" value="0.467343334348076" />
+      <entry key="H2" value="0.6836251416881007" />
+      <entry key="H4" value="0.826816268398306" />
+      <entry key="D1" value="0.968801573563682" />
+      <entry key="W1" value="0.9954823123748954" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.5717439281185308" />
-      <entry key="MS500" value="3.9293878788423524" />
-      <entry key="S2" value="9.060049431860888" />
-      <entry key="S5" value="14.639269965172048" />
-      <entry key="S10" value="18.093435397202537" />
-      <entry key="S30" value="21.217525127291406" />
-      <entry key="S60" value="22.873956508915423" />
-      <entry key="M2" value="26.31235316260229" />
-      <entry key="M5" value="33.1469883217691" />
-      <entry key="M10" value="37.580184524235364" />
-      <entry key="M15" value="39.459364122411735" />
-      <entry key="M30" value="41.5874990561016" />
-      <entry key="H1" value="42.755794828173435" />
-      <entry key="H2" value="43.36808912822166" />
-      <entry key="H4" value="43.68155132343651" />
-      <entry key="D1" value="43.94657538466133" />
-      <entry key="W1" value="43.99235929796328" />
+      <entry key="MS100" value="0.6736167884328451" />
+      <entry key="MS500" value="0.9240225724468234" />
+      <entry key="S2" value="0.9804391507833422" />
+      <entry key="S5" value="0.9921292599088718" />
+      <entry key="S10" value="0.9960568557611919" />
+      <entry key="S30" value="0.9986838871940489" />
+      <entry key="S60" value="0.9993417269353105" />
+      <entry key="M2" value="0.9996708364721989" />
+      <entry key="M5" value="1.0083041805841462" />
+      <entry key="M10" value="1.5994515729853611" />
+      <entry key="M15" value="3.5005625573381627" />
+      <entry key="M30" value="11.469104293747357" />
+      <entry key="H1" value="22.45203903635186" />
+      <entry key="H2" value="31.719003076903554" />
+      <entry key="H4" value="37.76346821249378" />
+      <entry key="D1" value="43.701661669416296" />
+      <entry key="W1" value="44.81212913762719" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -156,7 +158,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1791081141604</updated>
-      <workItem from="1791081142615" duration="3733000" />
+      <workItem from="1791081142615" duration="4002000" />
     </task>
     <task id="LOCAL-00001" summary="chore: add JetBrains IDE project files to .idea directory">
       <option name="closed" value="true" />
@@ -198,7 +200,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791084798092</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="feat(tui): adjust navigation and enable log toggle visibility&#10;&#10;- Increase navigation panel width for improved usability.&#10;- Make the log toggle binding visible in the UI.">
+      <option name="closed" value="true" />
+      <created>1791084908425</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1791084908425</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,6 +232,7 @@
     <MESSAGE value="feat(tui): display and cache Plex playlist creation and update times&#10;&#10;- Add support for displaying Plex playlist creation and update timestamps in the TUI.  &#10;- Cache playlist times per server for immediate display upon app launch before connecting.  &#10;- Update playlist handling logic to fetch and store timestamps from Plex.  &#10;- Extend testing and TUI logic to validate and integrate this functionality.  &#10;- Update README to document the new feature." />
     <MESSAGE value="feat(tui): add episode details display and auto-loading&#10;&#10;- Display episode details (number, air date, duration, watched status) and Plex summary in the TUI.&#10;- Implement automatic loading of episode details upon playlist navigation with a saved login.&#10;- Update playlist handling and UI to support detailed entry views under the table.&#10;- Adjust tests to validate episode detail functionality.&#10;- Update README to document the new feature." />
     <MESSAGE value="feat(tui): improve connection status UI and logging&#10;&#10;- Update subtitle to display connection statuses with icons:  connected, ⚪ not connected,  connection failed.&#10;- Add detailed logging for successful connection events.&#10;- Refactor subtitle updates to include connection error states.&#10;- Update tests to validate new subtitle logic and connection status handling.&#10;- Document header connection status icons in the README." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(tui): improve connection status UI and logging&#10;&#10;- Update subtitle to display connection statuses with icons:  connected, ⚪ not connected,  connection failed.&#10;- Add detailed logging for successful connection events.&#10;- Refactor subtitle updates to include connection error states.&#10;- Update tests to validate new subtitle logic and connection status handling.&#10;- Document header connection status icons in the README." />
+    <MESSAGE value="feat(tui): adjust navigation and enable log toggle visibility&#10;&#10;- Increase navigation panel width for improved usability.&#10;- Make the log toggle binding visible in the UI." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(tui): adjust navigation and enable log toggle visibility&#10;&#10;- Increase navigation panel width for improved usability.&#10;- Make the log toggle binding visible in the UI." />
   </component>
 </project>

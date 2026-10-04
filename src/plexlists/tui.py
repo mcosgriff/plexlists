@@ -9,6 +9,7 @@ import contextlib
 import os
 import shutil
 import subprocess
+import threading
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, ClassVar
@@ -43,6 +44,7 @@ from plexlists.service import (
     MatchResult,
     PlaylistTimes,
     Session,
+    ShowNotFoundError,
     cached_playlist_times,
 )
 from plexlists.sync import find_image
@@ -54,6 +56,13 @@ def connect_session() -> Session:
         os.environ.get("PLEX_URL"), os.environ.get("PLEX_TOKEN"), warn=lambda _m: None
     )
     return Session(plex)
+
+
+def has_login() -> bool:
+    """Whether there's a saved login (or PLEX_URL + PLEX_TOKEN) to connect with unasked."""
+    if config.load_config().get("client_id"):
+        return True
+    return bool(os.environ.get("PLEX_URL") and os.environ.get("PLEX_TOKEN"))
 
 
 def hours(minutes: int) -> str:
@@ -236,7 +245,7 @@ class AccountScreen(ModalScreen[str]):
 class PlexlistsApp(App[None]):
     TITLE = "plexlists"
     CSS = """
-    #nav { width: 46; border-right: solid $panel; padding-right: 1; }
+    #nav { width: 42; border-right: solid $panel; padding-right: 1; }
     #main { width: 1fr; }
     #summary { height: auto; padding: 0 1 1 1; }
     #table { height: 1fr; }
@@ -280,6 +289,7 @@ class PlexlistsApp(App[None]):
         self.times: dict[str, PlaylistTimes] | None = None
         # Shows whose episode details we stop loading unasked ("*" = can't connect at all).
         self.no_auto: set[str] = set()
+        self.connect_lock = threading.Lock()
         self.nodes: dict[Nav, Any] = {}
         self.current: Nav | None = None
 
@@ -305,6 +315,47 @@ class PlexlistsApp(App[None]):
         self.load_shows()
         self.update_subtitle()
         self.query_one("#nav", Tree).focus()
+        if has_login():
+            self.connect_in_background()
+
+    @work(thread=True, exclusive=True, group="connect")
+    def connect_in_background(self) -> None:
+        """Connect without being asked, then check every playlist against Plex quietly,
+        so the header, playlist times, match marks and episode details fill in by themselves."""
+        session = self.get_session()
+        if session is None:
+            self.no_auto.add("*")
+            return
+        with contextlib.suppress(Exception):
+            self.call_from_thread(self.set_times, session.playlist_times())
+        for show in list(self.shows.values()):
+            try:
+                results = [session.match(show, key) for key in show.playlists]
+            except ShowNotFoundError:
+                self.no_auto.add(show.slug)
+                self.call_from_thread(
+                    self.log_line, f"[dim]{escape(show.title)} isn't in your Plex library.[/dim]"
+                )
+                continue
+            except Exception as exc:
+                self.no_auto.add(show.slug)
+                self.call_from_thread(
+                    self.log_line,
+                    f"[yellow]Couldn't check {escape(show.title)}: "
+                    f"{escape(f'{type(exc).__name__}: {exc}')}[/yellow]",
+                )
+                continue
+            self.call_from_thread(self.store_scan, show, results)
+
+    def store_scan(self, show: Show, results: list[MatchResult]) -> None:
+        """Results of the background check for one show. Anything checked meanwhile wins."""
+        if self.shows.get(show.slug) is not show:
+            return  # show files were reloaded while this ran
+        for result in results:
+            self.results.setdefault((show.slug, result.key), result)
+        self.refresh_labels(show.slug)
+        if self.current and self.current.slug == show.slug:
+            self.refresh_view()
 
     def load_cached_times(self) -> None:
         """What the server said last time, until we connect and ask again."""
@@ -334,12 +385,15 @@ class PlexlistsApp(App[None]):
         ]
         return "".join(f" · {p}" for p in parts)
 
-    def update_subtitle(self, connected: str | None = None, failed: bool = False) -> None:
-        """Header status: 🟢 connected, 🔴 couldn't connect, ⚪ not connected yet."""
+    def update_subtitle(self, connected: str | None = None, state: str = "idle") -> None:
+        """Header status: 🟢 connected, 🟡 connecting, 🔴 couldn't connect, ⚪ not connected."""
         if connected:
             self.sub_title = f"🟢 connected to {connected}"
             return
-        icon, state = ("🔴", "can't connect") if failed else ("⚪", "not connected")
+        icon, state = {
+            "connecting": ("🟡", "connecting…"),
+            "failed": ("🔴", "can't connect"),
+        }.get(state, ("⚪", "not connected"))
         cfg = config.load_config()
         if cfg.get("client_id"):
             who = f"{cfg.get('username', '?')} @ {cfg.get('server_name', '?')}"
@@ -476,7 +530,7 @@ class PlexlistsApp(App[None]):
         """Whether to fetch episode details unasked: only with a connection or a saved login."""
         if self.no_auto & {"*", show.slug}:
             return False
-        return self.session is not None or bool(config.load_config().get("client_id"))
+        return self.session is not None or has_login()
 
     @on(DataTable.RowHighlighted, "#table")
     def row_highlighted(self, event: DataTable.RowHighlighted) -> None:
@@ -500,7 +554,12 @@ class PlexlistsApp(App[None]):
         detail.remove_class("hidden")
 
     def refresh_view(self) -> None:
+        """Redraw the current view in place, keeping the table cursor where it was."""
+        table = self.query_one("#table", DataTable)
+        row = table.cursor_row
         self.show_nav(self.current)
+        if 0 < row < table.row_count:
+            table.move_cursor(row=row)
 
     @on(DataTable.RowSelected, "#table")
     def row_selected(self, event: DataTable.RowSelected) -> None:
@@ -528,23 +587,25 @@ class PlexlistsApp(App[None]):
 
     def get_session(self) -> Session | None:
         """Called from worker threads."""
-        if self.session is not None:
+        with self.connect_lock:  # two workers asking at once share one connection
+            if self.session is not None:
+                return self.session
+            self.call_from_thread(self.log_line, "Connecting to Plex…")
+            self.call_from_thread(self.update_subtitle, None, "connecting")
+            try:
+                self.session = connect_session()
+            except auth.AuthError as exc:
+                self.call_from_thread(self.report_error, str(exc), "Can't connect")
+                self.call_from_thread(self.update_subtitle, None, "failed")
+                return None
+            except Exception as exc:
+                self.call_from_thread(
+                    self.report_error, f"{type(exc).__name__}: {exc}", "Can't connect"
+                )
+                self.call_from_thread(self.update_subtitle, None, "failed")
+                return None
+            self.call_from_thread(self.connected, self.session.server_name)
             return self.session
-        self.call_from_thread(self.log_line, "Connecting to Plex…")
-        try:
-            self.session = connect_session()
-        except auth.AuthError as exc:
-            self.call_from_thread(self.report_error, str(exc), "Can't connect")
-            self.call_from_thread(self.update_subtitle, None, True)
-            return None
-        except Exception as exc:
-            self.call_from_thread(
-                self.report_error, f"{type(exc).__name__}: {exc}", "Can't connect"
-            )
-            self.call_from_thread(self.update_subtitle, None, True)
-            return None
-        self.call_from_thread(self.connected, self.session.server_name)
-        return self.session
 
     def connected(self, server_name: str) -> None:
         self.update_subtitle(server_name)
@@ -749,6 +810,8 @@ class PlexlistsApp(App[None]):
             self.session.forget()
         self.load_shows()
         self.notify("Reloaded show files.")
+        if has_login():
+            self.connect_in_background()
 
     def action_toggle_log(self) -> None:
         self.query_one("#log").toggle_class("hidden")
@@ -769,6 +832,7 @@ class PlexlistsApp(App[None]):
             self.load_cached_times()
             self.update_subtitle()
             self.refresh_view()
+            self.connect_in_background()
 
     @work(thread=True, exclusive=True, group="plex")
     def do_logout(self) -> None:
