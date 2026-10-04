@@ -18,7 +18,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58c68fc5-f407-48bb-9d62-5cd6b24ff055" name="Changes" comment="" />
+    <list default="true" id="58c68fc5-f407-48bb-9d62-5cd6b24ff055" name="Changes" comment="chore: add JetBrains IDE project files to .idea directory">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -135,7 +137,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
-    "settings.editor.selected.configurable": "ml.llm.AIAssistantPromptsLibrary",
+    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog",
     "to.speed.mode.migration.done": "true"
   }
 }]]></component>
@@ -154,11 +156,36 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1791081141604</updated>
-      <workItem from="1791081142615" duration="761000" />
+      <workItem from="1791081142615" duration="2306000" />
     </task>
+    <task id="LOCAL-00001" summary="chore: add JetBrains IDE project files to .idea directory">
+      <option name="closed" value="true" />
+      <created>1791081919407</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1791081919407</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="chore: add JetBrains IDE project files to .idea directory" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: add JetBrains IDE project files to .idea directory" />
   </component>
 </project>

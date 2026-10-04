@@ -1,14 +1,22 @@
-"""Generated title-card posters: an original starting point you can replace anytime."""
+"""Posters: generated title cards, and your own images cropped to the right shape."""
 
 from __future__ import annotations
 
+import io
 import textwrap
+import urllib.request
+from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 from plexlists.models import Show
+from plexlists.sync import IMAGE_EXTS
+
+POSTER_SIZE = (1000, 1000)
+ART_SIZE = (1920, 1080)
+MAX_DOWNLOAD = 40 * 1024 * 1024
 
 FONT_CANDIDATES = (
     "DejaVuSans-Bold.ttf",
@@ -49,7 +57,26 @@ def _fit_lines(
     return font, textwrap.wrap(text, width=max(1, int(width / (min_size * 0.55))))[:max_lines]
 
 
-def render_poster(show: Show, key: str, path: Path, size: int = 1000) -> None:
+def _open(data: bytes) -> Image.Image:
+    img = Image.open(io.BytesIO(data))
+    return ImageOps.exif_transpose(img).convert("RGB")
+
+
+def _shade(size: int) -> Image.Image:
+    """How much of the gradient shows over a backdrop: heavy behind the text, light between."""
+    stops = ((0.0, 215), (0.3, 120), (0.42, 150), (0.62, 150), (0.8, 215), (1.0, 240))
+    col = Image.new("L", (1, size))
+    for y in range(size):
+        t = y / (size - 1)
+        (t0, a0), (t1, a1) = next((lo, hi) for lo, hi in pairwise(stops) if t <= hi[0])
+        col.putpixel((0, y), round(a0 + (a1 - a0) * (t - t0) / (t1 - t0)))
+    return col.resize((size, size))
+
+
+def render_poster(
+    show: Show, key: str, path: Path, size: int = 1000, backdrop: bytes | None = None
+) -> None:
+    """Write a title card: text on a gradient, over `backdrop` (image bytes) if given."""
     top, bottom, accent, fg = (_rgb(c) for c in show.colors)
     img = Image.new("RGB", (size, size))
     d = ImageDraw.Draw(img)
@@ -57,6 +84,10 @@ def render_poster(show: Show, key: str, path: Path, size: int = 1000) -> None:
         t = y / (size - 1)
         color = tuple(round(a + (b - a) * t) for a, b in zip(top, bottom, strict=True))
         d.line([(0, y), (size, y)], fill=color)
+    if backdrop is not None:
+        photo = ImageOps.fit(_open(backdrop), (size, size))
+        img = Image.composite(img, photo, _shade(size))
+        d = ImageDraw.Draw(img)
 
     m = int(size * 0.09)
     p = show.playlists[key]
@@ -87,5 +118,34 @@ def render_poster(show: Show, key: str, path: Path, size: int = 1000) -> None:
     stats = f"{n} {'item' if n == 1 else 'items'}  ·  ~{round(show.runtime(key) / 60)}h"
     d.text((m, y), stats, font=small, fill=accent)
 
+    _save(img, path)
+
+
+def _save(img: Image.Image, path: Path) -> None:
+    """Save as path (a .jpg), removing the same image in any other format."""
     path.parent.mkdir(parents=True, exist_ok=True)
+    for ext in IMAGE_EXTS:
+        other = path.with_suffix(ext)
+        if other != path and other.is_file():
+            other.unlink()
     img.save(path, quality=92)
+
+
+# --------------------------------------------------------------------- your own images
+
+
+def read_source(source: str) -> bytes:
+    """Image bytes from a file path or an http(s) URL."""
+    if source.startswith(("http://", "https://")):
+        req = urllib.request.Request(source, headers={"User-Agent": "plexlists"})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = resp.read(MAX_DOWNLOAD + 1)
+        if len(data) > MAX_DOWNLOAD:
+            raise ValueError(f"image is larger than {MAX_DOWNLOAD // (1024 * 1024)} MB")
+        return data
+    return Path(source).expanduser().read_bytes()
+
+
+def import_image(data: bytes, path: Path, art: bool = False) -> None:
+    """Crop image bytes to a square poster (or 16:9 background art) and save as path."""
+    _save(ImageOps.fit(_open(data), ART_SIZE if art else POSTER_SIZE), path)

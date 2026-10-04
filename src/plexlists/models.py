@@ -20,6 +20,7 @@ A show file looks like this (see src/plexlists/shows/ for full examples):
     key = "borg"
     name = "The Borg"
     description = "Every Borg episode in order, plus First Contact"
+    poster_from = "Q Who"                       # optional: artwork for the generated poster
     episodes = [
         [2, "Q Who", "First contact with the Borg"],   # [season, title, note?]
         [3, "The Best of Both Worlds (1)"],
@@ -27,6 +28,10 @@ A show file looks like this (see src/plexlists/shows/ for full examples):
     ]
 
 The file name (minus .toml) is the show's key on the command line.
+
+`poster_from` picks the Plex artwork behind a generated poster: an episode title
+(its still), a key from [films] (the film's art), or "show" (the show's
+background). Without it, the playlist's first episode is used.
 """
 
 from __future__ import annotations
@@ -69,6 +74,7 @@ class Playlist:
     name: str  # without the show prefix
     description: str
     episodes: tuple[Ep, ...]
+    poster_from: str = ""  # episode title, film key or "show"; "" = first episode
 
 
 @dataclass(frozen=True)
@@ -181,6 +187,7 @@ def parse_show(data: dict[str, Any], slug: str, source: Path | None = None) -> S
             name=_req(p, "name", str, pw),
             description=_opt(p, "description", str, "", pw),
             episodes=tuple(_entry(e, f"{pw} entry {n}", films) for n, e in enumerate(raw_eps, 1)),
+            poster_from=_opt(p, "poster_from", str, "", pw),
         )
     if not playlists:
         raise ShowFileError(f"{name}: no [[playlists]] defined")

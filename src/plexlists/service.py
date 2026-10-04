@@ -75,12 +75,19 @@ class ShowNotFoundError(LookupError):
     pass
 
 
+def _image_url(item: Any, attr: str) -> str | None:
+    """A Plex item's thumbUrl/artUrl, falling back to the other one."""
+    other = "thumbUrl" if attr == "artUrl" else "artUrl"
+    return getattr(item, attr, None) or getattr(item, other, None)
+
+
 class Session:
     """A connected Plex server plus per-show caches of its episodes."""
 
     def __init__(self, plex: Any) -> None:
         self.plex = plex
         self._libraries: dict[tuple[str, str], Library] = {}
+        self._show_objs: dict[tuple[str, str], Any] = {}
 
     @property
     def server_name(self) -> str:
@@ -95,14 +102,17 @@ class Session:
                 raise ShowNotFoundError(f"Couldn't find '{title}' in any TV library.")
             films = find_films(self.plex, show.films) if show.films else {}
             self._libraries[cache_key] = Library(show_obj.episodes(), films)
+            self._show_objs[cache_key] = show_obj
         return self._libraries[cache_key]
 
     def forget(self, show: Show | None = None) -> None:
         """Drop cached episode lists (e.g. after adding episodes to Plex)."""
         if show is None:
             self._libraries.clear()
+            self._show_objs.clear()
         else:
             self._libraries = {k: v for k, v in self._libraries.items() if k[0] != show.slug}
+            self._show_objs = {k: v for k, v in self._show_objs.items() if k[0] != show.slug}
 
     def match(self, show: Show, key: str, title: str | None = None) -> MatchResult:
         lib = self.library(show, title)
@@ -112,6 +122,32 @@ class Session:
             sugg = lib.suggest(ep) if not items and not ep.film else []
             entries.append(EntryResult(ep, items, sugg))
         return MatchResult(key, entries)
+
+    def backdrop(self, show: Show, key: str, title: str | None = None) -> bytes | None:
+        """Artwork from Plex to put behind a generated poster, or None if there isn't any.
+
+        Uses the playlist's `poster_from` (an episode title, a film key or "show"),
+        otherwise the still of the first episode Plex has, otherwise the show's art.
+        """
+        lib = self.library(show, title)
+        show_obj = self._show_objs[(show.slug, title or show.title)]
+        p = show.playlists[key]
+        source: list[Any] = []
+        if p.poster_from in show.films:
+            source = [lib.films.get(p.poster_from)]
+        elif p.poster_from and p.poster_from != "show":
+            source = lib.match(Ep(None, p.poster_from))
+        elif not p.poster_from:
+            source = next((m for e in p.episodes if not e.film and (m := lib.match(e))), [])
+        film = p.poster_from in show.films
+        urls = [_image_url(i, "artUrl" if film else "thumbUrl") for i in source if i is not None]
+        urls += [_image_url(show_obj, "artUrl"), _image_url(show_obj, "thumbUrl")]
+        url = next((u for u in urls if u), None)
+        if url is None:
+            return None
+        resp = self.plex._session.get(url, timeout=30)
+        resp.raise_for_status()
+        return resp.content
 
     def existing_playlists(self) -> dict[str, Any]:
         found: dict[str, Any] = {}

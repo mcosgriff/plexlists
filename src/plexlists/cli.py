@@ -1,7 +1,7 @@
 """Command-line interface.
 
 plexlists shows                         # available shows
-plexlists <show> list | show | build | posters | remove
+plexlists <show> list | show | build | posters | poster | remove
 plexlists login | status | logout | paths | new
 """
 
@@ -278,35 +278,120 @@ def make_show_app(show: Show) -> typer.Typer:
             bool,
             typer.Option("--force", "-f", help="Overwrite existing images, including your own."),
         ] = False,
+        plain: Annotated[
+            bool,
+            typer.Option("--plain", help="Don't use artwork from Plex: text on a gradient only."),
+        ] = False,
+        show_title: Annotated[
+            str,
+            typer.Option(
+                envvar=title_env(show),
+                help="The show's title as it appears in your Plex TV library.",
+                rich_help_panel="Plex connection",
+            ),
+        ] = show.title,
+        url: UrlOpt = None,
+        token: TokenOpt = None,
     ) -> None:
         """
-        Generate simple title-card posters.
+        Generate title-card posters.
 
-        Writes a square [bold]<key>.jpg[/bold] (playlist name, description and runtime on
-        a gradient in the show's colors) to the posters folder. Playlists that
-        already have an image are skipped unless you pass --force, so your own
-        artwork is safe. Run [cyan]build[/cyan] afterwards to upload them.
+        Writes a square [bold]<key>.jpg[/bold] to the posters folder: the playlist name,
+        description and runtime over artwork from your Plex library. The artwork is
+        the playlist's [bold]poster_from[/bold] in the show file (an episode title, a film
+        key or "show"), otherwise the still of its first episode. With --plain, or
+        when Plex can't be reached, the background is a gradient in the show's colors.
+
+        Playlists that already have an image are skipped unless you pass --force,
+        so your own artwork is safe. Run [cyan]build[/cyan] afterwards to upload them.
         """
         from plexlists.posters import render_poster
 
         keys = resolve(keys, all_)
         folder = posters_dir or config.posters_dir(show.slug)
-        made = 0
+        todo = []
         for k in keys:
             img = find_image(folder, k)
             if img and not force:
                 console.print(f"[dim]skip {k} ({img.name} exists)[/dim]")
-                continue
-            if img and img.suffix != ".jpg":
-                img.unlink()
-            render_poster(show, k, folder / f"{k}.jpg")
-            made += 1
-            console.print(f"[green]wrote[/green] {escape(str(folder / (k + '.jpg')))}")
-        if made:
+            else:
+                todo.append(k)
+
+        session = None
+        if todo and not plain:
+            try:
+                with console.status("Connecting to Plex..."):
+                    session = Session(connect_plex(url, token))
+                    session.library(show, show_title)
+            except (typer.Exit, ShowNotFoundError) as exc:
+                if isinstance(exc, ShowNotFoundError):
+                    err_console.print(f"[red]{escape(str(exc))}[/red]")
+                session = None
+                err_console.print("[yellow]Writing plain title cards instead.[/yellow]")
+
+        for k in todo:
+            backdrop, note = None, ""
+            if session is not None:
+                try:
+                    backdrop = session.backdrop(show, k, show_title)
+                    note = "" if backdrop else " [dim](no artwork in Plex: plain)[/dim]"
+                except Exception as exc:
+                    note = f" [yellow](artwork failed: {type(exc).__name__}: plain)[/yellow]"
+            render_poster(show, k, folder / f"{k}.jpg", backdrop=backdrop)
+            console.print(f"[green]wrote[/green] {escape(str(folder / (k + '.jpg')))}{note}")
+        if todo:
             target = "--all" if all_ else " ".join(keys)
             console.print(
                 f"\nRun [cyan]plexlists {show.slug} build {target}[/cyan] to upload them."
             )
+
+    @app.command()
+    def poster(
+        key: Annotated[
+            str,
+            typer.Argument(
+                help=f"Playlist key: {keys_help}.",
+                autocompletion=complete_keys,
+                show_default=False,
+            ),
+        ],
+        source: Annotated[
+            str, typer.Argument(help="An image file or an http(s) URL.", show_default=False)
+        ],
+        art: Annotated[
+            bool,
+            typer.Option("--art", help="Use it as the 16:9 background art, not the poster."),
+        ] = False,
+        posters_dir: PostersOpt = None,
+        force: Annotated[
+            bool, typer.Option("--force", "-f", help="Replace an image that's already there.")
+        ] = False,
+    ) -> None:
+        """
+        Use your own image as a playlist's poster or background art.
+
+        Crops the image from its center to a square (or to 16:9 with --art), resizes
+        it and saves it under the right name in the posters folder. Run
+        [cyan]build[/cyan] afterwards to upload it.
+        """
+        from PIL import UnidentifiedImageError
+
+        from plexlists.posters import import_image, read_source
+
+        (key,) = resolve([key], False)
+        folder = posters_dir or config.posters_dir(show.slug)
+        stem = f"{key}-art" if art else key
+        old = find_image(folder, stem)
+        if old and not force:
+            raise fail(f"{escape(str(old))} already exists. Pass --force to replace it.")
+        try:
+            import_image(read_source(source), folder / f"{stem}.jpg", art=art)
+        except UnidentifiedImageError:
+            raise fail(f"{escape(source)} isn't an image Pillow can read.") from None
+        except (OSError, ValueError) as exc:
+            raise fail(f"Couldn't read {escape(source)}: {escape(str(exc))}") from None
+        console.print(f"[green]wrote[/green] {escape(str(folder / (stem + '.jpg')))}")
+        console.print(f"Run [cyan]plexlists {show.slug} build {key}[/cyan] to upload it.")
 
     @app.command()
     def remove(
@@ -724,6 +809,7 @@ colors = { top = "#1b1f2a", bottom = "#05070b", accent = "#d4a017", text = "#f2f
 key = "favorites"            # used on the command line
 name = "Favorites"           # shown in Plex after the prefix
 description = "My favorite episodes"
+# poster_from = "Pilot"      # artwork for the generated poster: episode, film key or "show"
 episodes = [
     [1, "Pilot", "an optional note"],     # [season, "title", "note"?]
     # [2, "Some Two-Parter (1)"],         # parts: "(1)", "Part II", "Part One" all work

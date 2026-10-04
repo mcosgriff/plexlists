@@ -22,6 +22,14 @@ def test_minimal_defaults() -> None:
     assert s.prefix == "Test Show: "
     assert s.plex_name("fav") == "Test Show: Favorites"
     assert s.runtime("fav") == 44
+    assert s.playlists["fav"].poster_from == ""
+
+
+def test_poster_from_is_read() -> None:
+    playlist = {"key": "fav", "name": "Favorites", "episodes": [[1, "Pilot"]]}
+    data = {"show": {"title": "Test Show"}, "playlists": [{**playlist, "poster_from": "Pilot"}]}
+    s = parse_show(data, "test")
+    assert s.playlists["fav"].poster_from == "Pilot"
 
 
 def test_long_episode_counts_double(shows) -> None:
@@ -42,6 +50,7 @@ def test_long_episode_counts_double(shows) -> None:
         (lambda d: d["playlists"][0].update(episodes=[{"film": "nope"}]), "unknown film"),
         (lambda d: d["show"].update(colors={"top": "red"}), "#rrggbb"),
         (lambda d: d.update(playlists=[]), "no [[playlists]]"),
+        (lambda d: d["playlists"][0].update(poster_from=3), "'poster_from' must be a str"),
     ],
 )
 def test_validation_errors(mutate, message: str) -> None:

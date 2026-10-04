@@ -16,6 +16,8 @@ class Item:
     index: int = 0
     year: int | None = None
     playlistItemID: int | None = None  # noqa: N815
+    thumbUrl: str | None = None  # noqa: N815
+    artUrl: str | None = None  # noqa: N815
 
 
 class FakePlaylist:
@@ -69,6 +71,7 @@ class Section:
 class FakeShow:
     title: str
     eps: list[Item]
+    artUrl: str | None = None  # noqa: N815
 
     def episodes(self) -> list[Item]:
         return self.eps
@@ -82,8 +85,24 @@ class _Library:
         return self.secs
 
 
+class _Response:
+    def __init__(self, content: bytes) -> None:
+        self.content = content
+
+    def raise_for_status(self) -> None:
+        pass
+
+
 class _Session:
     delete, put = "DELETE", "PUT"
+
+    def __init__(self) -> None:
+        self.images: dict[str, bytes] = {}  # url -> image bytes
+        self.fetched: list[str] = []
+
+    def get(self, url: str, timeout: int = 0) -> _Response:
+        self.fetched.append(url)
+        return _Response(self.images[url])
 
 
 @dataclass

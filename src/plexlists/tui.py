@@ -5,6 +5,7 @@ Plex calls block, so they run in thread workers and post results back to the UI.
 
 from __future__ import annotations
 
+import contextlib
 import os
 import shutil
 import subprocess
@@ -584,14 +585,26 @@ class PlexlistsApp(App[None]):
     def make_posters(self, show: Show, keys: list[str], folder: Path) -> None:
         from plexlists.posters import render_poster
 
+        session = self.session
+        try:  # artwork from Plex is a bonus: without a connection, write plain cards
+            if session is None:
+                session = self.session = connect_session()
+                self.call_from_thread(self.update_subtitle, session.server_name)
+            session.library(show)
+        except Exception:
+            session = None
+        plain = 0
         for k in keys:
-            img = find_image(folder, k)
-            if img and img.suffix != ".jpg":
-                img.unlink()
-            render_poster(show, k, folder / f"{k}.jpg")
+            backdrop = None
+            if session is not None:
+                with contextlib.suppress(Exception):
+                    backdrop = session.backdrop(show, k)
+            plain += backdrop is None
+            render_poster(show, k, folder / f"{k}.jpg", backdrop=backdrop)
+        note = f" {plain} without artwork from Plex." if plain else ""
         self.call_from_thread(
             self.log_line,
-            f"Wrote {len(keys)} poster(s) to {escape(str(folder))}. Build to upload them.",
+            f"Wrote {len(keys)} poster(s) to {escape(str(folder))}.{note} Build to upload them.",
         )
         self.call_from_thread(self.notify, f"Generated {len(keys)} poster(s).")
         self.call_from_thread(self.refresh_view)

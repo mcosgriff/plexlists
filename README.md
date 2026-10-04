@@ -6,7 +6,8 @@ Build curated TV show playlists in Plex, matched by episode title.
   match as separate parts ("Descent (1)", "Part II") or one combined file.
 - **In-place updates:** rebuilding adds, removes and reorders items without
   recreating the playlist, so custom posters survive.
-- **Posters:** upload your own artwork, or generate simple title cards.
+- **Posters:** generate title cards over artwork from your Plex library, or
+  import your own image and have it cropped to fit.
 - **Shows as TOML:** ships with *The X-Files*, *Star Trek: The Next Generation*,
   *Star Trek: Enterprise*, *Babylon 5*, *Defiance*, *Stargate SG-1* and
   *Stargate Atlantis*; add your own without writing Python.
@@ -37,7 +38,7 @@ playlists, or select a single playlist.
 |---|---|
 | `c` | Check: match episodes against your library without changing Plex |
 | `b` | Build: create or update playlists, and upload changed posters |
-| `p` | Generate title-card posters (asks before replacing existing ones) |
+| `p` | Generate title-card posters from Plex artwork (asks before replacing existing ones) |
 | `o` | Open the posters folder in Finder |
 | `e` | Edit the show file in `$EDITOR` (copies a built-in show to your folder first) |
 | `x` | Delete playlists from Plex (asks first) |
@@ -55,6 +56,7 @@ plexlists tng list                    # playlists for a show
 plexlists tng show borg               # episodes in a playlist
 plexlists tng build --all --dry-run   # check matches and what would change
 plexlists tng posters --all           # optional: generate title-card posters
+plexlists tng poster borg ~/borg.png  # or use your own image (file or URL)
 plexlists tng build --all             # create / update playlists in Plex
 plexlists tng remove borg             # delete a playlist from Plex
 plexlists status                      # login state and token expiry
@@ -74,6 +76,32 @@ Put images in `<config dir>/posters/<show>/`, named by playlist key:
 `png` and `webp` also work. `build` uploads an image when it's new or changed.
 `plexlists paths` shows where `<config dir>` is (on macOS,
 `~/Library/Application Support/plexlists`).
+
+You don't have to place the files by hand:
+
+```sh
+plexlists tng posters --all                  # title cards over artwork from Plex
+plexlists tng posters --all --plain          # text on a gradient, no Plex needed
+plexlists tng poster borg ~/Downloads/x.png  # your own image, cropped to a square
+plexlists tng poster borg https://…/x.jpg --art   # …or to 16:9 background art
+```
+
+`posters` skips playlists that already have an image, and `poster` refuses to
+replace one, unless you pass `--force`.
+
+A generated poster uses the still of the playlist's first episode. To choose,
+set `poster_from` on the playlist in the show file:
+
+```toml
+[[playlists]]
+key = "borg"
+poster_from = "Q Who"          # an episode title: its still
+# poster_from = "first_contact"  # a key from [films]: the film's art
+# poster_from = "show"           # the show's background
+```
+
+If Plex can't be reached or has no artwork, the poster falls back to the plain
+gradient.
 
 ## Adding a show
 
