@@ -1,0 +1,72 @@
+[project]
+name = "plexlists"
+version = "0.1.0"
+description = "Build curated TV show playlists in Plex, matched by episode title"
+readme = "README.md"
+authors = [{ name = "Matthew", email = "claude@cosgriff.io" }]
+requires-python = ">=3.12"
+dependencies = [
+    "typer>=0.12",
+    "rich>=13",
+    "plexapi>=4.18",      # MyPlexJWTLogin
+    "pyjwt[crypto]>=2.8", # Ed25519 signing for Plex JWT auth
+    "keyring>=25",        # macOS Keychain / Linux Secret Service
+    "pillow>=10.1",       # generated posters
+    "textual>=1.0",
+]
+
+[project.scripts]
+plexlists = "plexlists.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11,<0.13"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.15",
+    "textual-dev>=1.8.0",
+    "ty>=0.0.80",
+]
+
+# ---------------------------------------------------------------- ruff
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E", "W",   # pycodestyle
+    "F",        # pyflakes
+    "I",        # isort
+    "B",        # bugbear
+    "UP",       # pyupgrade
+    "SIM",      # simplify
+    "C4",       # comprehensions
+    "PTH",      # pathlib
+    "N",        # pep8-naming
+    "RUF",      # ruff-specific
+]
+ignore = [
+    "B008",     # typer.Option() in defaults is idiomatic
+    "RUF001",   # ambiguous unicode in strings: we use … and → on purpose
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+
+# ---------------------------------------------------------------- ty
+[tool.ty.environment]
+python-version = "3.12"
+
+[tool.ty.src]
+include = ["src", "tests"]
+
+# ---------------------------------------------------------------- pytest
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
