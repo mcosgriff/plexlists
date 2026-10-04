@@ -193,3 +193,17 @@ def test_no_command_opens_tui(monkeypatch) -> None:
     invoke()
     invoke("tui")
     assert opened == [True, True]
+
+
+def test_build_and_remove_for_other_users(monkeypatch, plex, make_server, shows) -> None:
+    theirs = {name: make_server(shows["tng"]) for name in ("alice", "bob")}
+    monkeypatch.setattr(cli, "connect_user", lambda server, user: theirs[user])
+    out = invoke("tng", "build", "borg", "--no-artwork", "-u", "alice", "-u", "bob")
+    assert "For alice" in out and "For bob" in out
+    assert [p.title for p in theirs["alice"].pls] == ["TNG: The Borg"]
+    assert [p.title for p in theirs["bob"].pls] == ["TNG: The Borg"]
+    assert plex.pls == []  # yours are left alone
+
+    out = invoke("tng", "remove", "borg", "--yes", "--user", "alice")
+    assert "for alice" in out and "Deleted 1" in out
+    assert theirs["alice"].pls == [] and len(theirs["bob"].pls) == 1

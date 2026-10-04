@@ -76,6 +76,7 @@ plexlists tng build --all --dry-run   # check matches and what would change
 plexlists tng posters --all           # optional: generate title-card posters
 plexlists tng poster borg ~/borg.png  # or use your own image (file or URL)
 plexlists tng build --all             # create / update playlists in Plex
+plexlists tng build --all --user kid   # for a managed or shared user, not you
 plexlists tng remove borg             # delete a playlist from Plex
 plexlists status                      # login state and token expiry
 ```

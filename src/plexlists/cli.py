@@ -47,6 +47,25 @@ def connect_plex(url: str | None, token: str | None) -> Any:
         raise fail(f"Couldn't connect to Plex: {type(exc).__name__}: {escape(str(exc))}") from None
 
 
+def connect_user(plex: Any, user: str) -> Any:
+    """Connect to the same server as another user, or exit. Tests replace this function."""
+    try:
+        return auth.connect_as(plex, user)
+    except auth.AuthError as exc:
+        raise fail(exc) from None
+    except Exception as exc:
+        raise fail(
+            f"Couldn't connect as {escape(user)}: {type(exc).__name__}: {escape(str(exc))}"
+        ) from None
+
+
+def sessions_for(plex: Any, users: list[str] | None) -> list[tuple[str | None, Session]]:
+    """(user, session) to act on: you (None) by default, otherwise each named user."""
+    if not users:
+        return [(None, Session(plex))]
+    return [(u, Session(connect_user(plex, u))) for u in users]
+
+
 def print_result(show: Show, result: MatchResult, out: ApplyResult) -> None:
     for line in result_lines(show, result, out):
         console.print(line)
@@ -76,6 +95,16 @@ TokenOpt = Annotated[
     ),
 ]
 AllOpt = Annotated[bool, typer.Option("--all", "-a", help="Every playlist instead of naming them.")]
+UsersOpt = Annotated[
+    list[str] | None,
+    typer.Option(
+        "--user",
+        "-u",
+        help="Act on this user's playlists instead of yours: a managed or shared user of "
+        "your Plex account. Repeat for several. Only the server's owner can do this.",
+        show_default=False,
+    ),
+]
 PostersOpt = Annotated[
     Path | None,
     typer.Option(
@@ -218,6 +247,7 @@ def make_show_app(show: Show) -> typer.Typer:
                 rich_help_panel="Plex connection",
             ),
         ] = show.title,
+        users: UsersOpt = None,
         url: UrlOpt = None,
         token: TokenOpt = None,
     ) -> None:
@@ -236,7 +266,12 @@ def make_show_app(show: Show) -> typer.Typer:
         keys = resolve(keys, all_)
 
         with console.status("Connecting to Plex..."):
-            session = Session(connect_plex(url, token))
+            targets = sessions_for(connect_plex(url, token), users)
+
+        total_missing = 0
+        for user, session in targets:
+            if user:
+                console.print(f"\n[bold]For {escape(user)}[/bold]")
             try:
                 session.library(show, show_title)
             except ShowNotFoundError as exc:
@@ -245,21 +280,19 @@ def make_show_app(show: Show) -> typer.Typer:
                     "to the title Plex shows."
                 ) from None
             existing = session.existing_playlists()
-
-        total_missing = 0
-        for key in keys:
-            result = session.match(show, key, show_title)
-            total_missing += len(result.missing)
-            out = session.apply(
-                show,
-                result,
-                dry_run=dry_run,
-                artwork=not no_artwork,
-                force_artwork=force_artwork,
-                posters_dir=posters_dir,
-                existing=existing,
-            )
-            print_result(show, result, out)
+            for key in keys:
+                result = session.match(show, key, show_title)
+                total_missing += len(result.missing)
+                out = session.apply(
+                    show,
+                    result,
+                    dry_run=dry_run,
+                    artwork=not no_artwork,
+                    force_artwork=force_artwork,
+                    posters_dir=posters_dir,
+                    existing=existing,
+                )
+                print_result(show, result, out)
 
         if total_missing:
             src = show.source or f"{show.slug}.toml"
@@ -440,6 +473,7 @@ def make_show_app(show: Show) -> typer.Typer:
         yes: Annotated[
             bool, typer.Option("--yes", "-y", help="Don't ask for confirmation.")
         ] = False,
+        users: UsersOpt = None,
         url: UrlOpt = None,
         token: TokenOpt = None,
     ) -> None:
@@ -450,16 +484,19 @@ def make_show_app(show: Show) -> typer.Typer:
         playlists. Episodes and watch history aren't affected.
         """
         keys = resolve(keys, all_)
+        targets = []
         with console.status("Connecting to Plex..."):
-            targets = Session(connect_plex(url, token)).find_playlists(show, keys)
+            for user, session in sessions_for(connect_plex(url, token), users):
+                targets += [(user, pl) for pl in session.find_playlists(show, keys)]
         if not targets:
             console.print("None of those playlists exist in Plex.")
             return
-        for pl in targets:
-            console.print(f"  • {escape(pl.title)} [dim]({pl.leafCount} items)[/dim]")
+        for user, pl in targets:
+            owner = f" [dim]for {escape(user)}[/dim]" if user else ""
+            console.print(f"  • {escape(pl.title)} [dim]({pl.leafCount} items)[/dim]{owner}")
         if not yes and not typer.confirm(f"Delete {len(targets)} playlist(s) from Plex?"):
             raise typer.Abort()
-        for pl in targets:
+        for _, pl in targets:
             pl.delete()
         console.print(f"[green]Deleted {len(targets)} playlist(s).[/green]")
 

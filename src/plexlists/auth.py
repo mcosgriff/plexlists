@@ -274,6 +274,28 @@ def connect(url: str | None, token: str | None, warn: Any = print) -> Any:
     return connect_https(res, tokens)
 
 
+def connect_as(plex: Any, user: str) -> Any:
+    """The same server, signed in as another user of your Plex account (managed or shared).
+
+    Playlists belong to one user, so building them for someone else means connecting
+    as them. Only the server's owner can do this, and it needs the login session.
+    """
+    from plexapi.exceptions import NotFound
+    from plexapi.myplex import MyPlexAccount
+    from plexapi.server import PlexServer
+
+    cfg, secrets = logged_in()
+    account = MyPlexAccount(token=fresh_jwt(cfg, secrets))
+    try:
+        token = account.user(user).get_token(plex.machineIdentifier)
+    except NotFound:
+        names = ", ".join(sorted(str(u.title) for u in account.users())) or "none"
+        raise AuthError(
+            f"No user '{user}' on your Plex account. Users you can build for: {names}."
+        ) from None
+    return PlexServer(plex._baseurl, token, timeout=15)
+
+
 def revoke_device(cfg: dict[str, Any], secrets: dict[str, Any]) -> bool:
     """Remove this device from the Plex account (Authorized Devices). Best effort."""
     from plexapi.myplex import MyPlexAccount
