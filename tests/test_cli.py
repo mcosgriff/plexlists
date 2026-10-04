@@ -14,7 +14,7 @@ runner = CliRunner()
 
 def invoke(*args: str) -> str:
     result = runner.invoke(
-        cli.make_app(), list(args), catch_exceptions=False, env={"COLUMNS": "200"}
+        cli.make_app(), list(args), catch_exceptions=False, env={"COLUMNS": "300"}
     )
     return result.output
 

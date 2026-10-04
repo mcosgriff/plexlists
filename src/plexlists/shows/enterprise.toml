@@ -1,0 +1,200 @@
+# Star Trek: Enterprise.
+# Two-parters that span seasons ("Shockwave") list each part explicitly.
+
+[show]
+title = "Star Trek: Enterprise"
+label = "Star Trek: ENT"
+prefix = "ENT: "
+episode_minutes = 43
+long_episodes = ["Broken Bow"]
+colors = { top = "#16304a", bottom = "#04090f", accent = "#c9a45c", text = "#eef2f5" }
+
+[[playlists]]
+key = "binge"
+name = "Weekend Binge"
+description = "The essential episodes, from Broken Bow to Terra Prime"
+episodes = [
+    [1, "Broken Bow", "Friday night"],
+    [1, "The Andorian Incident"],
+    [1, "Dear Doctor"],
+    [1, "Shuttlepod One"],
+    [1, "Shockwave (1)"],
+    [2, "Shockwave (2)"],
+    [2, "Carbon Creek", "Saturday"],
+    [2, "Dead Stop"],
+    [2, "Cogenitor"],
+    [2, "Regeneration"],
+    [2, "First Flight"],
+    [2, "The Expanse"],
+    [3, "Twilight"],
+    [3, "Similitude"],
+    [3, "Azati Prime"],
+    [3, "Damage"],
+    [3, "The Forgotten"],
+    [3, "Zero Hour"],
+    [4, "The Forge", "Sunday"],
+    [4, "Awakening"],
+    [4, "Kir'Shara"],
+    [4, "Babel One"],
+    [4, "United"],
+    [4, "In a Mirror, Darkly (1)"],
+    [4, "In a Mirror, Darkly (2)"],
+    [4, "Demons"],
+    [4, "Terra Prime", "Finale: the real ending"],
+]
+
+[[playlists]]
+key = "xindi"
+name = "The Xindi Arc"
+description = "The attack on Earth and the mission into the Delphic Expanse"
+episodes = [
+    [2, "The Expanse", "The attack on Earth"],
+    [3, "The Xindi"],
+    [3, "Anomaly"],
+    [3, "Rajiin"],
+    [3, "Impulse"],
+    [3, "The Shipment"],
+    [3, "Twilight"],
+    [3, "Similitude"],
+    [3, "Proving Ground"],
+    [3, "Stratagem"],
+    [3, "Harbinger"],
+    [3, "Azati Prime"],
+    [3, "Damage"],
+    [3, "The Forgotten"],
+    [3, "E²"],
+    [3, "The Council"],
+    [3, "Countdown"],
+    [3, "Zero Hour"],
+]
+
+[[playlists]]
+key = "tcw"
+name = "Temporal Cold War"
+description = "Daniels, the Suliban and the war fought across time"
+episodes = [
+    [1, "Broken Bow"],
+    [1, "Cold Front"],
+    [1, "Detained"],
+    [1, "Shockwave (1)"],
+    [2, "Shockwave (2)"],
+    [2, "Future Tense"],
+    [2, "The Expanse"],
+    [3, "Carpenter Street"],
+    [3, "Azati Prime"],
+    [3, "Zero Hour"],
+    [4, "Storm Front (1)"],
+    [4, "Storm Front (2)"],
+]
+
+[[playlists]]
+key = "andorians"
+name = "Shran and the Andorians"
+description = "Archer's most reluctant ally"
+episodes = [
+    [1, "The Andorian Incident", "First appearance of Shran"],
+    [1, "Shadows of P'Jem"],
+    [2, "Cease Fire"],
+    [3, "Proving Ground"],
+    [3, "Zero Hour"],
+    [4, "Kir'Shara"],
+    [4, "Babel One"],
+    [4, "United"],
+    [4, "The Aenar"],
+    [4, "These Are the Voyages..."],
+]
+
+[[playlists]]
+key = "vulcan"
+name = "Vulcan"
+description = "T'Pol, the High Command and the rediscovery of Surak"
+episodes = [
+    [1, "The Andorian Incident"],
+    [1, "Breaking the Ice"],
+    [1, "Shadows of P'Jem"],
+    [1, "Fusion"],
+    [1, "Fallen Hero"],
+    [2, "Carbon Creek"],
+    [2, "The Seventh"],
+    [2, "Stigma"],
+    [3, "Impulse"],
+    [4, "Home"],
+    [4, "The Forge"],
+    [4, "Awakening"],
+    [4, "Kir'Shara"],
+]
+
+[[playlists]]
+key = "federation"
+name = "Road to the Federation"
+description = "The season four arcs that set up the Original Series"
+episodes = [
+    [4, "Borderland"],
+    [4, "Cold Station 12"],
+    [4, "The Augments"],
+    [4, "The Forge"],
+    [4, "Awakening"],
+    [4, "Kir'Shara"],
+    [4, "Babel One"],
+    [4, "United"],
+    [4, "The Aenar"],
+    [4, "Affliction"],
+    [4, "Divergence"],
+    [4, "Demons"],
+    [4, "Terra Prime"],
+]
+
+[[playlists]]
+key = "prequel"
+name = "Prequel Tie-Ins"
+description = "Episodes that connect to the rest of Star Trek"
+episodes = [
+    [1, "Acquisition", "The Ferengi"],
+    [2, "Minefield", "The Romulans"],
+    [2, "Judgment", "A Klingon tribunal"],
+    [2, "Regeneration", "The Borg, following First Contact"],
+    [4, "Borderland", "Khan's fellow Augments"],
+    [4, "Cold Station 12"],
+    [4, "The Augments"],
+    [4, "Affliction", "Why Klingons looked different in the Original Series"],
+    [4, "Divergence"],
+    [4, "Bound", "The Orions"],
+    [4, "In a Mirror, Darkly (1)", "The Mirror Universe and the USS Defiant"],
+    [4, "In a Mirror, Darkly (2)"],
+]
+
+[[playlists]]
+key = "standalones"
+name = "Best Standalones"
+description = "Self-contained episodes that need no arc knowledge"
+episodes = [
+    [1, "Dear Doctor"],
+    [1, "Shuttlepod One"],
+    [2, "Carbon Creek"],
+    [2, "Minefield"],
+    [2, "Dead Stop"],
+    [2, "The Catwalk"],
+    [2, "Cogenitor"],
+    [2, "First Flight"],
+    [3, "Twilight"],
+    [3, "North Star"],
+    [3, "Similitude"],
+    [4, "Observer Effect"],
+]
+
+[[playlists]]
+key = "guests"
+name = "Guest Stars"
+description = "Familiar faces, many from other Trek series"
+episodes = [
+    [1, "The Andorian Incident", "Jeffrey Combs as Shran"],
+    [1, "Acquisition", "Jeffrey Combs, Ethan Phillips, Clint Howard"],
+    [1, "Oasis", "Rene Auberjonois"],
+    [1, "Detained", "Dean Stockwell: a Quantum Leap reunion"],
+    [1, "Fallen Hero", "Fionnula Flanagan"],
+    [2, "First Flight", "Keith Carradine"],
+    [4, "Borderland", "Brent Spiner as Arik Soong"],
+    [4, "Daedalus", "Bill Cobbs"],
+    [4, "Demons", "Peter Weller"],
+    [4, "These Are the Voyages...", "Jonathan Frakes and Marina Sirtis"],
+]
